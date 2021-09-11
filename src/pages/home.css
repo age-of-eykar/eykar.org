@@ -67,7 +67,7 @@ button.highlighted {
 }
 
 .icon {
-  width    : 2vh;
+  width    : 25px;
   display  : inline-block;
   position : absolute;
   left     : 1.3em;
