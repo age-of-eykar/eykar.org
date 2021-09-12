@@ -28,10 +28,11 @@ nav {
 
 @media (max-width: 999px) {
   nav {
-    top: 50px;
+    top: 50%;
     left:50px;
     right:50px;
     bottom: auto;
+    transform: translateY(-50%);
   }
 }
 @media (max-width: 548px) {
