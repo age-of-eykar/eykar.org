@@ -26,6 +26,33 @@ nav {
   border-radius  : 20px;
 }
 
+@media (max-width: 999px) {
+  nav {
+    top: 50px;
+    left:50px;
+    right:50px;
+    bottom: auto;
+  }
+}
+@media (max-width: 548px) {
+  nav {
+    padding        : 1em 1em;
+  }
+}
+@media (max-width: 440px) {
+  nav {
+    left:10px;
+    right:10px;
+  }
+}
+@media (max-width: 358px) {
+  nav {
+    padding        : 2em 1em;
+  }
+}
+
+
+
 button {
   font-family   : Verdana, sans-serif;
   text-align    : left;
@@ -44,6 +71,14 @@ button {
   height         : 3em;
   position       : relative;
   border-radius  : 12px;
+}
+@media (max-width: 536px) {
+  button {
+    margin         : 0.4em 1em 0.4em 0.0em;
+    padding        : 0.1em 0.4em 0.02em 0em;
+    letter-spacing: 0em;
+    font-size: 15px;
+  }
 }
 
 button.normal {
