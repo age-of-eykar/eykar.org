@@ -1,21 +1,4 @@
-.background_home {
-  background-image   : url("../img/background.webp");
-  background-position: center;
-  background-repeat  : no-repeat;
-  background-size    : cover;
-  position           : absolute;
-  top                : 0;
-  bottom             : 0;
-  left               : 0;
-  right              : 0;
-  z-index            : -1;
-}
-
-.default_background {
-  background-color: #1C1709;
-}
-
-nav {
+nav.home {
   position       : absolute;
   left           : 10vh;
   bottom         : 10vh;
@@ -27,30 +10,31 @@ nav {
 }
 
 @media (max-width: 999px) {
-  nav {
-    top: 50%;
-    left:50px;
-    right:50px;
-    bottom: auto;
+  nav.home {
+    top      : 50%;
+    left     : 50px;
+    right    : 50px;
+    bottom   : auto;
     transform: translateY(-50%);
   }
 }
 
 @media (max-width: 440px) {
-  nav {
-    left:10px;
-    right:10px;
+  nav.home {
+    left : 10px;
+    right: 10px;
   }
 }
+
 @media (max-width: 358px) {
-  nav {
-    padding        : 2em 1em;
+  nav.home {
+    padding: 2em 1em;
   }
 }
 
 
 
-button {
+.home.button {
   font-family   : Verdana, sans-serif;
   text-align    : left;
   letter-spacing: 0.05em;
@@ -69,36 +53,37 @@ button {
   position       : relative;
   border-radius  : 12px;
 }
+
 @media (max-width: 536px) {
-  button {
-    margin         : 0.4em 1em 0.4em 0.0em;
-    padding        : 0.1em 0.4em 0.02em 0em;
+  .home.button {
+    margin        : 0.4em 1em 0.4em 0.0em;
+    padding       : 0.1em 0.4em 0.02em 0em;
     letter-spacing: 0em;
-    font-size: 15px;
+    font-size     : 15px;
   }
 }
 
-button.normal {
+.home.button.normal {
   color           : #F3F2ED;
   background-color: rgba(0, 0, 0, 0);
   border          : 2px solid rgba(243, 242, 237, 0.95);
   box-sizing      : border-box;
 }
 
-button.highlighted {
+.home.button.highlighted {
   color           : #F4E9CB;
   background-color: rgba(0, 0, 0, 0);
   border          : 2px solid #E7C878;
   box-sizing      : border-box;
 }
 
-.logo {
+.home.logo {
   width  : 65%;
   margin : auto;
   display: block;
 }
 
-.icon {
+.home.icon {
   width    : 25px;
   display  : inline-block;
   position : absolute;
@@ -106,8 +91,9 @@ button.highlighted {
   top      : 50%;
   transform: translateY(-50%);
 }
+
 @media (max-width: 536px) {
-  .icon {
+  .home.icon {
     width    : 25px;
     display  : inline-block;
     position : absolute;
@@ -117,7 +103,7 @@ button.highlighted {
   }
 }
 
-.button_text {
+.home.button_text {
   display    : inline-block;
   margin-left: 1.75em;
   position   : absolute;
@@ -126,11 +112,11 @@ button.highlighted {
   transform  : translateY(-50%);
 }
 
-button:hover {
+.home.button:hover {
   border: solid 1px rgba(0, 0, 0, 0);
 }
 
-.button_div {
+.home.button_div {
   position       : absolute;
   width          : 100%;
   height         : 100%;
@@ -141,10 +127,10 @@ button:hover {
   z-index        : -1;
 }
 
-button:hover .button_div {
+.home.button:hover .button_div {
   border: solid 1px #dddddd;
 }
 
-button.highlighted:hover .button_div {
+.home.button.highlighted:hover .button_div {
   border: solid 1px #ffe1a9;
 }

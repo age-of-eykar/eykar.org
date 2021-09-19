@@ -1,7 +1,7 @@
 
 function App() {
   return (
-    <div className="background_home">
+    <div className="default_background">
     </div>
   );
 
