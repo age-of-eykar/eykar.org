@@ -58,21 +58,134 @@ margin-left: 14px;
   height: 500px;
   width: 600px;
   position: absolute;
-  bottom: 50px;
-  left:50px;
+  bottom: 150px;
+  left:180px;
+  box-shadow     : 0px 0px 150px rgba(0, 0, 0, 0.25);
 }
 
-.discover.page1 {
-  display: inline;
+
+.discover.bigstory.Title {
+  font-family   : Verdana, sans-serif;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 35px;
+  padding: 30px 45px;
+  color: #FFFFFF;
+}
+.discover.bigstory.Description {
+  font-family   : Verdana, sans-serif;
+  font-style: normal;
+  font-size: 15px;
+  letter-spacing: 1px;
+  padding: 30px 45px;
+  color: #FFFFFF;
+  line-height: 20px;
 }
 
-.test {
-  color:white;
-  font-size: 50px;
+.discover.stuff1 {
+  position: absolute;
+  width: 700px;
+  height: 240px;
+  right: 200px;
+  bottom: 410px;
+  
+  background: rgba(87, 85, 78, 0.212);
+  box-shadow: 0px 0px 150px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(15px);
+  border-radius: 22px;
 }
 
- .discover.page1 {
-  overflow: auto;
-  white-space: nowrap;
+.discover.stuff2 {
+  position: absolute;
+  width: 700px;
+  height: 240px;
+  right: 200px;
+  bottom: 150px;
+  
+  background: rgba(87, 85, 78, 0.212);
+  box-shadow: 0px 0px 150px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(15px);
+  border-radius: 22px;
 }
 
+
+.discover.stuff.Title {
+  font-family   : Verdana, sans-serif;
+  font-style: normal;
+  font-weight: 1;
+  font-size: 28px;
+  padding: 25px 25px;
+  color: #FFFFFF;
+  letter-spacing: 3px;
+}
+.discover.stuff.Description {
+  font-family   : Verdana, sans-serif;
+  font-style: normal;
+  font-size: 16px;
+  letter-spacing: 2px;
+  padding: 1px 25px;
+  color: #FFFFFF;
+  line-height: 20px;
+}
+
+.discover.stuff.Image1 {
+  border-radius: 150px 22px 22px 100px;
+width: 210px;
+right: 0;
+top:0;
+bottom: 0;
+background: url(page1/stuff1.png);
+background-position: center;
+background-repeat  : no-repeat;
+background-size    : cover;
+position: absolute;
+}
+
+.discover.stuff.Image2 {
+  border-radius: 100px 22px 22px 200px;
+width: 210px;
+right: 0;
+top:0;
+bottom: 0;
+background: url(page1/stuff2.png);
+background-position: center;
+background-repeat  : no-repeat;
+background-size    : cover;
+position: absolute;
+}
+
+.discover.bottom_line {
+  position: absolute;
+  width: 500px;
+  bottom: 25px;
+  left:50%;
+  transform: translate(-50%);
+  backdrop-filter: blur(25px);
+  height: 5px;
+  background-color:rgba(211, 205, 198, 0.2);
+}
+.discover.bottom_line_content.contener {
+  position: absolute;
+  bottom: 25px;
+  left:50%;
+  transform: translate(-50%);
+
+}
+
+.discover.bottom_line_content.circle1 {
+  width: 35px;
+  height: 35px;
+  background-color: rgb(219, 219, 219);
+  border-radius: 90px;
+  display: inline-flex;
+  margin: 0 0 -17.5px 0;
+}
+
+.discover.bottom_line_content.circle {
+  width: 20px;
+  height: 20px;
+  background-color: rgb(158, 158, 158);
+  border-radius: 90px;
+  display: inline-flex;
+  margin: 0 0 -10px 105px;
+}
