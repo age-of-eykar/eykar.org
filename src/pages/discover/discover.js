@@ -1,6 +1,6 @@
 import "./discover.css"
 
-import Header from "../header/header";
+import Header from "../../components/header/header";
 import Page1 from "./page1/page1";
 function Discover() {
 

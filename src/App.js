@@ -1,6 +1,6 @@
 import React from "react";
 import "./index.css"
-import Home from './pages/home';
+import Home from './pages/home/home';
 import Discover from './pages/discover/discover';
 import Explore from './pages/explore/explore';
 
