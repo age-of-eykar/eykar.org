@@ -21,7 +21,7 @@ function MapCanvas(props) {
         context.fillRect(i * x_step, j * y_step,
           x_step + 1, y_step + 1);
         context.fillStyle = "#e74c3c";
-        var center = getTileCenter(i, j, x_step, y_step);
+        var center = getTileCenter(props.top_left.x, i, props.top_left.y, j, x_step, y_step);
         context.fillRect(center.x - 4, center.y - 4, 8, 8);
       }
     }
@@ -32,9 +32,11 @@ function MapCanvas(props) {
     className="map" ref={canvasRef} {...props} />
 }
 
-function getTileCenter(i, j, tile_width, tile_height) {
-  var alpha = (((i + j) & 1) * 149 + (i + 53) * 16807 + j * j * 37 + 509 ^ i) % tile_width;
-  var beta = ((j & 1) * j * 127 + (i & 1) * (j + 71) * 389 + j * 601) % tile_height;
+function getTileCenter(i_prefix, i, j_prefix, j, tile_width, tile_height) {
+  const x = i + i_prefix;
+  const y = j + j_prefix;
+  var alpha = ((((x + y) & 1) * 149 + (x + 53) * 16807 + y * y * 37 + 509 ^ x) % tile_width + 881) % tile_width;
+  var beta = (((y & 1) * y * 127 + (x & 1) * (y + 71) * 389 + y * 601) % tile_height + 439) % tile_height;
   return { x: i * tile_width + alpha % tile_width, y: j * tile_height + beta % tile_height + 0 };
 }
 
