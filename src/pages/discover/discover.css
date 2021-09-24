@@ -54,7 +54,6 @@
   border-radius: 22px;
 }
 
-
 .discover.stuff.Title {
   font-family   : Verdana, sans-serif;
   font-style: normal;
@@ -64,6 +63,7 @@
   color: #FFFFFF;
   letter-spacing: 3px;
 }
+
 .discover.stuff.Description {
   font-family   : Verdana, sans-serif;
   font-style: normal;
@@ -110,6 +110,7 @@ position: absolute;
   height: 5px;
   background-color:rgba(211, 205, 198, 0.2);
 }
+
 .discover.bottom_line_content.contener {
   position: absolute;
   bottom: 25px;
