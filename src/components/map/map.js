@@ -22,7 +22,9 @@ function MapCanvas(props) {
           x_step + 1, y_step + 1);
         context.fillStyle = "#e74c3c";
         var center = getTileCenter(props.top_left.x, i, props.top_left.y, j, x_step, y_step);
-        context.fillRect(center.x - 4, center.y - 4, 8, 8);
+        context.beginPath();
+        context.arc(center.x, center.y, 3, 0, 2 * Math.PI);
+        context.fill();
       }
     }
 

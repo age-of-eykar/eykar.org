@@ -14,9 +14,15 @@ nav.header {
     margin-right   : auto;
 }
 
+.header.icons {
+    display        : flex;
+    justify-content: center;
+    align-items    : center;
+    margin-top     : -6px;
+}
+
 @media (max-width: 700px) {
     nav.header {
-        display      : block;
         width        : 100%;
         border-radius: 0px 0px 12px 12px;
     }
@@ -24,13 +30,11 @@ nav.header {
     .header.button_text {
         display: none;
     }
-}
 
-.header.icons {
-    display        : flex;
-    justify-content: center;
-    align-items    : center;
-    margin-top     : -6px;
+    .header.icons {
+        margin-top: 0;
+        height    : 100%;
+    }
 }
 
 .header.logo {
