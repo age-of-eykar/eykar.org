@@ -5,11 +5,9 @@
 }
 
 .page1 {
-
-  display         : table-cell;
-  vertical-align  : middle;
+  display       : table-cell;
+  vertical-align: middle;
 }
-
 
 .cards {
   display        : flex;
@@ -27,6 +25,8 @@
 
 @media (max-width: 1240px) {
   .cards {
+    cursor: default;
+    margin-top    : 30px;
     align-items   : center;
     flex-direction: column;
   }
@@ -118,10 +118,6 @@
   .discover.bigcard {
     width: 100%;
   }
-
-.cards {
-  margin-top: 30px;
-}
 
   .discover.card {
     width         : 100%;
