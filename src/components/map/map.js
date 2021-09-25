@@ -1,11 +1,15 @@
-
+import { Delaunay } from "d3-delaunay"
 import "./map.css"
 import React, { useRef, useEffect } from 'react'
+
+
 
 function MapCanvas(props) {
 
   const canvasRef = useRef(null)
 
+  
+  
   useEffect(() => {
     const canvas = canvasRef.current
     const context = canvas.getContext('2d')
@@ -15,18 +19,28 @@ function MapCanvas(props) {
     var x_step = context.canvas.width / (map_width + 1);
     var y_step = context.canvas.height / (map_height + 1);
 
+    var points = [];
+
     for (var i = 0; i <= map_width; i++) {
       for (var j = 0; j <= map_height; j++) {
-        context.fillStyle = (i + j & 1) ? "#2ecc71" : "#2c3e50";
-        context.fillRect(i * x_step, j * y_step,
-          x_step + 1, y_step + 1);
         context.fillStyle = "#e74c3c";
         var center = getTileCenter(props.top_left.x, i, props.top_left.y, j, x_step, y_step);
+        
+        points.push([Math.round(center.x), Math.round(center.y)]);
+
         context.beginPath();
-        context.arc(center.x, center.y, 3, 0, 2 * Math.PI);
+        //context.arc(center.x, center.y, 2, 0, 2 * Math.PI);
         context.fill();
+        context.closePath();
       }
     }
+
+    const voronoi = Delaunay.from(points).voronoi([0, 0, canvas.width, canvas.height]);
+    context.beginPath();
+    context.strokeStyle = "#ffffff";
+    voronoi.render(context);
+    context.stroke();
+    context.closePath();
 
   }, [props.bottom_right, props.top_left])
 
