@@ -53,7 +53,7 @@ function getTileCenter(i_prefix, i, j_prefix, j, tile_width, tile_height) {
   const y = j + j_prefix;
   var alpha = ((x * 16807 + y * y * 37 + 509 ^ x + 71 ^ (y - 27)) % tile_width + 881) % tile_width;
   var beta = (((x & 1) * (y + 71) * 389 + y * 601 + 127 ^ (x - 27)) % tile_height + 439) % tile_height;
-  return { x: i * tile_width + alpha % tile_width, y: j * tile_height + beta % tile_height + 0 };
+  return { x: i * tile_width + alpha % tile_width, y: j * tile_height + beta % tile_height };
 }
 
 export default MapCanvas
