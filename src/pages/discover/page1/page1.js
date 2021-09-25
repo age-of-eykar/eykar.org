@@ -7,8 +7,7 @@ import secondIllustration from '../../../img/stuff2.png';
 function Page1() {
   return (
     <div className="discover page1">
-
-      <div className="vertical">
+      <div className="cards">
         <div className="discover bigcard">
           <h1 >A great punchline</h1>
           <p >
