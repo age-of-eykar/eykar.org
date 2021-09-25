@@ -17,7 +17,6 @@
 .cards {
   display        : flex;
   justify-content: center;
-
 }
 
 .discover.bigcard {
@@ -90,6 +89,7 @@
   padding       : 1px 25px;
   color         : #FFFFFF;
   line-height   : 20px;
+  margin-bottom: 20px;
 }
 
 .discover.card img {
@@ -114,5 +114,40 @@
 
   .discover.card {
     margin-bottom: 3vw;
+
   }
+}
+
+@media (max-width: 620px) {
+
+  .page1 {
+   margin-top: 200px;
+  }
+
+  .discover.bigcard {
+    width: 100%;
+  }
+
+  .discover.card {
+    width: 100%;
+    height: auto;
+    flex-direction: column;
+  }
+
+  .discover.card img {
+    object-fit: cover;
+    width: 100%;
+    height: 356px;
+    border-radius: 0px 0px 22px 22px;
+  }
+
+  .mask1 {
+
+    clip-path: none;
+  }
+  
+  .mask2 {
+    clip-path: none;
+  }
+
 }
