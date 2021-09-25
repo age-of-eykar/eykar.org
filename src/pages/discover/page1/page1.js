@@ -10,25 +10,26 @@ function Page1() {
       <div className="cards">
         <div className="discover bigcard">
           <h1 >A great punchline</h1>
-          <p >
+          <p>
             Cras maximus et nibh sed efficitur. Ut fringilla mi ultricies metus pulvinar,
             eu tempor mi viverra. In ut euismod orci. Quisque blandit posuere sem, sit
             amet dapibus est viverra vel. Ut eget nisl efficitur, dignissim nunc in,
             aliquam dolor.
-            <br />
+          </p>
+          <p>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam consectetur
             eget lorem vel facilisis. Nunc nec erat interdum nunc bibendum volutpat.
             Sed congue, purus et sodales dictum, lectus tortor porttitor dui, vitae
             tempor quam purus ut dui. Donec sit amet tempus nisi. Aenean ut est at massa
-            lobortis
-            <br />
+            lobortis.
+          </p>
+          <p>
             Quisque blandit posuere sem, sit amet dapibus est viverra vel. Cras maximus
             et nibh sed efficitur.  In ut euismod orci. Quisque blandit posuere sem,
             sit amet dapibus est viverra vel. Nullam quis dolor eros. Ut eget nisl
             efficitur, dignissim nunc in, aliquam dolor.
           </p>
         </div>
-
         <div className="vertical">
           <div className="discover card">
             <div className="vertical">
@@ -54,7 +55,6 @@ function Page1() {
         </div>
       </div>
     </div>
-
   );
 }
 export default Page1;
