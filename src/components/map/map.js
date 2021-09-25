@@ -8,8 +8,8 @@ function MapCanvas(props) {
 
   const canvasRef = useRef(null)
 
-  
-  
+
+
   useEffect(() => {
     const canvas = canvasRef.current
     const context = canvas.getContext('2d')
@@ -25,7 +25,7 @@ function MapCanvas(props) {
       for (var j = 0; j <= map_height; j++) {
         context.fillStyle = "#e74c3c";
         var center = getTileCenter(props.top_left.x, i, props.top_left.y, j, x_step, y_step);
-        
+
         points.push([Math.round(center.x), Math.round(center.y)]);
 
         context.beginPath();
@@ -51,8 +51,8 @@ function MapCanvas(props) {
 function getTileCenter(i_prefix, i, j_prefix, j, tile_width, tile_height) {
   const x = i + i_prefix;
   const y = j + j_prefix;
-  var alpha = ((((x + y) & 1) * 149 + (x + 53) * 16807 + y * y * 37 + 509 ^ x) % tile_width + 881) % tile_width;
-  var beta = (((y & 1) * y * 127 + (x & 1) * (y + 71) * 389 + y * 601) % tile_height + 439) % tile_height;
+  var alpha = ((x * 16807 + y * y * 37 + 509 ^ x + 71 ^ (y - 27)) % tile_width + 881) % tile_width;
+  var beta = (((x & 1) * (y + 71) * 389 + y * 601 + 127 ^ (x - 27)) % tile_height + 439) % tile_height;
   return { x: i * tile_width + alpha % tile_width, y: j * tile_height + beta % tile_height + 0 };
 }
 
