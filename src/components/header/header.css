@@ -1,7 +1,4 @@
 nav.header {
-    position       : absolute;
-    left           : 50%;
-    transform      : translateX(-50%);
     z-index        : 1;
     display        : block;
     width          : 562px;
