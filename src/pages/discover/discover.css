@@ -54,7 +54,7 @@
 .discover.bigcard p {
   font-family   : Verdana, sans-serif;
   font-style    : normal;
-  font-size     : 15px;
+  font-size     : 16px;
   letter-spacing: 1px;
   padding       : 0px 28px 28px 28px;
   color         : #FFFFFF;
@@ -107,13 +107,10 @@
 }
 
 @media (min-width: 1920px) {
-
   .discover.bigcard {
     margin-bottom: 3vw;
     margin-right : 3vw;
   }
-
-  
 
   .discover.card {
     margin-bottom: 3vw;
