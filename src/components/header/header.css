@@ -15,7 +15,7 @@ nav.header {
     display        : flex;
     justify-content: center;
     align-items    : center;
-    margin-top     : -6px;
+    margin-top     : -10px;
 }
 
 @media (max-width: 700px) {
@@ -41,7 +41,7 @@ nav.header {
 
 .header.icon {
     width  : 25px;
-    margin : 27px 6px 25px 48px;
+    margin : 27px 18px 25px 18px;
     display: inline-flex;
 }
 
