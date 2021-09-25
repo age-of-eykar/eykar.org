@@ -7,11 +7,7 @@ function Discover() {
   return (
     <div className="default_background">
       <Header />
-      <div className="parent">
-        <div className="container">
-          <Page1 />
-        </div>
-      </div>
+      <Page1 />
     </div>
   );
 }

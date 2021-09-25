@@ -53,17 +53,6 @@ function Page1() {
           </div>
         </div>
       </div>
-
-      <div className="discover bottom_line" />
-
-      <div className="discover bottom_line_content contener">
-        <div className="discover bottom_line_content circle1"></div>
-        <div className="discover bottom_line_content circle"></div>
-        <div className="discover bottom_line_content circle"></div>
-        <div className="discover bottom_line_content circle"></div>
-        <div className="discover bottom_line_content circle"></div>
-      </div>
-
     </div>
 
   );
