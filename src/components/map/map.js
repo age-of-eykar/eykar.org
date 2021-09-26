@@ -7,12 +7,32 @@ import React, { useRef, useEffect } from 'react'
 function MapCanvas(props) {
 
   const canvasRef = useRef(null)
-
-  
   
   useEffect(() => {
     const canvas = canvasRef.current
     const context = canvas.getContext('2d')
+
+    let isInteracting = true;
+
+
+    canvas.addEventListener('mousemove', e => {
+      if (isInteracting === true) {
+        drawCell(context, e.offsetX, e.offsetY);
+      }
+    });
+
+    function drawCell(context, x, y) {
+      context.beginPath();
+      context.fillStyle = '#ff0000';
+      var cell = 0;
+      while (!voronoi.contains(cell, x, y)) {
+        cell++;
+      }
+      voronoi.renderCell(cell, context);
+      context.fill();
+      context.closePath();
+    }
+
 
     const map_width = props.bottom_right.x - props.top_left.x;
     const map_height = props.bottom_right.y - props.top_left.y;
@@ -36,10 +56,16 @@ function MapCanvas(props) {
     }
 
     const voronoi = Delaunay.from(points).voronoi([0, 0, canvas.width, canvas.height]);
+    console.log(voronoi);
     context.beginPath();
     context.strokeStyle = "#ffffff";
-    voronoi.render(context);
+    context.fillStyle = "#e74c3c";
+    for (var cell = 0; cell < points.length; cell++) {
+      voronoi.renderCell(cell, context);
+    }
+    context.fill();
     context.stroke();
+    
     context.closePath();
 
   }, [props.bottom_right, props.top_left])
