@@ -12,6 +12,7 @@
 
   .default_background {
     background-image   : url("img/background.webp");
+    background-attachment: fixed;
     background-position: center;
     background-repeat  : no-repeat;
     background-size    : cover;
