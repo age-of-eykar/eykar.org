@@ -4,13 +4,17 @@ import React, { useRef, useEffect } from 'react'
 
 
 
-function MapCanvas(props) {
+function MapCanvas({ blurry, bottom_right, top_left }) {
 
   const canvasRef = useRef(null)
-  
+
   useEffect(() => {
-    const canvas = canvasRef.current
+    const scale = window.devicePixelRatio;
+    const canvas = canvasRef.current;
+    canvas.width = canvas.clientWidth * scale;
+    canvas.height = canvas.clientHeight * scale;
     const context = canvas.getContext('2d')
+    context.scale(scale, scale);
 
     let isInteracting = true;
 
@@ -24,7 +28,7 @@ function MapCanvas(props) {
     function drawCell(context, x, y) {
       context.beginPath();
       context.fillStyle = '#ff0000';
-      var cell = 0;
+      let cell = 0;
       while (!voronoi.contains(cell, x, y)) {
         cell++;
       }
@@ -34,52 +38,59 @@ function MapCanvas(props) {
     }
 
 
-    const map_width = props.bottom_right.x - props.top_left.x;
-    const map_height = props.bottom_right.y - props.top_left.y;
-    var x_step = context.canvas.width / (map_width + 1);
-    var y_step = context.canvas.height / (map_height + 1);
+    const map_width = bottom_right.x - top_left.x;
+    const map_height = bottom_right.y - top_left.y;
+    let x_step = context.canvas.width / (scale * (map_width + 1));
+    let y_step = context.canvas.height / (scale * (map_height + 1));
 
-    var points = [];
+    let points = [];
 
-    for (var i = 0; i <= map_width; i++) {
-      for (var j = 0; j <= map_height; j++) {
+    for (let i = 0; i <= map_width; i++) {
+      for (let j = 0; j <= map_height; j++) {
         context.fillStyle = "#e74c3c";
-        var center = getTileCenter(props.top_left.x, i, props.top_left.y, j, x_step, y_step);
+        let center = getTileCenter(top_left.x, i, top_left.y, j, x_step, y_step);
 
         points.push([Math.round(center.x), Math.round(center.y)]);
 
         context.beginPath();
-        //context.arc(center.x, center.y, 2, 0, 2 * Math.PI);
+        context.arc(center.x, center.y, 2, 0, 2 * Math.PI);
         context.fill();
         context.closePath();
       }
     }
 
     const voronoi = Delaunay.from(points).voronoi([0, 0, canvas.width, canvas.height]);
-    console.log(voronoi);
     context.beginPath();
     context.strokeStyle = "#ffffff";
-    context.fillStyle = "#e74c3c";
-    for (var cell = 0; cell < points.length; cell++) {
+    context.fillStyle = "#000000";
+    for (let cell = 0; cell < points.length; cell++) {
       voronoi.renderCell(cell, context);
     }
     context.fill();
     context.stroke();
-    
+
     context.closePath();
 
-  }, [props.bottom_right, props.top_left])
+  }, [bottom_right, top_left])
 
-  return <canvas width={window.innerWidth} height={window.innerHeight}
-    className="map" ref={canvasRef} {...props} />
+  return <canvas className="map" ref={canvasRef} />
 }
 
 function getTileCenter(i_prefix, i, j_prefix, j, tile_width, tile_height) {
   const x = i + i_prefix;
   const y = j + j_prefix;
-  var alpha = ((x * 16807 + y * y * 37 + 509 ^ x + 71 ^ (y - 27)) % tile_width + 881) % tile_width;
-  var beta = (((x & 1) * (y + 71) * 389 + y * 601 + 127 ^ (x - 27)) % tile_height + 439) % tile_height;
+  let alpha = ((x * 16807 + y * y * 37 + 509 ^ x + 71 ^ (y - 27)) % tile_width + 881) % tile_width;
+  let beta = (((x & 1) * (y + 71) * 389 + y * 601 + 127 ^ (x - 27)) % tile_height + 439) % tile_height;
   return { x: i * tile_width + alpha % tile_width, y: j * tile_height + beta % tile_height };
+}
+
+export function getDimensions(center, plot_width) {
+  const width_plots_amount = window.innerWidth / plot_width;
+  const height_plots_amount = window.innerHeight / (plot_width / 2);
+  return {
+    bottom_right: { x: center.x - width_plots_amount / 2, y: center.y - height_plots_amount / 2 },
+    top_left: { x: center.x + width_plots_amount / 2, y: center.y + height_plots_amount / 2 }
+  };
 }
 
 export default MapCanvas
