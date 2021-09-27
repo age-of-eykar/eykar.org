@@ -23,7 +23,7 @@ function MapCanvas({ blurry, bottom_right, top_left }) {
       cell = findCell(context, e.offsetX, e.offsetY);
       if (drew[0] !== cell) {
         drew.push(cell);
-        drawCell(context,cell, '#ff0000');
+        drawCell(context, cell, '#ff0000');
       }
       if (drew.length > 1) {
         drawCell(context, drew[0], '#1C1709');
@@ -32,11 +32,11 @@ function MapCanvas({ blurry, bottom_right, top_left }) {
       console.log(drew);
     });
 
-    /*
+    
     canvas.addEventListener('mouseout', e => {
-      drawCell(context, e.offsetX, e.offsetY, '#1C1709');
+      drawCell(context, drew[0], '#1C1709');
     });
-    */
+    
 
     function findCell(context, x, y) {
       let cell = 0;
