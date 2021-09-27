@@ -29,14 +29,13 @@ function MapCanvas({ blurry, bottom_right, top_left }) {
         drawCell(context, drew[0], '#1C1709');
         drew.shift();
       }
-      console.log(drew);
     });
 
-    
+
     canvas.addEventListener('mouseout', e => {
       drawCell(context, drew[0], '#1C1709');
     });
-    
+
 
     function findCell(context, x, y) {
       let cell = 0;
@@ -56,29 +55,34 @@ function MapCanvas({ blurry, bottom_right, top_left }) {
       context.closePath();
     }
 
-
     const map_width = bottom_right.x - top_left.x;
     const map_height = bottom_right.y - top_left.y;
     let x_step = context.canvas.width / (scale * (map_width + 1));
     let y_step = context.canvas.height / (scale * (map_height + 1));
 
-    let points = [];
+    let Iterator = {
+      _i: -1,
 
-    for (let i = -1; i <= map_width+1; i++) {
-      for (let j = -1; j <= map_height+1; j++) {
-        context.fillStyle = "#e74c3c";
-        let center = getTileCenter(top_left.x, i, top_left.y, j, x_step, y_step);
+      [Symbol.iterator]() {
+        this.current = -1;
+        return this;
+      },
 
-        points.push([Math.round(center.x), Math.round(center.y)]);
-
-        context.beginPath();
-        //context.arc(center.x, center.y, 2, 0, 2 * Math.PI);
-        context.fill();
-        context.closePath();
+      next() {
+        let center = getTileCenter(top_left.x, this._i, top_left.y, this.current, x_step, y_step);
+        
+        if (this.current >= map_height + 1) {
+          this._i++;
+          this.current = -1;
+          return { done: false, value: [center.x, center.y] };
+        } else {
+          this.current++;
+          return { done: this._i > map_width + 1, value: [center.x, center.y] };
+        }
       }
-    }
+    };
 
-    const voronoi = Delaunay.from(points).voronoi([0, 0, canvas.width, canvas.height]);
+    const voronoi = Delaunay.from(Iterator).voronoi([0, 0, canvas.width, canvas.height]);
     context.beginPath();
     context.strokeStyle = "#ffffff";
     context.fillStyle = "#000000";
@@ -87,6 +91,7 @@ function MapCanvas({ blurry, bottom_right, top_left }) {
     context.stroke();
 
     context.closePath();
+
 
   }, [bottom_right, top_left])
 
