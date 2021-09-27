@@ -64,8 +64,8 @@ function MapCanvas({ blurry, bottom_right, top_left }) {
 
     let points = [];
 
-    for (let i = 0; i <= map_width; i++) {
-      for (let j = 0; j <= map_height; j++) {
+    for (let i = -1; i <= map_width+1; i++) {
+      for (let j = -1; j <= map_height+1; j++) {
         context.fillStyle = "#e74c3c";
         let center = getTileCenter(top_left.x, i, top_left.y, j, x_step, y_step);
 

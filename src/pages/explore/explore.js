@@ -5,7 +5,7 @@ import debounce from "debounce";
 
 function Explore() {
 
-  const dimensions = getDimensions({ x: 1000, y: 1005 }, 48);
+  const dimensions = getDimensions({ x: 0, y: 0 }, 48);
   const [key, setKey] = useState(0);
   useEffect(() => {
     const handler = debounce(() => setKey((oldValue) => oldValue + 1), 20);
