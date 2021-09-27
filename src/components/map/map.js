@@ -16,18 +16,21 @@ function MapCanvas({ blurry, bottom_right, top_left }) {
     const context = canvas.getContext('2d')
     context.scale(scale, scale);
 
-    let drew = [];
+    let drew = [0];
+    let cell;
 
     canvas.addEventListener('mousemove', e => {
-      drew.push(findCell(context, e.offsetX, e.offsetY));
-      drawCell(context,drew[drew.length-1], '#ff0000');
-      if (drew.length > 1 && drew[0] !== drew[1]) {
+      cell = findCell(context, e.offsetX, e.offsetY);
+      if (drew[0] !== cell) {
+        drew.push(cell);
+        drawCell(context,cell, '#ff0000');
+      }
+      if (drew.length > 1) {
         drawCell(context, drew[0], '#1C1709');
         drew.shift();
       }
+      console.log(drew);
     });
-
-    
 
     /*
     canvas.addEventListener('mouseout', e => {
