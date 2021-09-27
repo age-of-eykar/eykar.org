@@ -16,24 +16,40 @@ function MapCanvas({ blurry, bottom_right, top_left }) {
     const context = canvas.getContext('2d')
     context.scale(scale, scale);
 
-    let isInteracting = true;
-
+    let drew = [];
 
     canvas.addEventListener('mousemove', e => {
-      if (isInteracting === true) {
-        drawCell(context, e.offsetX, e.offsetY);
+      drew.push(findCell(context, e.offsetX, e.offsetY));
+      drawCell(context,drew[drew.length-1], '#ff0000');
+      if (drew.length > 1 && drew[0] !== drew[1]) {
+        drawCell(context, drew[0], '#1C1709');
+        drew.shift();
       }
     });
 
-    function drawCell(context, x, y) {
-      context.beginPath();
-      context.fillStyle = '#ff0000';
+    
+
+    /*
+    canvas.addEventListener('mouseout', e => {
+      drawCell(context, e.offsetX, e.offsetY, '#1C1709');
+    });
+    */
+
+    function findCell(context, x, y) {
       let cell = 0;
       while (!voronoi.contains(cell, x, y)) {
         cell++;
       }
+      return cell;
+    }
+
+    function drawCell(context, cell, color) {
+      context.beginPath();
+      context.fillStyle = color;
+      context.strokeStyle = "#ffffff";
       voronoi.renderCell(cell, context);
       context.fill();
+      context.stroke();
       context.closePath();
     }
 
@@ -53,7 +69,7 @@ function MapCanvas({ blurry, bottom_right, top_left }) {
         points.push([Math.round(center.x), Math.round(center.y)]);
 
         context.beginPath();
-        context.arc(center.x, center.y, 2, 0, 2 * Math.PI);
+        //context.arc(center.x, center.y, 2, 0, 2 * Math.PI);
         context.fill();
         context.closePath();
       }
@@ -63,9 +79,7 @@ function MapCanvas({ blurry, bottom_right, top_left }) {
     context.beginPath();
     context.strokeStyle = "#ffffff";
     context.fillStyle = "#000000";
-    for (let cell = 0; cell < points.length; cell++) {
-      voronoi.renderCell(cell, context);
-    }
+    voronoi.render(context);
     context.fill();
     context.stroke();
 
