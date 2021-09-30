@@ -20,6 +20,7 @@ nav.header {
 @media (max-width: 700px) {
     nav.header {
         width        : 100%;
+        left         : 0px;
         border-radius: 0px 0px 12px 12px;
     }
 
