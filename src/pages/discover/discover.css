@@ -12,6 +12,7 @@
 .cards {
   display        : flex;
   justify-content: center;
+  margin-top     : 90px;
 }
 
 .discover.bigcard {
@@ -26,7 +27,6 @@
 @media (max-width: 1240px) {
   .cards {
     cursor        : default;
-    margin-top    : 30px;
     align-items   : center;
     flex-direction: column;
   }
@@ -117,10 +117,6 @@
 
   .discover.bigcard {
     width: 100%;
-  }
-
-  .cards {
-    margin-top: 30px;
   }
 
   .discover.card {
