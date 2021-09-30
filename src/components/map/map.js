@@ -118,6 +118,9 @@ function MapCanvas({ initialBottomRight, initialTopLeft }) {
         setBottomRight({ x: bottomRight.x + 1, y: bottomRight.y });
         setTopLeft({ x: topLeft.x + 1, y: topLeft.y });
         break;
+
+      default:
+        break;
     }
   }
 
