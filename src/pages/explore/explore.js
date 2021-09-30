@@ -16,7 +16,7 @@ function Explore() {
   return (
     <div className="">
       <Header />
-      <MapCanvas key={key} top_left={dimensions.bottom_right} bottom_right={dimensions.top_left} />
+      <MapCanvas key={key} initialTopLeft={dimensions.topLeft} initialBottomRight={dimensions.bottomRight} />
     </div>
   );
 

@@ -1,12 +1,14 @@
 import { Delaunay } from "d3-delaunay"
 import "./map.css"
-import React, { useRef, useEffect } from 'react'
+import React, { useRef, useEffect, useState } from 'react'
 
 
 
-function MapCanvas({ blurry, bottom_right, top_left }) {
+function MapCanvas({ initialBottomRight, initialTopLeft }) {
 
   const canvasRef = useRef(null)
+  const [bottomRight, setBottomRight] = useState(initialBottomRight);
+  const [topLeft, setTopLeft] = useState(initialTopLeft);
 
   useEffect(() => {
     const scale = window.devicePixelRatio;
@@ -20,7 +22,7 @@ function MapCanvas({ blurry, bottom_right, top_left }) {
     let cell;
 
     canvas.addEventListener('mousemove', e => {
-      cell = findCell(context, e.offsetX, e.offsetY);
+      cell = findCell(e.offsetX, e.offsetY);
       if (drew[0] !== cell) {
         drew.push(cell);
         drawCell(context, cell, '#ff0000');
@@ -37,11 +39,10 @@ function MapCanvas({ blurry, bottom_right, top_left }) {
     });
 
 
-    function findCell(context, x, y) {
+    function findCell(x, y) {
       let cell = 0;
-      while (!voronoi.contains(cell, x, y)) {
+      while (!voronoi.contains(cell, x, y))
         cell++;
-      }
       return cell;
     }
 
@@ -55,8 +56,8 @@ function MapCanvas({ blurry, bottom_right, top_left }) {
       context.closePath();
     }
 
-    const map_width = bottom_right.x - top_left.x;
-    const map_height = bottom_right.y - top_left.y;
+    const map_width = bottomRight.x - topLeft.x;
+    const map_height = bottomRight.y - topLeft.y;
     let x_step = context.canvas.width / (scale * (map_width + 1));
     let y_step = context.canvas.height / (scale * (map_height + 1));
 
@@ -69,8 +70,8 @@ function MapCanvas({ blurry, bottom_right, top_left }) {
       },
 
       next() {
-        let center = getTileCenter(top_left.x, this._i, top_left.y, this.current, x_step, y_step);
-        
+        let center = getTileCenter(topLeft.x, this._i, topLeft.y, this.current, x_step, y_step);
+
         if (this.current >= map_height + 1) {
           this._i++;
           this.current = -1;
@@ -93,9 +94,35 @@ function MapCanvas({ blurry, bottom_right, top_left }) {
     context.closePath();
 
 
-  }, [bottom_right, top_left])
+  }, [bottomRight, topLeft])
 
-  return <canvas className="map" ref={canvasRef} />
+  function onKeyPressed(event) {
+    switch (event.key) {
+
+      case "ArrowDown":
+        setBottomRight({ x: bottomRight.x, y: bottomRight.y + 1 });
+        setTopLeft({ x: topLeft.x, y: topLeft.y + 1 });
+        break;
+
+      case "ArrowUp":
+        setBottomRight({ x: bottomRight.x, y: bottomRight.y - 1 });
+        setTopLeft({ x: topLeft.x, y: topLeft.y - 1 });
+        break;
+
+      case "ArrowLeft":
+        setBottomRight({ x: bottomRight.x - 1, y: bottomRight.y });
+        setTopLeft({ x: topLeft.x - 1, y: topLeft.y });
+        break;
+
+      case "ArrowRight":
+        setBottomRight({ x: bottomRight.x + 1, y: bottomRight.y });
+        setTopLeft({ x: topLeft.x + 1, y: topLeft.y });
+        break;
+    }
+  }
+
+  return <canvas className="map" onKeyDown={onKeyPressed}
+    tabIndex={0} ref={canvasRef} />
 }
 
 function getTileCenter(i_prefix, i, j_prefix, j, tile_width, tile_height) {
@@ -110,8 +137,8 @@ export function getDimensions(center, plot_width) {
   const width_plots_amount = window.innerWidth / plot_width;
   const height_plots_amount = window.innerHeight / (plot_width / 2);
   return {
-    bottom_right: { x: center.x - width_plots_amount / 2, y: center.y - height_plots_amount / 2 },
-    top_left: { x: center.x + width_plots_amount / 2, y: center.y + height_plots_amount / 2 }
+    topLeft: { x: center.x - width_plots_amount / 2, y: center.y - height_plots_amount / 2 },
+    bottomRight: { x: center.x + width_plots_amount / 2, y: center.y + height_plots_amount / 2 }
   };
 }
 
