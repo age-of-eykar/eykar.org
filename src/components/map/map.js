@@ -21,8 +21,8 @@ function MapCanvas({ initialBottomRight, initialTopLeft }) {
     let drew = [0];
     let cell;
 
-    canvas.addEventListener('mousemove', e => {
-      cell = findCell(e.offsetX, e.offsetY);
+    function handleMouseMove(event) {
+      cell = findCell(event.offsetX, event.offsetY);
       if (drew[0] !== cell) {
         drew.push(cell);
         drawCell(context, cell, '#ff0000');
@@ -31,12 +31,15 @@ function MapCanvas({ initialBottomRight, initialTopLeft }) {
         drawCell(context, drew[0], '#1C1709');
         drew.shift();
       }
-    });
+      console.log(drew);
+    }
 
-
-    canvas.addEventListener('mouseout', e => {
+    function handleMouseOut(e) {
       drawCell(context, drew[0], '#1C1709');
-    });
+    }
+
+    canvas.addEventListener('mousemove', handleMouseMove);
+    canvas.addEventListener('mouseout', handleMouseOut);
 
 
     function findCell(x, y) {
@@ -93,7 +96,10 @@ function MapCanvas({ initialBottomRight, initialTopLeft }) {
 
     context.closePath();
 
-
+    return () => {
+      canvas.removeEventListener('mousemove', handleMouseMove) 
+      canvas.removeEventListener('mouseout', handleMouseOut)
+    }
   }, [bottomRight, topLeft])
 
   function onKeyPressed(event) {
