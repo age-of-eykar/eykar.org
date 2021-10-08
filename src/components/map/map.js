@@ -135,9 +135,7 @@ function MapCanvas({ initialBottomRight, initialTopLeft }) {
 }
 
 function getTileCenter(i_prefix, i, j_prefix, j, tile_width, tile_height) {
-  const x = i + i_prefix;
-  const y = j + j_prefix;
-  const output = lcg(szudzik(x, y), 2);
+  const output = lcg(szudzik(i + i_prefix, j + j_prefix), 2);
   let alpha = output % tile_width;
   let beta = lcg(output) % tile_height;
   return { x: i * tile_width + alpha % tile_width, y: j * tile_height + beta % tile_height };
