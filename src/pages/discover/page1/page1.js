@@ -1,7 +1,7 @@
 import "../discover.css";
 
-import firstIllustration from '../../../img/stuff1.png';
-import secondIllustration from '../../../img/stuff2.png';
+import firstIllustration from '../../../img/stuff1.webp';
+import secondIllustration from '../../../img/stuff2.webp';
 
 
 function Page1() {
