@@ -1,7 +1,7 @@
 import { Delaunay } from "d3-delaunay"
 import "./map.css"
-import React, { useRef, useEffect, useState } from 'react'
-
+import React, { useRef, useEffect, useState } from "react"
+import { szudzik, lcg } from "../../utils/deterministic"
 
 
 function MapCanvas({ initialBottomRight, initialTopLeft }) {
@@ -97,7 +97,7 @@ function MapCanvas({ initialBottomRight, initialTopLeft }) {
     context.closePath();
 
     return () => {
-      canvas.removeEventListener('mousemove', handleMouseMove) 
+      canvas.removeEventListener('mousemove', handleMouseMove)
       canvas.removeEventListener('mouseout', handleMouseOut)
     }
   }, [bottomRight, topLeft])
@@ -137,8 +137,9 @@ function MapCanvas({ initialBottomRight, initialTopLeft }) {
 function getTileCenter(i_prefix, i, j_prefix, j, tile_width, tile_height) {
   const x = i + i_prefix;
   const y = j + j_prefix;
-  let alpha = ((x * 16807 + y * y * 37 + 509 ^ x + 71 ^ (y - 27)) % tile_width + 881) % tile_width;
-  let beta = (((x & 1) * (y + 71) * 389 + y * 601 + 127 ^ (x - 27)) % tile_height + 439) % tile_height;
+  const output = lcg(szudzik(x, y), 2);
+  let alpha = output % tile_width;
+  let beta = lcg(output) % tile_height;
   return { x: i * tile_width + alpha % tile_width, y: j * tile_height + beta % tile_height };
 }
 
