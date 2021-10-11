@@ -41,7 +41,6 @@ function MapCanvas({ initialBottomRight, initialTopLeft }) {
     canvas.addEventListener('mousemove', handleMouseMove);
     canvas.addEventListener('mouseout', handleMouseOut);
 
-
     function findCell(x, y) {
       let cell = 0;
       while (!voronoi.contains(cell, x, y))
