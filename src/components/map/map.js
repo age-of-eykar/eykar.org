@@ -11,6 +11,7 @@ function MapCanvas({ initialBottomRight, initialTopLeft }) {
   const [topLeft, setTopLeft] = useState(initialTopLeft);
 
   useEffect(() => {
+
     const scale = window.devicePixelRatio;
     const canvas = canvasRef.current;
     canvas.width = canvas.clientWidth * scale;
@@ -18,9 +19,10 @@ function MapCanvas({ initialBottomRight, initialTopLeft }) {
     const context = canvas.getContext('2d')
     context.scale(scale, scale);
 
+    // Variables for cells drawing when mouse on them
     let drew = [0];
     let cell;
-
+    // function for mouse drawing
     function handleMouseMove(event) {
       cell = findCell(event.offsetX, event.offsetY);
       if (drew[0] !== cell) {
@@ -31,9 +33,8 @@ function MapCanvas({ initialBottomRight, initialTopLeft }) {
         drawCell(context, drew[0], '#1C1709');
         drew.shift();
       }
-      console.log(drew);
     }
-
+    // function when mouse out of the screen
     function handleMouseOut(e) {
       drawCell(context, drew[0], '#1C1709');
     }
@@ -41,13 +42,13 @@ function MapCanvas({ initialBottomRight, initialTopLeft }) {
     canvas.addEventListener('mousemove', handleMouseMove);
     canvas.addEventListener('mouseout', handleMouseOut);
 
+    // sub fonctions for cell drawing
     function findCell(x, y) {
       let cell = 0;
       while (!voronoi.contains(cell, x, y))
         cell++;
       return cell;
     }
-
     function drawCell(context, cell, color) {
       context.beginPath();
       context.fillStyle = color;
@@ -58,6 +59,7 @@ function MapCanvas({ initialBottomRight, initialTopLeft }) {
       context.closePath();
     }
 
+    
     const map_width = bottomRight.x - topLeft.x;
     const map_height = bottomRight.y - topLeft.y;
     let x_step = context.canvas.width / (scale * (map_width + 1));
@@ -85,14 +87,14 @@ function MapCanvas({ initialBottomRight, initialTopLeft }) {
       }
     };
 
+  
+
     const voronoi = Delaunay.from(Iterator).voronoi([0, 0, canvas.width, canvas.height]);
     context.beginPath();
     context.strokeStyle = "#ffffff";
-    context.fillStyle = "#000000";
     voronoi.render(context);
     context.fill();
     context.stroke();
-
     context.closePath();
 
     return () => {
