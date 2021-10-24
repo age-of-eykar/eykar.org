@@ -87,6 +87,10 @@
   margin-bottom : 20px;
 }
 
+.discover.card a {
+  color: #FFFFFF;
+}
+
 .discover.card img {
   border-radius: 0px 22px 22px 0px;
 }
