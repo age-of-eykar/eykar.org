@@ -43,6 +43,17 @@ function MapCanvas({ initialBottomRight, initialTopLeft }) {
       drawCell(context, drew[0], '#1C1709');
     }
 
+    function handleMouseWheel(event) {
+      if (event.deltaY > 0)
+        console.log("Zoom", bottomRight, topLeft);
+    //    setTopLeft(topLeft + 0.5);
+      //  setBottomRight(bottomRight - 0.5);
+      if (event.deltaY < 0)
+        console.log("DeZoom");
+      event.preventDefault();
+    }
+
+    canvas.addEventListener('mousewheel', handleMouseWheel, false);
     canvas.addEventListener('mousemove', handleMouseMove);
     canvas.addEventListener('mouseout', handleMouseOut);
 
