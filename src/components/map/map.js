@@ -44,10 +44,15 @@ function MapCanvas({ initialBottomRight, initialTopLeft }) {
     }
 
     function handleMouseWheel(event) {
-      if (event.deltaY > 0)
-        console.log("Zoom", bottomRight, topLeft);
-    //    setTopLeft(topLeft + 0.5);
-      //  setBottomRight(bottomRight - 0.5);
+      const mapWidth = bottomRight.x - topLeft.x;
+      const mapHeight = bottomRight.y - topLeft.y;
+
+      if (event.deltaY > 0) {
+        setBottomRight({ x: bottomRight.x - 0.05, y: bottomRight.y - 0.05 });
+        setTopLeft({ x: topLeft.x + 0.5, y: topLeft.y + 0.5 });
+        console.log(mapWidth, mapHeight);
+        // setTopLeft(topLeft + 0.5);        
+      }
       if (event.deltaY < 0)
         console.log("DeZoom");
       event.preventDefault();
@@ -114,6 +119,7 @@ function MapCanvas({ initialBottomRight, initialTopLeft }) {
     context.closePath();
 
     return () => {
+      canvas.removeEventListener('mousewheel', handleMouseWheel)
       canvas.removeEventListener('mousemove', handleMouseMove)
       canvas.removeEventListener('mouseout', handleMouseOut)
     }
