@@ -9,6 +9,10 @@ function MapCanvas({ initialBottomRight, initialTopLeft }) {
   const canvasRef = useRef(null)
   const [bottomRight, setBottomRight] = useState(initialBottomRight);
   const [topLeft, setTopLeft] = useState(initialTopLeft);
+  const [xPrefix, setXPrefix] = useState(0);
+  const [yPrefix, setYPrefix] = useState(0);
+  let xStep;
+  let yStep;
 
   useEffect(() => {
 
@@ -59,11 +63,11 @@ function MapCanvas({ initialBottomRight, initialTopLeft }) {
       context.closePath();
     }
 
-    
-    const map_width = bottomRight.x - topLeft.x;
-    const map_height = bottomRight.y - topLeft.y;
-    let x_step = context.canvas.width / (scale * (map_width + 1));
-    let y_step = context.canvas.height / (scale * (map_height + 1));
+
+    const mapWidth = bottomRight.x - topLeft.x;
+    const mapHeight = bottomRight.y - topLeft.y;
+    xStep = context.canvas.width / (scale * (mapWidth + 1));
+    yStep = context.canvas.height / (scale * (mapHeight + 1));
 
     let Iterator = {
       _i: -1,
@@ -74,20 +78,21 @@ function MapCanvas({ initialBottomRight, initialTopLeft }) {
       },
 
       next() {
-        let center = getTileCenter(topLeft.x, this._i, topLeft.y, this.current, x_step, y_step);
+        let center = getTileCenter(topLeft.x, this._i, topLeft.y, this.current, xStep, yStep,
+          xPrefix, yPrefix);
 
-        if (this.current >= map_height + 1) {
+        if (this.current >= mapHeight + 1) {
           this._i++;
           this.current = -1;
           return { done: false, value: [center.x, center.y] };
         } else {
           this.current++;
-          return { done: this._i > map_width + 1, value: [center.x, center.y] };
+          return { done: this._i > mapWidth + 1, value: [center.x, center.y] };
         }
       }
     };
 
-  
+
 
     const voronoi = Delaunay.from(Iterator).voronoi([0, 0, canvas.width, canvas.height]);
     context.beginPath();
@@ -103,27 +108,33 @@ function MapCanvas({ initialBottomRight, initialTopLeft }) {
     }
   }, [bottomRight, topLeft])
 
+
+  function move(xPixels, yPixels) {
+    const x = parseInt((xPrefix + xPixels) / xStep);
+    const y = parseInt((yPrefix + yPixels) / yStep);
+    setXPrefix(xPrefix + xPixels - x * xStep);
+    setYPrefix(yPrefix + yPixels - y * yStep);
+    setBottomRight({ x: bottomRight.x - x, y: bottomRight.y - y });
+    setTopLeft({ x: topLeft.x - x, y: topLeft.y - y });
+  }
+
   function onKeyPressed(event) {
     switch (event.key) {
 
       case "ArrowDown":
-        setBottomRight({ x: bottomRight.x, y: bottomRight.y + 1 });
-        setTopLeft({ x: topLeft.x, y: topLeft.y + 1 });
+        move(0, -1);
         break;
 
       case "ArrowUp":
-        setBottomRight({ x: bottomRight.x, y: bottomRight.y - 1 });
-        setTopLeft({ x: topLeft.x, y: topLeft.y - 1 });
+        move(0, 1);
         break;
 
       case "ArrowLeft":
-        setBottomRight({ x: bottomRight.x - 1, y: bottomRight.y });
-        setTopLeft({ x: topLeft.x - 1, y: topLeft.y });
+        move(1, 0);
         break;
 
       case "ArrowRight":
-        setBottomRight({ x: bottomRight.x + 1, y: bottomRight.y });
-        setTopLeft({ x: topLeft.x + 1, y: topLeft.y });
+        move(-1, 0);
         break;
 
       default:
@@ -135,11 +146,11 @@ function MapCanvas({ initialBottomRight, initialTopLeft }) {
     tabIndex={0} ref={canvasRef} />
 }
 
-function getTileCenter(i_prefix, i, j_prefix, j, tile_width, tile_height) {
+function getTileCenter(i_prefix, i, j_prefix, j, tile_width, tile_height, x_shift, y_shift) {
   const output = lcg(szudzik(i + i_prefix, j + j_prefix), 2);
   let alpha = output % tile_width;
   let beta = lcg(output) % tile_height;
-  return { x: i * tile_width + alpha % tile_width, y: j * tile_height + beta % tile_height };
+  return { x: i * tile_width + alpha % tile_width + x_shift, y: j * tile_height + beta % tile_height + y_shift };
 }
 
 export function getDimensions(center, plot_width) {
