@@ -43,22 +43,37 @@ function MapCanvas({ initialBottomRight, initialTopLeft }) {
       drawCell(context, drew[0], '#1C1709');
     }
 
+
     function handleMouseWheel(event) {
       const mapWidth = bottomRight.x - topLeft.x;
       const mapHeight = bottomRight.y - topLeft.y;
+      const mousePositionX = topLeft.x + event.offsetX / canvas.clientWidth * mapWidth;
+      const mousePositionY = topLeft.y + event.offsetY / canvas.clientHeight * mapHeight;
 
-      if (event.deltaY > 0) {
-        setBottomRight({ x: bottomRight.x - 0.05, y: bottomRight.y - 0.05 });
-        setTopLeft({ x: topLeft.x + 0.5, y: topLeft.y + 0.5 });
-        console.log(mapWidth, mapHeight);
-        // setTopLeft(topLeft + 0.5);        
+      // cell = findCell(event.offsetX, event.offsetY);
+      // drew.push(cell);
+      // drawCell(context, cell, '#ff0000');
+
+      //console.log(event);
+      if (event.deltaY < 0) {
+        //console.log(mousePositionX, mousePositionY);
+        move(0, -1);
+        //setTopLeft({ x: topLeft.x + 0.05 * mousePositionX, y: topLeft.y + 0.05 * mousePositionY});
+        //setBottomRight({ x: mapWidth * 0.95 + topLeft.x, y: mapHeight * 0.95 + topLeft.y });
+      // setTopLeft(topLeft + 0.5);        
       }
-      if (event.deltaY < 0)
-        console.log("DeZoom");
-      event.preventDefault();
+      else {
+        // console.log("BEFORR", topLeft, bottomRight);
+        // setTopLeft({ x: topLeft.x * 1.05 - 0.05 * event.offsetX / canvas.width, y: topLeft.y * 1.05 - 0.05 * event.offsetY / canvas.height});
+        // setBottomRight({ x: mapWidth * 1.05 + topLeft.x, y: mapHeight * 1.05 + topLeft.y });
+        // setBottomRight({ x: bottomRight.x * 1.05, y: bottomRight.y * 1.05 });
+        // setTopLeft({ x: topLeft.x * 0.95, y: topLeft.y * 0.95 });
+        // console.log(mapWidth, mapHeight);
+      }
+      //event.preventDefault();
     }
 
-    canvas.addEventListener('mousewheel', handleMouseWheel, false);
+    canvas.addEventListener('mousewheel', handleMouseWheel);
     canvas.addEventListener('mousemove', handleMouseMove);
     canvas.addEventListener('mouseout', handleMouseOut);
 
@@ -145,6 +160,20 @@ function MapCanvas({ initialBottomRight, initialTopLeft }) {
     setTopLeft({ x: topLeft.x - x, y: topLeft.y - y });
   }
 
+  function zoomMap(zoomIn)
+  {
+    const mapWidth = bottomRight.x - topLeft.x;
+    const mapHeight = bottomRight.y - topLeft.y;
+
+    if (zoomIn) {
+      setTopLeft({ x: topLeft.x + 0.1 * mapWidth, y: topLeft.y + 0.1 * mapHeight});
+      //setBottomRight({ x: mapWidth * 0.95 + topLeft.x, y: mapHeight * 0.95 + topLeft.y });
+    } else {
+      setTopLeft({ x: topLeft.x - 0.1 * mapWidth, y: topLeft.y - 0.1 * mapHeight});
+    }
+  }
+
+
   function onKeyPressed(event) {
     switch (event.key) {
 
@@ -153,7 +182,8 @@ function MapCanvas({ initialBottomRight, initialTopLeft }) {
         break;
 
       case "ArrowUp":
-        move(0, 1);
+        zoomMap(true);
+        //move(0, 1);
         break;
 
       case "ArrowLeft":
