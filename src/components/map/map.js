@@ -128,23 +128,34 @@ function MapCanvas({ initialBottomRight, initialTopLeft }) {
     setTopLeft({ x: topLeft.x - x, y: topLeft.y - y });
   }
 
+  const [repeatStreak, setRepeatStreak] = useState(0);
   function onKeyPressed(event) {
-    switch (event.key) {
+    let i;
+    if (!event.repeat) {
+      setRepeatStreak(0);
+      i = (xStep + yStep) / 4;
+    } else {
+      setRepeatStreak(repeatStreak + 1);
+      console.log(repeatStreak);
+      i = Math.min(repeatStreak, (xStep + yStep) / 4);
+      console.log(i);
+    }
 
+    switch (event.key) {
       case "ArrowDown":
-        move(0, -1);
+        move(0, -i);
         break;
 
       case "ArrowUp":
-        move(0, 1);
+        move(0, i);
         break;
 
       case "ArrowLeft":
-        move(1, 0);
+        move(i, 0);
         break;
 
       case "ArrowRight":
-        move(-1, 0);
+        move(-i, 0);
         break;
 
       default:
