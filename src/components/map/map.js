@@ -11,7 +11,7 @@ function MapCanvas({ initialBottomRight, initialTopLeft }) {
   const [topLeft, setTopLeft] = useState(initialTopLeft);
   const [xPrefix, setXPrefix] = useState(0);
   const [yPrefix, setYPrefix] = useState(0);
-  const [zoomIn, setZoomIn] = useState({x : 0, y : 0, zoom : 0});
+  const [zoomIn, setZoomIn] = useState({ x: 0, y: 0, zoom: 0 });
   const xStep = useRef(1);
   const yStep = useRef(1);
 
@@ -50,14 +50,11 @@ function MapCanvas({ initialBottomRight, initialTopLeft }) {
       const mapHeight = bottomRight.y - topLeft.y;
       const mousePositionX = event.offsetX / canvas.clientWidth * mapWidth;
       const mousePositionY = event.offsetY / canvas.clientHeight * mapHeight;
-
-      console.log(mousePositionX + topLeft.x, mousePositionY + topLeft.y);
-      // console.log(topLeft, bottomRight);
       if (event.deltaY < 0) {
-        setZoomIn({x : mousePositionX, y : mousePositionY, zoom : 1});
+        setZoomIn({ x: mousePositionX, y: mousePositionY, zoom: 1 });
       }
       else {
-        setZoomIn({x : mousePositionX, y : mousePositionY, zoom : -1});
+        setZoomIn({ x: mousePositionX, y: mousePositionY, zoom: -1 });
       }
       event.preventDefault();
     }
@@ -101,13 +98,13 @@ function MapCanvas({ initialBottomRight, initialTopLeft }) {
         let center = getTileCenter(topLeft.x, this._i, topLeft.y, this.current, xStep.current, yStep.current,
           xPrefix, yPrefix);
 
-        if (this.current >= mapHeight + 2) {
+        if (this.current >= mapHeight + 8) {
           this._i++;
           this.current = -1;
           return { done: false, value: [center.x, center.y] };
         } else {
           this.current++;
-          return { done: this._i > mapWidth + 2, value: [center.x, center.y] };
+          return { done: this._i > mapWidth + 8, value: [center.x, center.y] };
         }
       }
     };
@@ -152,15 +149,17 @@ function MapCanvas({ initialBottomRight, initialTopLeft }) {
   if (zoomIn.zoom !== 0) {
     const mapWidth = bottomRight.x - topLeft.x;
     const mapHeight = bottomRight.y - topLeft.y;
-    setZoomIn({x : zoomIn.x, y : zoomIn.y, zoom : 0});
+    setZoomIn({ x: zoomIn.x, y: zoomIn.y, zoom: 0 });
     if (zoomIn.zoom === 1) {
-      const newTopLeft = {x : topLeft.x + 0.05 * zoomIn.x, y : topLeft.y + 0.05 * zoomIn.y};
-      const newBottomRight = {x : 0.95 * mapWidth + newTopLeft.x, y : 0.95 * mapHeight + newTopLeft.y};
+      const newTopLeft = { x: topLeft.x + 0.05 * zoomIn.x, y: topLeft.y + 0.05 * zoomIn.y };
+      const newBottomRight = { x: 0.95 * mapWidth + newTopLeft.x, y: 0.95 * mapHeight + newTopLeft.y };
+      setXPrefix(newTopLeft.x - Math.trunc(newTopLeft.x));
+      setYPrefix(newTopLeft.y - Math.trunc(newTopLeft.y));
       setTopLeft(newTopLeft);
       setBottomRight(newBottomRight);
     } else {
-      const newTopLeft = {x : topLeft.x - 0.05 * zoomIn.x, y : topLeft.y - 0.05 * zoomIn.y};
-      const newBottomRight = {x : 1.05 * mapWidth + newTopLeft.x, y : 1.05 * mapHeight + newTopLeft.y};
+      const newTopLeft = { x: topLeft.x - 0.05 * zoomIn.x, y: topLeft.y - 0.05 * zoomIn.y };
+      const newBottomRight = { x: 1.05 * mapWidth + newTopLeft.x, y: 1.05 * mapHeight + newTopLeft.y };
       setTopLeft(newTopLeft);
       setBottomRight(newBottomRight);
     }
@@ -206,10 +205,10 @@ function MapCanvas({ initialBottomRight, initialTopLeft }) {
 }
 
 function getTileCenter(i_prefix, i, j_prefix, j, tile_width, tile_height, x_shift, y_shift) {
-  const output = lcg(szudzik(i + i_prefix, j + j_prefix), 2);
-  let alpha = output % tile_width;
-  let beta = lcg(output) % tile_height;
-  return { x: i * tile_width + alpha % tile_width + x_shift, y: j * tile_height + beta % tile_height + y_shift };
+  const output = lcg(szudzik(Math.trunc(i + i_prefix), Math.trunc(j + j_prefix)), 2);
+  let alpha = ((output % 4897) * tile_width) / 4897;
+  let beta = ((lcg(output) % 4897) * tile_height) / 4897;
+  return { x: i * tile_width + alpha + x_shift, y: j * tile_height + beta + y_shift };
 }
 
 export function getDimensions(center, plot_width) {
