@@ -81,13 +81,13 @@ function MapCanvas({ initialBottomRight, initialTopLeft }) {
         let center = getTileCenter(topLeft.x, this._i, topLeft.y, this.current, xStep, yStep,
           xPrefix, yPrefix);
 
-        if (this.current >= mapHeight + 1) {
+        if (this.current >= mapHeight + 2) {
           this._i++;
           this.current = -1;
           return { done: false, value: [center.x, center.y] };
         } else {
           this.current++;
-          return { done: this._i > mapWidth + 1, value: [center.x, center.y] };
+          return { done: this._i > mapWidth + 2, value: [center.x, center.y] };
         }
       }
     };
@@ -110,10 +110,20 @@ function MapCanvas({ initialBottomRight, initialTopLeft }) {
 
 
   function move(xPixels, yPixels) {
-    const x = parseInt((xPrefix + xPixels) / xStep);
-    const y = parseInt((yPrefix + yPixels) / yStep);
-    setXPrefix(xPrefix + xPixels - x * xStep);
-    setYPrefix(yPrefix + yPixels - y * yStep);
+    let x = parseInt((xPrefix + xPixels) / xStep);
+    let y = parseInt((yPrefix + yPixels) / yStep);
+    let newPrefixX = xPrefix + xPixels - x * xStep;
+    let newPrefixY = yPrefix + yPixels - y * yStep;
+    if (2 * newPrefixX > xStep) {
+      newPrefixX -= xStep;
+      x++;
+    }
+    setXPrefix(newPrefixX);
+    if (2 * newPrefixY > yStep) {
+      newPrefixY -= yStep;
+      y++;
+    }
+    setYPrefix(newPrefixY);
     setBottomRight({ x: bottomRight.x - x, y: bottomRight.y - y });
     setTopLeft({ x: topLeft.x - x, y: topLeft.y - y });
   }
