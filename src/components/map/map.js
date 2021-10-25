@@ -11,8 +11,8 @@ function MapCanvas({ initialBottomRight, initialTopLeft }) {
   const [topLeft, setTopLeft] = useState(initialTopLeft);
   const [xPrefix, setXPrefix] = useState(0);
   const [yPrefix, setYPrefix] = useState(0);
-  let xStep;
-  let yStep;
+  const xStep = useRef(1);
+  const yStep = useRef(1);
 
   useEffect(() => {
 
@@ -66,8 +66,8 @@ function MapCanvas({ initialBottomRight, initialTopLeft }) {
 
     const mapWidth = bottomRight.x - topLeft.x;
     const mapHeight = bottomRight.y - topLeft.y;
-    xStep = context.canvas.width / (scale * (mapWidth + 1));
-    yStep = context.canvas.height / (scale * (mapHeight + 1));
+    xStep.current = context.canvas.width / (scale * (mapWidth + 1));
+    yStep.current = context.canvas.height / (scale * (mapHeight + 1));
 
     let Iterator = {
       _i: -1,
@@ -78,7 +78,7 @@ function MapCanvas({ initialBottomRight, initialTopLeft }) {
       },
 
       next() {
-        let center = getTileCenter(topLeft.x, this._i, topLeft.y, this.current, xStep, yStep,
+        let center = getTileCenter(topLeft.x, this._i, topLeft.y, this.current, xStep.current, yStep.current,
           xPrefix, yPrefix);
 
         if (this.current >= mapHeight + 2) {
@@ -106,21 +106,21 @@ function MapCanvas({ initialBottomRight, initialTopLeft }) {
       canvas.removeEventListener('mousemove', handleMouseMove)
       canvas.removeEventListener('mouseout', handleMouseOut)
     }
-  }, [bottomRight, topLeft])
+  }, [bottomRight, topLeft, xPrefix, yPrefix])
 
 
   function move(xPixels, yPixels) {
-    let x = parseInt((xPrefix + xPixels) / xStep);
-    let y = parseInt((yPrefix + yPixels) / yStep);
-    let newPrefixX = xPrefix + xPixels - x * xStep;
-    let newPrefixY = yPrefix + yPixels - y * yStep;
-    if (2 * newPrefixX > xStep) {
-      newPrefixX -= xStep;
+    let x = parseInt((xPrefix + xPixels) / xStep.current);
+    let y = parseInt((yPrefix + yPixels) / yStep.current);
+    let newPrefixX = xPrefix + xPixels - x * xStep.current;
+    let newPrefixY = yPrefix + yPixels - y * yStep.current;
+    if (2 * newPrefixX > xStep.current) {
+      newPrefixX -= xStep.current;
       x++;
     }
     setXPrefix(newPrefixX);
-    if (2 * newPrefixY > yStep) {
-      newPrefixY -= yStep;
+    if (2 * newPrefixY > yStep.current) {
+      newPrefixY -= yStep.current;
       y++;
     }
     setYPrefix(newPrefixY);
@@ -133,11 +133,11 @@ function MapCanvas({ initialBottomRight, initialTopLeft }) {
     let i;
     if (!event.repeat) {
       setRepeatStreak(0);
-      i = (xStep + yStep) / 4;
+      i = (xStep.current + yStep.current) / 4;
     } else {
       setRepeatStreak(repeatStreak + 1);
       console.log(repeatStreak);
-      i = Math.min(repeatStreak, (xStep + yStep) / 4);
+      i = Math.min(repeatStreak, (xStep.current + yStep.current) / 4);
       console.log(i);
     }
 
