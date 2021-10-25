@@ -11,6 +11,7 @@ function MapCanvas({ initialBottomRight, initialTopLeft }) {
   const [topLeft, setTopLeft] = useState(initialTopLeft);
   const [xPrefix, setXPrefix] = useState(0);
   const [yPrefix, setYPrefix] = useState(0);
+  const [zoomIn, setZoomIn] = useState({x : 0, y : 0, zoom : 0});
   const xStep = useRef(1);
   const yStep = useRef(1);
 
@@ -43,6 +44,25 @@ function MapCanvas({ initialBottomRight, initialTopLeft }) {
       drawCell(context, drew[0], '#1C1709');
     }
 
+
+    function handleMouseWheel(event) {
+      const mapWidth = bottomRight.x - topLeft.x;
+      const mapHeight = bottomRight.y - topLeft.y;
+      const mousePositionX = event.offsetX / canvas.clientWidth * mapWidth;
+      const mousePositionY = event.offsetY / canvas.clientHeight * mapHeight;
+
+      console.log(mousePositionX + topLeft.x, mousePositionY + topLeft.y);
+      // console.log(topLeft, bottomRight);
+      if (event.deltaY < 0) {
+        setZoomIn({x : mousePositionX, y : mousePositionY, zoom : 1});
+      }
+      else {
+        setZoomIn({x : mousePositionX, y : mousePositionY, zoom : -1});
+      }
+      event.preventDefault();
+    }
+
+    canvas.addEventListener('mousewheel', handleMouseWheel);
     canvas.addEventListener('mousemove', handleMouseMove);
     canvas.addEventListener('mouseout', handleMouseOut);
 
@@ -103,6 +123,7 @@ function MapCanvas({ initialBottomRight, initialTopLeft }) {
     context.closePath();
 
     return () => {
+      canvas.removeEventListener('mousewheel', handleMouseWheel)
       canvas.removeEventListener('mousemove', handleMouseMove)
       canvas.removeEventListener('mouseout', handleMouseOut)
     }
@@ -126,6 +147,23 @@ function MapCanvas({ initialBottomRight, initialTopLeft }) {
     setYPrefix(newPrefixY);
     setBottomRight({ x: bottomRight.x - x, y: bottomRight.y - y });
     setTopLeft({ x: topLeft.x - x, y: topLeft.y - y });
+  }
+
+  if (zoomIn.zoom !== 0) {
+    const mapWidth = bottomRight.x - topLeft.x;
+    const mapHeight = bottomRight.y - topLeft.y;
+    setZoomIn({x : zoomIn.x, y : zoomIn.y, zoom : 0});
+    if (zoomIn.zoom === 1) {
+      const newTopLeft = {x : topLeft.x + 0.05 * zoomIn.x, y : topLeft.y + 0.05 * zoomIn.y};
+      const newBottomRight = {x : 0.95 * mapWidth + newTopLeft.x, y : 0.95 * mapHeight + newTopLeft.y};
+      setTopLeft(newTopLeft);
+      setBottomRight(newBottomRight);
+    } else {
+      const newTopLeft = {x : topLeft.x - 0.05 * zoomIn.x, y : topLeft.y - 0.05 * zoomIn.y};
+      const newBottomRight = {x : 1.05 * mapWidth + newTopLeft.x, y : 1.05 * mapHeight + newTopLeft.y};
+      setTopLeft(newTopLeft);
+      setBottomRight(newBottomRight);
+    }
   }
 
   const [repeatStreak, setRepeatStreak] = useState(0);
