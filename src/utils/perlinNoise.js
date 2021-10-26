@@ -79,11 +79,24 @@ function cubicInterpolate(p1, p2, p3, p4) {
     return [p1, a2, a3, a4];
 }
 
-function perlin1(octaves, frequency, persistence, x) {
+/*
+Explication des variables :
+- octaves :
+    nombre d'appels a la fonction de bruit lisse
+- frequence :
+    c'est l'inverse du pas, l'intervale entre deux points definis  par le bruit
+- persistence :
+    controle de la variation d'amplitude des courbes (part d'une courbe dans la courbe finale)
+- amplitude :
+    c'est l'ecart maximal en ordonne entre les points de la courbe
+
+*/
+
+function perlin1(octaves, frequency, persistence, x, y) {
     let r = 0., f = frequency, amplitude = 1.;
 
     for (let i = 0; i < octaves; i++) {
-        r += smoothNoiseCosine(x * f) * amplitude;
+        r += smoothNoiseCosine(x * f, y * f) * amplitude;
         amplitude *= persistence;
         f *= 2;
     }
@@ -97,8 +110,13 @@ function perlinTest(tab) {
     let randTab = []
     for (let i = 0; i < sizeX; i++) {
         for (let j= 0; j < sizeY; j++) {
-            randTab.push();
+            randTab.push(perlin1(1, 1, 1, i, j));
         }
     }
     return randTab;
+}
+
+// fonction polynomiale d'odre 5, derivees 1 et 2 nulles
+function polynomial5F(t) {
+    return 6*Math.pow(t, 5) - 15*Math.pow(t, 4) + 10*Math.pow(t, 3);
 }
