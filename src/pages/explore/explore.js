@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import Header from "../../components/header/header";
-import MapCanvas, { getDimensions } from "../../components/map/map";
+import MapCanvas from "../../components/map/map";
+import { getDimensions } from "../../components/map/voronoiBis";
 import debounce from "debounce";
 
 function Explore() {

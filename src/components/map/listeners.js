@@ -44,7 +44,11 @@ export class MListeners {
 }
 
 export class KListeners {
-    constructor(xStep, yStep, setRepeatStreak, repeatStreak, xPrefix, yPrefix, setXPrefix, setYPrefix, bottomRight, setBottomRight, topLeft, setTopLeft) {
+    constructor(
+        xStep, yStep, setRepeatStreak, repeatStreak, xPrefix, yPrefix, setXPrefix, setYPrefix,
+        bottomRight, setBottomRight, topLeft, setTopLeft
+      ) 
+    {
         this.xStep = xStep;
         this.yStep = yStep;
         this.setRepeatStreak = setRepeatStreak;
