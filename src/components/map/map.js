@@ -2,7 +2,7 @@ import { Delaunay } from "d3-delaunay"
 import "./map.css"
 import React, { useRef, useEffect, useState } from "react"
 import { szudzik, lcg } from "../../utils/deterministic"
-
+import Listeners from "./listeners.js"
 
 function MapCanvas({ initialBottomRight, initialTopLeft }) {
 
@@ -16,7 +16,7 @@ function MapCanvas({ initialBottomRight, initialTopLeft }) {
   const yStep = useRef(1);
 
   useEffect(() => {
-
+  
     const scale = window.devicePixelRatio;
     const canvas = canvasRef.current;
     canvas.width = canvas.clientWidth * scale;
@@ -26,60 +26,6 @@ function MapCanvas({ initialBottomRight, initialTopLeft }) {
 
     // Variables for cells drawing when mouse on them
     let drew = [0];
-    let cell;
-    // function for mouse drawing
-    function handleMouseMove(event) {
-      cell = findCell(event.offsetX, event.offsetY);
-      if (drew[0] !== cell) {
-        drew.push(cell);
-        drawCell(context, cell, '#ff0000');
-      }
-      if (drew.length > 1) {
-        drawCell(context, drew[0], '#1C1709');
-        drew.shift();
-      }
-    }
-    // function when mouse out of the screen
-    function handleMouseOut(e) {
-      drawCell(context, drew[0], '#1C1709');
-    }
-
-
-    function handleMouseWheel(event) {
-      const mapWidth = bottomRight.x - topLeft.x;
-      const mapHeight = bottomRight.y - topLeft.y;
-      const mousePositionX = event.offsetX / canvas.clientWidth * mapWidth;
-      const mousePositionY = event.offsetY / canvas.clientHeight * mapHeight;
-      if (event.deltaY < 0) {
-        setZoomIn({ x: mousePositionX, y: mousePositionY, zoom: 1 });
-      }
-      else {
-        setZoomIn({ x: mousePositionX, y: mousePositionY, zoom: -1 });
-      }
-      event.preventDefault();
-    }
-
-    canvas.addEventListener('mousewheel', handleMouseWheel);
-    canvas.addEventListener('mousemove', handleMouseMove);
-    canvas.addEventListener('mouseout', handleMouseOut);
-
-    // sub fonctions for cell drawing
-    function findCell(x, y) {
-      let cell = 0;
-      while (!voronoi.contains(cell, x, y))
-        cell++;
-      return cell;
-    }
-    function drawCell(context, cell, color) {
-      context.beginPath();
-      context.fillStyle = color;
-      context.strokeStyle = "#ffffff";
-      voronoi.renderCell(cell, context);
-      context.fill();
-      context.stroke();
-      context.closePath();
-    }
-
 
     const mapWidth = bottomRight.x - topLeft.x;
     const mapHeight = bottomRight.y - topLeft.y;
@@ -109,9 +55,19 @@ function MapCanvas({ initialBottomRight, initialTopLeft }) {
       }
     };
 
-
-
     const voronoi = Delaunay.from(Iterator).voronoi([0, 0, canvas.width, canvas.height]);
+    console.log("ici c'est paris", voronoi);
+
+    const listeners = new Listeners(context, voronoi, drew, canvas, bottomRight, topLeft, setZoomIn);
+
+    const listenMouseOut = listeners.handleMouseOut.bind(listeners);
+    const listenMouseWheel = listeners.handleMouseWheel.bind(listeners);
+    const listenMouseMove = listeners.handleMouseMove.bind(listeners);
+
+    canvas.addEventListener('mousewheel', listenMouseWheel);
+    canvas.addEventListener('mousemove', listenMouseMove);
+    canvas.addEventListener('mouseout', listenMouseOut);
+
     context.beginPath();
     context.strokeStyle = "#ffffff";
     voronoi.render(context);
@@ -120,9 +76,9 @@ function MapCanvas({ initialBottomRight, initialTopLeft }) {
     context.closePath();
 
     return () => {
-      canvas.removeEventListener('mousewheel', handleMouseWheel)
-      canvas.removeEventListener('mousemove', handleMouseMove)
-      canvas.removeEventListener('mouseout', handleMouseOut)
+      canvas.removeEventListener('mousewheel', listenMouseWheel)
+      canvas.removeEventListener('mousemove', listenMouseMove)
+      canvas.removeEventListener('mouseout', listenMouseOut)
     }
   }, [bottomRight, topLeft, xPrefix, yPrefix])
 
@@ -173,9 +129,7 @@ function MapCanvas({ initialBottomRight, initialTopLeft }) {
       i = (xStep.current + yStep.current) / 4;
     } else {
       setRepeatStreak(repeatStreak + 1);
-      console.log(repeatStreak);
       i = Math.min(repeatStreak, (xStep.current + yStep.current) / 4);
-      console.log(i);
     }
 
     switch (event.key) {
