@@ -1,7 +1,7 @@
 import { findCell, drawCell } from "./voronoiBis";
 
 
-export default class Listeners {
+export class MListeners {
     constructor(context, voronoi, drew, canvas, bottomRight, topLeft, setZoomIn) {
         this.context = context;
         this.voronoi = voronoi;
@@ -29,7 +29,6 @@ export default class Listeners {
     }
     
     handleMouseWheel(event) {
-        console.log("youpi");
         const mapWidth = this.bottomRight.x - this.topLeft.x;
         const mapHeight = this.bottomRight.y - this.topLeft.y;
         const mousePositionX = event.offsetX / this.canvas.clientWidth * mapWidth;
@@ -42,4 +41,72 @@ export default class Listeners {
         }
         event.preventDefault();
     }
+}
+
+export class KListeners {
+    constructor(xStep, yStep, setRepeatStreak, repeatStreak, xPrefix, yPrefix, setXPrefix, setYPrefix, bottomRight, setBottomRight, topLeft, setTopLeft) {
+        this.xStep = xStep;
+        this.yStep = yStep;
+        this.setRepeatStreak = setRepeatStreak;
+        this.repeatStreak = repeatStreak;
+        this.xPrefix = xPrefix;
+        this.yPrefix = yPrefix;
+        this.setXPrefix = setXPrefix;
+        this.setYPrefix = setYPrefix;
+        this.bottomRight = bottomRight;
+        this.setBottomRight = setBottomRight;
+        this.topLeft = topLeft;
+        this.setTopLeft = setTopLeft;
+    }
+
+    move(xPixels, yPixels) {
+      let x = parseInt((this.xPrefix + xPixels) / this.xStep.current);
+      let y = parseInt((this.yPrefix + yPixels) / this.yStep.current);
+      let newPrefixX = this.xPrefix + xPixels - x * this.xStep.current;
+      let newPrefixY = this.yPrefix + yPixels - y * this.yStep.current;
+      if (2 * newPrefixX > this.xStep.current) {
+        newPrefixX -= this.xStep.current;
+        x++;
+      }
+      this.setXPrefix(newPrefixX);
+      if (2 * newPrefixY > this.yStep.current) {
+        newPrefixY -= this.yStep.current;
+        y++;
+      }
+      this.setYPrefix(newPrefixY);
+      this.setBottomRight({ x: this.bottomRight.x - x, y: this.bottomRight.y - y });
+      this.setTopLeft({ x: this.topLeft.x - x, y: this.topLeft.y - y });
+    }
+
+    onKeyPressed(event) {
+        let i;
+        if (!event.repeat) {
+          this.setRepeatStreak(0);
+          i = (this.xStep.current + this.yStep.current) / 4;
+        } else {
+          this.setRepeatStreak(this.repeatStreak + 1);
+          i = Math.min(this.repeatStreak, (this.xStep.current + this.yStep.current) / 4);
+        }
+    
+        switch (event.key) {
+          case "ArrowDown":
+            this.move(0, -i);
+            break;
+    
+          case "ArrowUp":
+            this.move(0, i);
+            break;
+    
+          case "ArrowLeft":
+            this.move(i, 0);
+            break;
+    
+          case "ArrowRight":
+            this.move(-i, 0);
+            break;
+    
+          default:
+            break;
+        }
+      }
 }

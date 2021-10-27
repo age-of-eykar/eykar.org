@@ -2,7 +2,7 @@ import { Delaunay } from "d3-delaunay"
 import "./map.css"
 import React, { useRef, useEffect, useState } from "react"
 import { szudzik, lcg } from "../../utils/deterministic"
-import Listeners from "./listeners.js"
+import { MListeners, KListeners} from "./listeners.js"
 
 function MapCanvas({ initialBottomRight, initialTopLeft }) {
 
@@ -23,9 +23,6 @@ function MapCanvas({ initialBottomRight, initialTopLeft }) {
     canvas.height = canvas.clientHeight * scale;
     const context = canvas.getContext('2d')
     context.scale(scale, scale);
-
-    // Variables for cells drawing when mouse on them
-    let drew = [0];
 
     const mapWidth = bottomRight.x - topLeft.x;
     const mapHeight = bottomRight.y - topLeft.y;
@@ -56,9 +53,9 @@ function MapCanvas({ initialBottomRight, initialTopLeft }) {
     };
 
     const voronoi = Delaunay.from(Iterator).voronoi([0, 0, canvas.width, canvas.height]);
-    console.log("ici c'est paris", voronoi);
+    let drew = [0];
 
-    const listeners = new Listeners(context, voronoi, drew, canvas, bottomRight, topLeft, setZoomIn);
+    const listeners = new MListeners(context, voronoi, drew, canvas, bottomRight, topLeft, setZoomIn);
 
     const listenMouseOut = listeners.handleMouseOut.bind(listeners);
     const listenMouseWheel = listeners.handleMouseWheel.bind(listeners);
@@ -82,26 +79,6 @@ function MapCanvas({ initialBottomRight, initialTopLeft }) {
     }
   }, [bottomRight, topLeft, xPrefix, yPrefix])
 
-
-  function move(xPixels, yPixels) {
-    let x = parseInt((xPrefix + xPixels) / xStep.current);
-    let y = parseInt((yPrefix + yPixels) / yStep.current);
-    let newPrefixX = xPrefix + xPixels - x * xStep.current;
-    let newPrefixY = yPrefix + yPixels - y * yStep.current;
-    if (2 * newPrefixX > xStep.current) {
-      newPrefixX -= xStep.current;
-      x++;
-    }
-    setXPrefix(newPrefixX);
-    if (2 * newPrefixY > yStep.current) {
-      newPrefixY -= yStep.current;
-      y++;
-    }
-    setYPrefix(newPrefixY);
-    setBottomRight({ x: bottomRight.x - x, y: bottomRight.y - y });
-    setTopLeft({ x: topLeft.x - x, y: topLeft.y - y });
-  }
-
   if (zoomIn.zoom !== 0) {
     const mapWidth = bottomRight.x - topLeft.x;
     const mapHeight = bottomRight.y - topLeft.y;
@@ -122,39 +99,13 @@ function MapCanvas({ initialBottomRight, initialTopLeft }) {
   }
 
   const [repeatStreak, setRepeatStreak] = useState(0);
-  function onKeyPressed(event) {
-    let i;
-    if (!event.repeat) {
-      setRepeatStreak(0);
-      i = (xStep.current + yStep.current) / 4;
-    } else {
-      setRepeatStreak(repeatStreak + 1);
-      i = Math.min(repeatStreak, (xStep.current + yStep.current) / 4);
-    }
 
-    switch (event.key) {
-      case "ArrowDown":
-        move(0, -i);
-        break;
+  const kListeners = new KListeners(
+    xStep, yStep, setRepeatStreak, repeatStreak, xPrefix, yPrefix, setXPrefix, setYPrefix,
+    bottomRight, setBottomRight, topLeft, setTopLeft
+  );
 
-      case "ArrowUp":
-        move(0, i);
-        break;
-
-      case "ArrowLeft":
-        move(i, 0);
-        break;
-
-      case "ArrowRight":
-        move(-i, 0);
-        break;
-
-      default:
-        break;
-    }
-  }
-
-  return <canvas className="map" onKeyDown={onKeyPressed}
+  return <canvas className="map" onKeyDown={kListeners.onKeyPressed.bind(kListeners)}
     tabIndex={0} ref={canvasRef} />
 }
 
