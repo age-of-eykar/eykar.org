@@ -16,7 +16,7 @@ function MapCanvas({ initialBottomRight, initialTopLeft }) {
   const yStep = useRef(1);
 
   useEffect(() => {
-  
+
     const scale = window.devicePixelRatio;
     const canvas = canvasRef.current;
     canvas.width = canvas.clientWidth * scale;
@@ -107,6 +107,22 @@ function MapCanvas({ initialBottomRight, initialTopLeft }) {
 
   return <canvas className="map" onKeyDown={kListeners.onKeyPressed.bind(kListeners)}
     tabIndex={0} ref={canvasRef} />
+}
+
+function getTileCenter(i_prefix, i, j_prefix, j, tile_width, tile_height, x_shift, y_shift) {
+  const output = lcg(szudzik(Math.trunc(i + i_prefix), Math.trunc(j + j_prefix)), 2);
+  let alpha = ((output % 64) * tile_width) / 64;
+  let beta = ((lcg(output) % 64) * tile_height) / 64;
+  return { x: i * tile_width + alpha + x_shift, y: j * tile_height + beta + y_shift };
+}
+
+export function getDimensions(center, plot_width) {
+  const width_plots_amount = window.innerWidth / plot_width;
+  const height_plots_amount = window.innerHeight / (plot_width / 2);
+  return {
+    topLeft: { x: center.x - width_plots_amount / 2, y: center.y - height_plots_amount / 2 },
+    bottomRight: { x: center.x + width_plots_amount / 2, y: center.y + height_plots_amount / 2 }
+  };
 }
 
 export default MapCanvas
