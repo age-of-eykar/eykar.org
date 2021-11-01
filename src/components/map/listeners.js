@@ -1,6 +1,5 @@
 import { findCell, drawCell } from "./voronoiBis";
 
-
 export class MListeners {
     constructor(context, voronoi, drew, canvas, bottomRight, topLeft, setZoomIn) {
         this.context = context;

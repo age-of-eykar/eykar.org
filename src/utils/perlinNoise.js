@@ -1,5 +1,9 @@
 import { szudzik, lcg } from "./deterministic"
 
+function rand(x, y) {
+    return ((lcg(szudzik(x, y, 3))%100)-50)/100;
+}
+
 function tableauTest(taille) {
     let coordArray = []
 
@@ -19,13 +23,11 @@ function tableauTest(taille) {
 - entre 7 et 9 foret -> vert fonce rgb(6,59,0)
 
 */
-function randTest(tab) {
-    const sizeX = tab.size();
-    const sizeY = tab[0].size();
+export function randTest(sizeX, sizeY) {
     let randTab = []
     for (let i = 0; i < sizeX; i++) {
         for (let j= 0; j < sizeY; j++) {
-            randTab.push(lcg(szudzik(tab[i][j], tab[i][j]), 3));
+            randTab.push(rand(i, j));
         }
     }
     return randTab;
@@ -33,17 +35,17 @@ function randTest(tab) {
 
 function cosineInterpolate(Ax, Bx, t) {
     const c = (1-Math.cos(t*Math.PI)) * 0.5;
-    return (1-c) * a+c * b;
+    return (1-c) * Ax+c * Bx;
 }
 
 function smoothNoiseCosine(x, y) {
     const int_X = Math.trunc(x), int_Y = Math.trunc(y);
     const frac_X = x - int_X; //, frac_Y = y - int_Y;
 
-    const a = lcg(szudzik(int_X, int_Y, 2));
-    const b = lcg(szudzik(int_X+1, int_Y, 2));
-    const c = lcg(szudzik(int_X, int_Y+1, 2));
-    const d = lcg(szudzik(int_X+1, int_Y+1, 2));
+    const a = rand(int_X, int_Y);
+    const b = rand(int_X+1, int_Y);
+    const c = rand(int_X, int_Y+1);
+    const d = rand(int_X+1, int_Y+1);
 
     const f = cosineInterpolate(a, b, frac_X);
     const g = cosineInterpolate(c, d, frac_X);
@@ -52,10 +54,10 @@ function smoothNoiseCosine(x, y) {
 }
 
 function smoothCubicBis(intX, intY, fracX) {
-    const v0 = lcg(szudzik(intX-1, intY, 2));
-    const v1 = lcg(szudzik(intX, intY, 2));
-    const v2 = lcg(szudzik(intX+1, intY, 2));
-    const v3 = lcg(szudzik(intX+2, intY, 2));
+    const v0 = rand(intX-1, intY);
+    const v1 = rand(intX, intY);
+    const v2 = rand(intX+1, intY);
+    const v3 = rand(intX+2, intY);
 
     return cubicInterpolate(v0, v1, v2, v3, fracX);
 }
@@ -92,25 +94,25 @@ Explication des variables :
 
 */
 
-function perlin1(octaves, frequency, persistence, x, y) {
+export function perlin1(octaves, frequency, persistence, x, y) {
     let r = 0., f = frequency, amplitude = 1.;
 
     for (let i = 0; i < octaves; i++) {
         r += smoothNoiseCosine(x * f, y * f) * amplitude;
         amplitude *= persistence;
+        //console.log("r = ", r, "persistence = ", persistence, "amplitude = ", amplitude)
         f *= 2;
     }
     
     return r * (1-persistence) / (1-amplitude);
 }
 
-function perlinTest(tab) {
-    const sizeX = tab.size();
-    const sizeY = tab[0].size();
+export function perlinTest(sizeX, sizeY) {
     let randTab = []
     for (let i = 0; i < sizeX; i++) {
         for (let j= 0; j < sizeY; j++) {
-            randTab.push(perlin1(1, 1, 1, i, j));
+            randTab.push(perlin1(3, 1, 0.5, i, j));
+            //console.log("Perlin", perlin1(1, 1, 1, i, j))
         }
     }
     return randTab;

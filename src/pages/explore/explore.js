@@ -3,6 +3,7 @@ import Header from "../../components/header/header";
 import MapCanvas from "../../components/map/map";
 import { getDimensions } from "../../components/map/voronoiBis";
 import debounce from "debounce";
+import BiomeCanvas from "../../components/map/biomes"
 
 function Explore() {
 
