@@ -7,10 +7,10 @@ export function findCell(x, y, voronoi) {
   return cell;
 }
 
-export function drawCell(context, cell, color, voronoi) {
+export function drawCell(context, cell, colorF, voronoi, colorS) {
   context.beginPath();
-  context.fillStyle = color;
-  context.strokeStyle = "#ffffff";
+  context.fillStyle = colorF;
+  context.strokeStyle = colorS;
   voronoi.renderCell(cell, context);
   context.fill();
   context.stroke();

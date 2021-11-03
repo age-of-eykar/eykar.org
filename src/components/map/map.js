@@ -1,7 +1,7 @@
 import { Delaunay } from "d3-delaunay"
 import "./map.css"
 import React, { useRef, useEffect, useState } from "react"
-import { MListeners, KListeners } from "./listeners.js"
+import { MListeners, KListeners, CListener } from "./listeners.js"
 import { getTileCenter } from "./voronoiBis.js"
 
 function MapCanvas({ initialBottomRight, initialTopLeft }) {
@@ -53,9 +53,14 @@ function MapCanvas({ initialBottomRight, initialTopLeft }) {
     };
 
     const voronoi = Delaunay.from(Iterator).voronoi([0, 0, canvas.width, canvas.height]);
-    let drew = [0];
+    let drew = 0
+    let displayed = -1
 
-    const listeners = new MListeners(context, voronoi, drew, canvas, bottomRight, topLeft, setZoomIn);
+    const listenerClick = new CListener(context, voronoi, displayed)
+    const listenMouseClick = listenerClick.handleMouseClick.bind(listenerClick)
+    canvas.addEventListener('click', listenMouseClick)
+
+    const listeners = new MListeners(context, voronoi, drew, canvas, bottomRight, topLeft, setZoomIn, displayed);
 
     const listenMouseOut = listeners.handleMouseOut.bind(listeners);
     const listenMouseWheel = listeners.handleMouseWheel.bind(listeners);
@@ -76,6 +81,7 @@ function MapCanvas({ initialBottomRight, initialTopLeft }) {
       canvas.removeEventListener('mousewheel', listenMouseWheel)
       canvas.removeEventListener('mousemove', listenMouseMove)
       canvas.removeEventListener('mouseout', listenMouseOut)
+      canvas.removeEventListener('click', listenMouseClick)
     }
   }, [bottomRight, topLeft, xPrefix, yPrefix])
 
