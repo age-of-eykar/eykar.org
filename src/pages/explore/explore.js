@@ -3,7 +3,8 @@ import Header from "../../components/header/header";
 import MapCanvas from "../../components/map/map";
 import { getDimensions } from "../../components/map/voronoiBis";
 import debounce from "debounce";
-import BiomeCanvas from "../../components/map/biomes"
+//import BiomeCanvas from "../../components/map/biomes"
+import CardCell from "../../components/map/cellCard/card"
 
 function Explore() {
 
@@ -15,10 +16,18 @@ function Explore() {
     return () => window.removeEventListener("resize", handler)
   });
 
+  const [cell, setCell] = useState(0);
+  const [coord, setCoord] = useState({ x: 0, y: 0 });
+  const childToParent = (currentCell, currentCoord) => {
+    setCell(currentCell);
+    setCoord(currentCoord);
+  }
+
   return (
     <div className="">
       <Header />
-      <MapCanvas key={key} initialTopLeft={dimensions.topLeft} initialBottomRight={dimensions.bottomRight} />
+      <MapCanvas key={key} initialTopLeft={dimensions.topLeft} initialBottomRight={dimensions.bottomRight} childToParent={childToParent} />
+      <CardCell cellNumber={cell} coord={coord}/>
     </div>
   );
 

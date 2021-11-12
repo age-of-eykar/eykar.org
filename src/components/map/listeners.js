@@ -1,7 +1,7 @@
 import { findCell, drawCell } from "./voronoiBis";
 
 export class MListeners {
-    constructor(context, voronoi, drew, canvas, bottomRight, topLeft, setZoomIn, displayed) {
+    constructor(context, voronoi, drew, canvas, bottomRight, topLeft, setZoomIn, setCell, setCoord) {
         this.context = context
         this.voronoi = voronoi
         this.drew = drew
@@ -9,15 +9,18 @@ export class MListeners {
         this.bottomRight = bottomRight
         this.topLeft = topLeft
         this.setZoomIn = setZoomIn
-        this.displayed = displayed
+        this.setCell = setCell
+        this.setCoord = setCoord
     }
 
     handleMouseMove(event) {
         const cell = findCell(event.offsetX, event.offsetY, this.voronoi);
         if (this.drew !== cell) {
             drawCell(this.context, cell, '#ff0000', this.voronoi, "#ffffff");
-            drawCell(this.context, this.drew, '#1C1709', this.voronoi);
+            drawCell(this.context, this.drew, '#1C1709', this.voronoi, "#ffffff");
             this.drew = cell
+            this.setCell(cell)
+            this.setCoord({ x: event.offsetX, y: event.offsetY })
         }
     }
     
@@ -110,31 +113,4 @@ export class KListeners {
             break;
         }
       }
-}
-
-export class CListener {
-
-  constructor(context, voronoi, displayed) {
-    this.context = context
-    this.voronoi = voronoi
-    this.displayed = displayed
-  }
-
-  handleMouseClick(event) {
-    // renvoie les coordonnees du click
-      // renvoie event.offsetX event.offsetY
-    // colorie la case en rouge fonce et les contours en rouge
-    const cell = findCell(event.offsetX, event.offsetY, this.voronoi);
-
-    // Si displayed contient le numero d'une cellule et que ce numero n'est pas le numero clique alors on de-draw
-    if (this.displayed !== cell) {
-      if (this.displayed !== -1) {
-        drawCell(this.context, this.displayed, '#1C1709', this.voronoi, '#ffffff')
-        this.displayed = -1
-      } else {     // Si displayed contient pas le numero de la cellule clique (contient -1) alors on dessine la cellule
-        this.displayed = cell
-        drawCell(this.context, this.displayed, '#8B0000', this.voronoi, '#ff0000')
-      }
-    }
-  }
 }

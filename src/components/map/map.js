@@ -4,8 +4,8 @@ import React, { useRef, useEffect, useState } from "react"
 import { MListeners, KListeners, CListener } from "./listeners.js"
 import { getTileCenter } from "./voronoiBis.js"
 
-function MapCanvas({ initialBottomRight, initialTopLeft }) {
-
+function MapCanvas({ initialBottomRight, initialTopLeft, childToParent }) {
+  
   const canvasRef = useRef(null)
   const [bottomRight, setBottomRight] = useState(initialBottomRight);
   const [topLeft, setTopLeft] = useState(initialTopLeft);
@@ -14,7 +14,9 @@ function MapCanvas({ initialBottomRight, initialTopLeft }) {
   const [zoomIn, setZoomIn] = useState({ x: 0, y: 0, zoom: 0 });
   const xStep = useRef(1);
   const yStep = useRef(1);
-
+  
+  const [cell, setCell] = useState(0);
+  const [coord, setCoord] = useState({ x: 0, y: 0 });
   useEffect(() => {
 
     const scale = window.devicePixelRatio;
@@ -40,7 +42,6 @@ function MapCanvas({ initialBottomRight, initialTopLeft }) {
       next() {
         let center = getTileCenter(topLeft.x, this._i, topLeft.y, this.current, xStep.current, yStep.current,
           xPrefix, yPrefix);
-
         if (this.current >= mapHeight + 8) {
           this._i++;
           this.current = -1;
@@ -53,14 +54,9 @@ function MapCanvas({ initialBottomRight, initialTopLeft }) {
     };
 
     const voronoi = Delaunay.from(Iterator).voronoi([0, 0, canvas.width, canvas.height]);
-    let drew = 0
-    let displayed = -1
-
-    const listenerClick = new CListener(context, voronoi, displayed)
-    const listenMouseClick = listenerClick.handleMouseClick.bind(listenerClick)
-    canvas.addEventListener('click', listenMouseClick)
-
-    const listeners = new MListeners(context, voronoi, drew, canvas, bottomRight, topLeft, setZoomIn, displayed);
+    let drew;
+  
+    const listeners = new MListeners(context, voronoi, drew, canvas, bottomRight, topLeft, setZoomIn, setCell, setCoord);
 
     const listenMouseOut = listeners.handleMouseOut.bind(listeners);
     const listenMouseWheel = listeners.handleMouseWheel.bind(listeners);
@@ -81,7 +77,6 @@ function MapCanvas({ initialBottomRight, initialTopLeft }) {
       canvas.removeEventListener('mousewheel', listenMouseWheel)
       canvas.removeEventListener('mousemove', listenMouseMove)
       canvas.removeEventListener('mouseout', listenMouseOut)
-      canvas.removeEventListener('click', listenMouseClick)
     }
   }, [bottomRight, topLeft, xPrefix, yPrefix])
 
@@ -112,7 +107,7 @@ function MapCanvas({ initialBottomRight, initialTopLeft }) {
   );
 
   return <canvas className="map" onKeyDown={kListeners.onKeyPressed.bind(kListeners)}
-    tabIndex={0} ref={canvasRef} />
+    tabIndex={0} ref={canvasRef} data={childToParent(cell, coord)}/>
 }
 
 export default MapCanvas
