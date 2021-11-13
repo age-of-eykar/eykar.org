@@ -4,35 +4,6 @@ function rand(x, y) {
     return ((lcg(szudzik(x, y, 3))%100)-50)/50;
 }
 
-function tableauTest(taille) {
-    let coordArray = []
-
-    for (let i = 0; i < taille; i++) {
-        for(let j = 0; j < taille; j++) {
-            coordArray.push([i, j]);
-        }
-    }
-
-    return coordArray;
-}
-
-/*  Exemples de biomes sur 10 :
-
-- entre 0 et 3 plaines -> jaune sable rgb(255,222,125)
-- entre 4 et 6 montagnes -> marron fonce rgb(123,7,7)
-- entre 7 et 9 foret -> vert fonce rgb(6,59,0)
-
-*/
-function randTest(sizeX, sizeY) {
-    let randTab = []
-    for (let i = 0; i < sizeX; i++) {
-        for (let j= 0; j < sizeY; j++) {
-            randTab.push(rand(i, j));
-        }
-    }
-    return randTab;
-}
-
 function cosineInterpolate(Ax, Bx, t) {
     const c = (1-Math.cos(t*Math.PI)) * 0.5;
     return (1. - c) * Ax + c * Bx;
@@ -130,13 +101,7 @@ export function perlinTest(sizeX, sizeY) {
     for (let i = 0; i < sizeX; i++) {
         for (let j= 0; j < sizeY; j++) {
             randTab.push(perlin1(3, 1, 0.95, i, j));
-            //console.log("Perlin", perlin1(1, 1, 1, i, j))
         }
     }
     return randTab;
-}
-
-// fonction polynomiale d'odre 5, derivees 1 et 2 nulles
-function polynomial5F(t) {
-    return 6*Math.pow(t, 5) - 15*Math.pow(t, 4) + 10*Math.pow(t, 3);
 }

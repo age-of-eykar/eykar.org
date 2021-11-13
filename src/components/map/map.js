@@ -3,6 +3,8 @@ import "./map.css"
 import React, { useRef, useEffect, useState } from "react"
 import { MListeners, KListeners } from "./listeners.js"
 import { getTileCenter } from "./voronoiBis.js"
+import { perlin1 } from "../../utils/perlinNoise.js"
+import { drawCell } from "./voronoiBis.js"
 
 function MapCanvas({ initialBottomRight, initialTopLeft, setCell, setCoord, coordinatesPerId, setCoordinatesPerId }) {
   
@@ -55,7 +57,6 @@ function MapCanvas({ initialBottomRight, initialTopLeft, setCell, setCoord, coor
 
     const voronoi = Delaunay.from(Iterator).voronoi([0, 0, canvas.width, canvas.height]);
     let drew;
-  
     const listeners = new MListeners(context, voronoi, drew, canvas,
       bottomRight, topLeft, setZoomIn, setCell, setCoord);
 
@@ -68,10 +69,12 @@ function MapCanvas({ initialBottomRight, initialTopLeft, setCell, setCoord, coor
     canvas.addEventListener('mouseout', listenMouseOut);
 
     context.beginPath();
-    context.strokeStyle = "#ffffff";
-    voronoi.render(context);
-    context.fill();
-    context.stroke();
+    let r, g, b;
+
+    for (let i = 0; i < voronoi._circumcenters.length; i++) {
+      r = (perlin1(10, 1, 0.5, i, i)+1)*127.5;
+      drawCell(context, i, "rgb("+r+","+r+","+r+")", voronoi, "#ffffff")
+    }
     context.closePath();
 
     return () => {
