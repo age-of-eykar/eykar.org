@@ -11,19 +11,18 @@ function cosineInterpolate(Ax, Bx, t) {
 
 function smoothNoiseCosine(x, y) {
     let int_X = Math.floor(x), int_Y = Math.floor(y);
+    let frac_Y = y - int_Y;
     let frac_X = x - int_X;
-    if (x < 0) int_X -= 1
-    if (y < 0) int_Y -= 1
 
-    const a = smoothedNoise(int_X, int_Y);
-    const b = smoothedNoise(int_X+1, int_Y);
-    const c = smoothedNoise(int_X, int_Y+1);
-    const d = smoothedNoise(int_X+1, int_Y+1);
+    const a = rand(int_X, int_Y);
+    const b = rand(int_X+1, int_Y);
+    const c = rand(int_X, int_Y+1);
+    const d = rand(int_X+1, int_Y+1);
 
     const f = cosineInterpolate(a, b, frac_X);
     const g = cosineInterpolate(c, d, frac_X);
 
-    return cosineInterpolate(f, g, frac_X);
+    return cosineInterpolate(f, g, frac_Y);
 }
 
 function smoothedNoise(x, y) {
@@ -78,11 +77,11 @@ export function perlin1(octaves, frequency, persistence, x, y) {
     let r = 0, f = 1, amplitude = 1;
     for (let i = 0; i < octaves; i++) {
         amplitude *= persistence;
-        f *= 2;
         r += smoothNoiseCosine(x * f, y * f) * amplitude;
+        f *= 2;
     }
     
-    return r * (1-persistence) / (1-amplitude);
+    return r// * (1-persistence) / (1-amplitude);
 }
 
 export function perlin2(octaves, frequency, persistence, x, y) {

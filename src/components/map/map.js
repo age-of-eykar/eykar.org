@@ -6,7 +6,7 @@ import { getTileCenter } from "./voronoiBis.js"
 import { perlin1 } from "../../utils/perlinNoise.js"
 import { drawCell } from "./voronoiBis.js"
 
-function MapCanvas({ initialBottomRight, initialTopLeft, setCell, setCoord, coordinatesPerId, setCoordinatesPerId }) {
+function MapCanvas({ initialBottomRight, initialTopLeft, setCell, setCoord, coordinatesPerId }) {
   
   const canvasRef = useRef(null)
   const [bottomRight, setBottomRight] = useState(initialBottomRight);
@@ -54,7 +54,6 @@ function MapCanvas({ initialBottomRight, initialTopLeft, setCell, setCoord, coor
         }
       }
     };
-
     const voronoi = Delaunay.from(Iterator).voronoi([0, 0, canvas.width, canvas.height]);
     let drew;
     const listeners = new MListeners(context, voronoi, drew, canvas,
@@ -69,10 +68,14 @@ function MapCanvas({ initialBottomRight, initialTopLeft, setCell, setCoord, coor
     canvas.addEventListener('mouseout', listenMouseOut);
 
     context.beginPath();
-    let r, g, b;
 
+    let r;
+    let x = 0, y = 0;
     for (let i = 0; i < voronoi._circumcenters.length; i++) {
-      r = (perlin1(10, 1, 0.5, i, i)+1)*127.5;
+      if (typeof coordinatesPerId.get(i) !== 'undefined') {
+        [x, y] = coordinatesPerId.get(i)
+      }
+      r = (perlin1(8, 1, 0.25, x, y)+1)*127.5;
       drawCell(context, i, "rgb("+r+","+r+","+r+")", voronoi, "#ffffff")
     }
     context.closePath();

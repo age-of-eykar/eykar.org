@@ -24,7 +24,7 @@ function Explore() {
     <div className="">
       <Header />
       <MapCanvas key={key} initialTopLeft={dimensions.topLeft} initialBottomRight={dimensions.bottomRight}
-        setCell={setCell} setCoord={setCoord} coordinatesPerId={coordinatesPerId} setCoordinatesPerId={setCoordinatesPerId} />
+        setCell={setCell} setCoord={setCoord} coordinatesPerId={coordinatesPerId} />
       <CardCell cellNumber={cell} coord={coord} coordinatesPerId={coordinatesPerId}/>
     </div>
   );
