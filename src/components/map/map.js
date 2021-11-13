@@ -1,10 +1,10 @@
 import { Delaunay } from "d3-delaunay"
 import "./map.css"
 import React, { useRef, useEffect, useState } from "react"
-import { MListeners, KListeners, CListener } from "./listeners.js"
+import { MListeners, KListeners } from "./listeners.js"
 import { getTileCenter } from "./voronoiBis.js"
 
-function MapCanvas({ initialBottomRight, initialTopLeft, childToParent }) {
+function MapCanvas({ initialBottomRight, initialTopLeft, setCell, setCoord, coordinatesPerId, setCoordinatesPerId }) {
   
   const canvasRef = useRef(null)
   const [bottomRight, setBottomRight] = useState(initialBottomRight);
@@ -14,11 +14,9 @@ function MapCanvas({ initialBottomRight, initialTopLeft, childToParent }) {
   const [zoomIn, setZoomIn] = useState({ x: 0, y: 0, zoom: 0 });
   const xStep = useRef(1);
   const yStep = useRef(1);
-  
-  const [cell, setCell] = useState(0);
-  const [coord, setCoord] = useState({ x: 0, y: 0 });
-  useEffect(() => {
 
+  useEffect(() => {
+    
     const scale = window.devicePixelRatio;
     const canvas = canvasRef.current;
     canvas.width = canvas.clientWidth * scale;
@@ -33,22 +31,24 @@ function MapCanvas({ initialBottomRight, initialTopLeft, childToParent }) {
 
     let Iterator = {
       _i: -1,
+      _j: -1,
+      id: 0,
 
       [Symbol.iterator]() {
-        this.current = -1;
         return this;
       },
 
       next() {
-        let center = getTileCenter(topLeft.x, this._i, topLeft.y, this.current, xStep.current, yStep.current,
+        let center = getTileCenter(topLeft.x, this._i, topLeft.y, this._j, xStep.current, yStep.current,
           xPrefix, yPrefix);
-        if (this.current >= mapHeight + 8) {
+          coordinatesPerId.set(this.id++, [Math.floor(this._i + topLeft.x), Math.floor(this._j + topLeft.y)]);
+        if (this._j >= mapHeight + 1) {
           this._i++;
-          this.current = -1;
+          this._j = -1;
           return { done: false, value: [center.x, center.y] };
         } else {
-          this.current++;
-          return { done: this._i > mapWidth + 8, value: [center.x, center.y] };
+          this._j++;
+          return { done: this._i > mapWidth + 2, value: [center.x, center.y] };
         }
       }
     };
@@ -56,7 +56,8 @@ function MapCanvas({ initialBottomRight, initialTopLeft, childToParent }) {
     const voronoi = Delaunay.from(Iterator).voronoi([0, 0, canvas.width, canvas.height]);
     let drew;
   
-    const listeners = new MListeners(context, voronoi, drew, canvas, bottomRight, topLeft, setZoomIn, setCell, setCoord);
+    const listeners = new MListeners(context, voronoi, drew, canvas,
+      bottomRight, topLeft, setZoomIn, setCell, setCoord);
 
     const listenMouseOut = listeners.handleMouseOut.bind(listeners);
     const listenMouseWheel = listeners.handleMouseWheel.bind(listeners);
@@ -107,7 +108,7 @@ function MapCanvas({ initialBottomRight, initialTopLeft, childToParent }) {
   );
 
   return <canvas className="map" onKeyDown={kListeners.onKeyPressed.bind(kListeners)}
-    tabIndex={0} ref={canvasRef} data={childToParent(cell, coord)}/>
+    tabIndex={0} ref={canvasRef} />
 }
 
 export default MapCanvas

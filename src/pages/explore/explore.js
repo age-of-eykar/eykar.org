@@ -18,16 +18,14 @@ function Explore() {
 
   const [cell, setCell] = useState(0);
   const [coord, setCoord] = useState({ x: 0, y: 0 });
-  const childToParent = (currentCell, currentCoord) => {
-    setCell(currentCell);
-    setCoord(currentCoord);
-  }
+  const [coordinatesPerId, setCoordinatesPerId] = useState(new Map());
 
   return (
     <div className="">
       <Header />
-      <MapCanvas key={key} initialTopLeft={dimensions.topLeft} initialBottomRight={dimensions.bottomRight} childToParent={childToParent} />
-      <CardCell cellNumber={cell} coord={coord}/>
+      <MapCanvas key={key} initialTopLeft={dimensions.topLeft} initialBottomRight={dimensions.bottomRight}
+        setCell={setCell} setCoord={setCoord} coordinatesPerId={coordinatesPerId} setCoordinatesPerId={setCoordinatesPerId} />
+      <CardCell cellNumber={cell} coord={coord} coordinatesPerId={coordinatesPerId}/>
     </div>
   );
 
