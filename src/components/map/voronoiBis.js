@@ -17,10 +17,13 @@ export function drawCell(context, cell, colorF, voronoi, colorS) {
   context.closePath();
 }
 
-export function getTileCenter(i_prefix, i, j_prefix, j, tile_width, tile_height, x_shift, y_shift) {
-  const output = lcg(szudzik(Math.trunc(i + i_prefix), Math.trunc(j + j_prefix)), 2);
+export function getTileCenter(i_prefix, i, j_prefix, j, tile_width, tile_height,
+   x_shift, y_shift) {
+  let x = i + Math.trunc(i_prefix);
+  let y = j + Math.trunc(j_prefix);
+  const output = lcg(szudzik(x, y), 2);
   let alpha = ((output % 64) * tile_width) / 64;
-  let beta = ((lcg(output) % 64) * tile_height) / 64;
+  let beta = ((lcg(output, 2) % 64) * tile_height) / 64;
   return { x: i * tile_width + alpha + x_shift, y: j * tile_height + beta + y_shift };
 }
 
