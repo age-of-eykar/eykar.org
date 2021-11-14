@@ -3,10 +3,10 @@ import "./map.css"
 import React, { useRef, useEffect, useState } from "react"
 import { MListeners, KListeners } from "./listeners.js"
 import { getTileCenter } from "./voronoiBis.js"
-import { perlin1 } from "../../utils/perlinNoise.js"
+import { perlin } from "../../utils/perlinNoise.js"
 import { drawCell } from "./voronoiBis.js"
 
-function MapCanvas({ initialBottomRight, initialTopLeft, setCell, setCoord, coordinatesPerId }) {
+function MapCanvas({ initialBottomRight, initialTopLeft, setCell, setCoord, coordinatesPerId, mapCenters }) {
   
   const canvasRef = useRef(null)
   const [bottomRight, setBottomRight] = useState(initialBottomRight);
@@ -44,6 +44,7 @@ function MapCanvas({ initialBottomRight, initialTopLeft, setCell, setCoord, coor
         let center = getTileCenter(topLeft.x, this._i, topLeft.y, this._j, xStep.current, yStep.current,
           xPrefix, yPrefix);
           coordinatesPerId.set(this.id++, [Math.floor(this._i + topLeft.x), Math.floor(this._j + topLeft.y)]);
+          mapCenters.set(this.id, [this._i+ topLeft.x, this._j + topLeft.y]);
         if (this._j >= mapHeight + 1) {
           this._i++;
           this._j = -1;
@@ -72,10 +73,10 @@ function MapCanvas({ initialBottomRight, initialTopLeft, setCell, setCoord, coor
     let r;
     let x = 0, y = 0;
     for (let i = 0; i < voronoi._circumcenters.length; i++) {
-      if (typeof coordinatesPerId.get(i) !== 'undefined') {
-        [x, y] = coordinatesPerId.get(i)
+      if (typeof mapCenters.get(i) !== 'undefined') {
+        [x, y] = mapCenters.get(i)
       }
-      r = (perlin1(8, 1, 0.25, x, y)+1)*127.5;
+      r = (perlin(x, y, 1, 0.5, 0.03)+1)*127.5;
       drawCell(context, i, "rgb("+r+","+r+","+r+")", voronoi, "#ffffff")
     }
     context.closePath();

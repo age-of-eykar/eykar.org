@@ -12,12 +12,11 @@ function cellCard({ cellNumber, coord, coordinatesPerId }) {
   return (
     <div className="card">
       <div className="card-body">
-        <p>Structure:</p>
-        <p>Numero cellule: {cellNumber}</p>
+        <p>Cell number: {cellNumber}</p>
         <p>
-          Coordonnées écran: {coord.x}, {coord.y}
+          Screen coordinates: {coord.x}, {coord.y}
         </p>
-        <p>Coordonnées réelles: {x}, {y} </p>
+        <p>True coordinates: {x}, {y} </p>
       </div>
     </div>
   );

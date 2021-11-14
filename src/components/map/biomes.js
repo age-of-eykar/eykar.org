@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import { perlin1, perlin2 } from "../../utils/perlinNoise"
+import { perlin } from "../../utils/perlinNoise"
 import "./biomes.css"
 
 function BiomeCanvas() {
@@ -15,7 +15,7 @@ function BiomeCanvas() {
         let t = 6;
         for (let i = 0; i < layerB.width/t; i++) {
             for (let j = 0; j < layerB.height/t; j++) {
-                r = g = b = (perlin1(8, 1, 0.4, i*t, j*t)+1)*127.5
+                r = g = b = (perlin(8, 1, 0.4, i*t, j*t)+1)*127.5
                 ctx.fillStyle = "rgb(" + r + ", " + g + ", " + b + ")"
                 ctx.fillRect(i*t, j*t, t, t);
             }

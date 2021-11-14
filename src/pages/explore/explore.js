@@ -19,13 +19,14 @@ function Explore() {
   const [cell, setCell] = useState(0);
   const [coord, setCoord] = useState({ x: 0, y: 0 });
   const [coordinatesPerId, setCoordinatesPerId] = useState(new Map());
+  const [mapCenters, setMapCenters] = useState(new Map());
 
   return (
     <div className="">
       <Header />
       <MapCanvas key={key} initialTopLeft={dimensions.topLeft} initialBottomRight={dimensions.bottomRight}
-        setCell={setCell} setCoord={setCoord} coordinatesPerId={coordinatesPerId} />
-      <CardCell cellNumber={cell} coord={coord} coordinatesPerId={coordinatesPerId}/>
+        setCell={setCell} setCoord={setCoord} coordinatesPerId={coordinatesPerId} mapCenters={mapCenters} />
+      <CardCell cellNumber={cell} coord={coord} coordinatesPerId={coordinatesPerId} />
     </div>
   );
 

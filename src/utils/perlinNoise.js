@@ -1,106 +1,73 @@
-import { szudzik, lcg } from "./deterministic"
+import { lcg, szudzik } from "./deterministic";
 
-function rand(x, y) {
-    return ((lcg(szudzik(x, y, 3))%100)-50)/50;
+// Vector table for gradient
+const grad3 = [
+    [1, 1, 0], [-1, 1, 0], [1, -1, 0], [-1, -1, 0],
+    [1, 0, 1], [-1, 0, 1], [1, 0, -1], [-1, 0, -1],
+    [0, 1, 1], [0, -1, 1], [0, 1, -1], [0, -1, -1],
+    [1, 1, 0], [-1, 1, 0], [1, -1, 0], [-1, -1, 0]
+];
+
+// Fast dost product function
+function fastDot(g, x, y) {
+  return g[0] * x + g[1] * y;
 }
 
-function cosineInterpolate(Ax, Bx, t) {
-    const c = (1-Math.cos(t*Math.PI)) * 0.5;
-    return (1. - c) * Ax + c * Bx;
+// get the noise value at the given coordinates
+function getGrad(x, y){
+    let rand_val = lcg(szudzik(x, y, 1))%15;
+    return grad3[rand_val];
 }
 
-function smoothNoiseCosine(x, y) {
-    let int_X = Math.floor(x), int_Y = Math.floor(y);
-    let frac_Y = y - int_Y;
-    let frac_X = x - int_X;
-
-    const a = rand(int_X, int_Y);
-    const b = rand(int_X+1, int_Y);
-    const c = rand(int_X, int_Y+1);
-    const d = rand(int_X+1, int_Y+1);
-
-    const f = cosineInterpolate(a, b, frac_X);
-    const g = cosineInterpolate(c, d, frac_X);
-
-    return cosineInterpolate(f, g, frac_Y);
+// Polynomial function with derivative = 0
+function poly(t) {
+  return t * t * t * (t * (t * 6 - 15) + 10);
 }
 
-function smoothedNoise(x, y) {
-    const corners = (rand(x-1, y-1) + rand(x+1, y-1) + rand(x-1, y+1) + rand(x+1, y+1)) / 16
-    const sides =  (rand(x-1, y) + rand(x+1, y) + rand(x, y-1) + rand(x, y+1)) /8
-    const center = rand(x, y) / 4
-    return corners + sides + center
+// Function for obtaining integer and fractionnal part of a number
+function intAndFrac(x) {
+  return [Math.floor(x), x - Math.floor(x)];
 }
 
-function smoothCubicBis(intX, intY, fracX) {
-    const v0 = rand(intX-1, intY);
-    const v1 = rand(intX, intY);
-    const v2 = rand(intX+1, intY);
-    const v3 = rand(intX+2, intY);
-
-    return cubicInterpolate(v0, v1, v2, v3, fracX);
+// Cosine interpolation function
+function cosineInterpolate(a, b, x) {
+  let ft = x * Math.PI;
+  let f = (1 - Math.cos(ft)) * 0.5;
+  return a * (1 - f) + b * f;
 }
 
-function smoothNoiseCubic(x, y) {
-    const int_X = Math.floor(x), int_Y = Math.floor(y);
-    const frac_X = x - int_X, frac_Y = y - int_Y;
+// Main calculatory function for obtaining noise value at the given coordinates
+export function Noise(x, y) {
+    let x_int, y_int, x_frac, y_frac;
+    [x_int, x_frac] = intAndFrac(x);
+    [y_int, y_frac] = intAndFrac(y);
 
-    const t0 = smoothCubicBis(int_X, int_Y-1, frac_X);
-    const t1 = smoothCubicBis(int_X, int_Y,   frac_X);
-    const t2 = smoothCubicBis(int_X, int_Y+1, frac_X);
-    const t3 = smoothCubicBis(int_X, int_Y+2, frac_X);
+    const g00 = fastDot(getGrad(x_int, y_int), x_frac, y_frac);
+    const g01 = fastDot(getGrad(x_int, y_int + 1), x_frac, y_frac - 1);
+    const g10 = fastDot(getGrad(x_int + 1, y_int), x_frac - 1, y_frac);
+    const g11 = fastDot(getGrad(x_int + 1, y_int + 1), x_frac - 1, y_frac - 1);
 
-    return cubicInterpolate(t0, t1, t2, t3, frac_Y);
-}
+    const u = poly(x_frac);
+    const v = poly(y_frac);
 
-function cubicInterpolate(p1, p2, p3, p4, t) {
-    const a2 = -0.5 * p1 + 0.5 * p3;
-    const a3 = p1 - 2.5 * p2 + 2 * p3 - 0.5 * p4;
-    const a4 = -0.5 * p1 + 1.5 * p2 - 1.5 * p3 + 0.5 * p4;
-    return p1 + a2 * t + a3 * t*t + a4 * t*t*t;
-}
+    const x00 = cosineInterpolate(g00, g10, u);
+    const x01 = cosineInterpolate(g01, g11, u);
 
-/*
-Explication des variables :
-- octaves :
-    nombre d'appels a la fonction de bruit lisse
-- frequence :
-    c'est l'inverse du pas, l'intervale entre deux points definis  par le bruit
-- persistence :
-    controle de la variation d'amplitude des courbes (part d'une courbe dans la courbe finale)
-- amplitude :
-    c'est l'ecart maximal en ordonne entre les points de la courbe
-
-*/
-
-export function perlin1(octaves, frequency, persistence, x, y) {
-    let r = 0, f = 1, amplitude = 1;
-    for (let i = 0; i < octaves; i++) {
-        amplitude *= persistence;
-        r += smoothNoiseCosine(x * f, y * f) * amplitude;
-        f *= 2;
-    }
+    const xy = cosineInterpolate(x00, x01, v);
     
-    return r// * (1-persistence) / (1-amplitude);
+    return xy;
 }
 
-export function perlin2(octaves, frequency, persistence, x, y) {
-    let r = 0., f = frequency, amplitude = 1.;
+// Main function
+export function perlin(x, y, octaves, persistence, frequency) {
+    let r = 0, f = frequency, amplitude = 1, max = 0;
+    let t;
     for (let i = 0; i < octaves; i++) {
-        r += smoothNoiseCubic(x * f, y * f) * amplitude;
-        amplitude *= persistence;
+        t = i * 4096
+        r += Noise(x * f + t, y * f + t) * amplitude;
         f *= 2;
+        amplitude *= persistence;
+        max += amplitude;
     }
-    
-    return r * (1-persistence) / (1-amplitude);
-}
-
-export function perlinTest(sizeX, sizeY) {
-    let randTab = []
-    for (let i = 0; i < sizeX; i++) {
-        for (let j= 0; j < sizeY; j++) {
-            randTab.push(perlin1(3, 1, 0.95, i, j));
-        }
-    }
-    return randTab;
+    return r / max
 }
