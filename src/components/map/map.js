@@ -2,11 +2,9 @@ import { Delaunay } from "d3-delaunay"
 import "./map.css"
 import React, { useRef, useEffect, useState } from "react"
 import { MListeners, KListeners } from "./listeners.js"
-import { getTileCenter } from "./voronoiBis.js"
-import { perlin } from "../../utils/perlinNoise.js"
-import { drawCell } from "./voronoiBis.js"
+import { getTileCenter } from "./gridManager.js"
 
-function MapCanvas({ initialBottomRight, initialTopLeft, setCell, setCoord, coordinatesPerId, mapCenters }) {
+function MapCanvas({ initialBottomRight, initialTopLeft, setCell, setCoord, coordinatesPerId }) {
   
   const canvasRef = useRef(null)
   const [bottomRight, setBottomRight] = useState(initialBottomRight);
@@ -43,8 +41,7 @@ function MapCanvas({ initialBottomRight, initialTopLeft, setCell, setCoord, coor
       next() {
         let center = getTileCenter(topLeft.x, this._i, topLeft.y, this._j, xStep.current, yStep.current,
           xPrefix, yPrefix);
-          coordinatesPerId.set(this.id++, [Math.floor(this._i + topLeft.x), Math.floor(this._j + topLeft.y)]);
-          mapCenters.set(this.id, [this._i+ topLeft.x, this._j + topLeft.y]);
+        coordinatesPerId.set(this.id++, [this._i + Math.floor(topLeft.x), this._j + Math.floor(topLeft.y)]);
         if (this._j >= mapHeight + 1) {
           this._i++;
           this._j = -1;
@@ -69,16 +66,11 @@ function MapCanvas({ initialBottomRight, initialTopLeft, setCell, setCoord, coor
     canvas.addEventListener('mouseout', listenMouseOut);
 
     context.beginPath();
-
-    let r;
-    let x = 0, y = 0;
-    for (let i = 0; i < voronoi._circumcenters.length; i++) {
-      if (typeof mapCenters.get(i) !== 'undefined') {
-        [x, y] = mapCenters.get(i)
-      }
-      r = (perlin(x, y, 1, 0.5, 0.03)+1)*127.5;
-      drawCell(context, i, "rgb("+r+","+r+","+r+")", voronoi, "#ffffff")
-    }
+    context.fillStyle = '#1C1709';
+    context.strokeStyle = '#ffffff';
+    voronoi.render(context);
+    context.fill();
+    context.stroke();
     context.closePath();
 
     return () => {
@@ -86,7 +78,7 @@ function MapCanvas({ initialBottomRight, initialTopLeft, setCell, setCoord, coor
       canvas.removeEventListener('mousemove', listenMouseMove)
       canvas.removeEventListener('mouseout', listenMouseOut)
     }
-  }, [bottomRight, topLeft, xPrefix, yPrefix])
+  }, [bottomRight, topLeft, xPrefix, yPrefix, coordinatesPerId, setCell, setCoord]);
 
   if (zoomIn.zoom !== 0) {
     const mapWidth = bottomRight.x - topLeft.x;

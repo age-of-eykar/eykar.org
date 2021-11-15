@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
 import Header from "../../components/header/header";
 import MapCanvas from "../../components/map/map";
-import { getDimensions } from "../../components/map/voronoiBis";
+import { getDimensions } from "../../components/map/gridManager";
 import debounce from "debounce";
-//import BiomeCanvas from "../../components/map/biomes"
 import CardCell from "../../components/map/cellCard/card"
 
 function Explore() {
@@ -19,13 +18,12 @@ function Explore() {
   const [cell, setCell] = useState(0);
   const [coord, setCoord] = useState({ x: 0, y: 0 });
   const [coordinatesPerId, setCoordinatesPerId] = useState(new Map());
-  const [mapCenters, setMapCenters] = useState(new Map());
 
   return (
     <div className="">
       <Header />
       <MapCanvas key={key} initialTopLeft={dimensions.topLeft} initialBottomRight={dimensions.bottomRight}
-        setCell={setCell} setCoord={setCoord} coordinatesPerId={coordinatesPerId} mapCenters={mapCenters} />
+        setCell={setCell} setCoord={setCoord} coordinatesPerId={coordinatesPerId} />
       <CardCell cellNumber={cell} coord={coord} coordinatesPerId={coordinatesPerId} />
     </div>
   );

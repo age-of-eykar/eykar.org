@@ -1,11 +1,13 @@
 import { lcg, szudzik } from "./deterministic";
 
 // Vector table for gradient
-const grad3 = [
-    [1, 1, 0], [-1, 1, 0], [1, -1, 0], [-1, -1, 0],
-    [1, 0, 1], [-1, 0, 1], [1, 0, -1], [-1, 0, -1],
-    [0, 1, 1], [0, -1, 1], [0, 1, -1], [0, -1, -1],
-    [1, 1, 0], [-1, 1, 0], [1, -1, 0], [-1, -1, 0]
+const grad2 = [
+  [1, 0],
+  [-1, 1],
+  [0, -1],
+  [-1, 0],
+  [1, -1],
+  [0, 1],
 ];
 
 // Fast dost product function
@@ -14,60 +16,53 @@ function fastDot(g, x, y) {
 }
 
 // get the noise value at the given coordinates
-function getGrad(x, y){
-    let rand_val = lcg(szudzik(x, y, 1))%15;
-    return grad3[rand_val];
-}
-
-// Polynomial function with derivative = 0
-function poly(t) {
-  return t * t * t * (t * (t * 6 - 15) + 10);
+function getGrad(x, y, s) {
+  let rand_val = lcg(szudzik(x, y) + s) % 6;
+  return grad2[rand_val];
 }
 
 // Function for obtaining integer and fractionnal part of a number
-function intAndFrac(x) {
-  return [Math.floor(x), x - Math.floor(x)];
+function intAndFrac(n) {
+  const floor = Math.floor(n);
+  return [floor, n - floor];
 }
 
-// Cosine interpolation function
-function cosineInterpolate(a, b, x) {
-  let ft = x * Math.PI;
-  let f = (1 - Math.cos(ft)) * 0.5;
+// Cubic interpolation function
+function cubicInterpolate(a, b, t) {
+  let f = t * t * t * (t * (t * 6 - 15) + 10);
   return a * (1 - f) + b * f;
 }
 
 // Main calculatory function for obtaining noise value at the given coordinates
-export function Noise(x, y) {
-    let x_int, y_int, x_frac, y_frac;
-    [x_int, x_frac] = intAndFrac(x);
-    [y_int, y_frac] = intAndFrac(y);
+export function noise(x, y, s) {
+  let x_int, y_int, x_frac, y_frac;
+  [x_int, x_frac] = intAndFrac(x*2);
+  [y_int, y_frac] = intAndFrac(y);
 
-    const g00 = fastDot(getGrad(x_int, y_int), x_frac, y_frac);
-    const g01 = fastDot(getGrad(x_int, y_int + 1), x_frac, y_frac - 1);
-    const g10 = fastDot(getGrad(x_int + 1, y_int), x_frac - 1, y_frac);
-    const g11 = fastDot(getGrad(x_int + 1, y_int + 1), x_frac - 1, y_frac - 1);
+  const g00 = fastDot(getGrad(x_int, y_int, s), x_frac, y_frac);
+  const g01 = fastDot(getGrad(x_int, y_int + 1, s), x_frac, y_frac - 1);
+  const g10 = fastDot(getGrad(x_int + 1, y_int, s), x_frac - 1, y_frac);
+  const g11 = fastDot(getGrad(x_int + 1, y_int + 1, s), x_frac - 1, y_frac - 1);
 
-    const u = poly(x_frac);
-    const v = poly(y_frac);
+  const x00 = cubicInterpolate(g00, g10, x_frac);
+  const x01 = cubicInterpolate(g01, g11, x_frac);
+  const xy = cubicInterpolate(x00, x01, y_frac);
 
-    const x00 = cosineInterpolate(g00, g10, u);
-    const x01 = cosineInterpolate(g01, g11, u);
-
-    const xy = cosineInterpolate(x00, x01, v);
-    
-    return xy;
+  return xy;
 }
 
 // Main function
-export function perlin(x, y, octaves, persistence, frequency) {
-    let r = 0, f = frequency, amplitude = 1, max = 0;
-    let t;
-    for (let i = 0; i < octaves; i++) {
-        t = i * 4096
-        r += Noise(x * f + t, y * f + t) * amplitude;
-        f *= 2;
-        amplitude *= persistence;
-        max += amplitude;
-    }
-    return r / max
+export function perlin(x, y, octaves, persistence, frequency, seed) {
+  let r = 0,
+    f = frequency,
+    amplitude = 1,
+    max = 0;
+
+  for (let i = 0; i < octaves; i++) {
+    r += noise(x * f, y * f, seed) * amplitude;
+    f *= 2;
+    amplitude *= persistence;
+    max += amplitude;
+  }
+  return r / max;
 }

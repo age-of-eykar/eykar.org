@@ -1,4 +1,4 @@
-import { findCell, drawCell } from "./voronoiBis";
+import { findCell, drawCell } from "./gridManager";
 
 export class MListeners {
     constructor(context, voronoi, drew, canvas, bottomRight, topLeft, setZoomIn, setCell, setCoord) {
@@ -16,8 +16,6 @@ export class MListeners {
     handleMouseMove(event) {
         const cell = findCell(event.offsetX, event.offsetY, this.voronoi);
         if (this.drew !== cell) {
-            //const C = this.context.getImageData(Math.floor(event.offsetX), Math.floor(event.offsetY), 1, 1).data
-            //const color = "rgb("+C[0]+","+C[1]+","+C[2]+","+C[3]+")"
             drawCell(this.context, cell, '#ff0000', this.voronoi, "#ffffff");
             drawCell(this.context, this.drew, '#1C1709', this.voronoi, "#ffffff");
             this.drew = cell
