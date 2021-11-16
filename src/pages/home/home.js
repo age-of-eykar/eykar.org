@@ -1,7 +1,6 @@
 import "./home.css"
 import { Link } from "react-router-dom";
 import logo from "../../img/logo.svg";
-import close from "../../img/close.svg";
 import React from 'react'
 import { useWeb3React } from '@web3-react/core'
 import { useEagerConnect, useInactiveListener } from '../../utils/web3hooks'
@@ -18,7 +17,7 @@ const connectorsByName = {
 function App() {
 
   const context = useWeb3React();
-  const { connector, library, chainId, account, activate, deactivate, active, error } = context;
+  const { connector, activate, error } = context;
 
   // handle logic to recognize the connector currently being activated
   const [activatingConnector, setActivatingConnector] = React.useState();
@@ -42,14 +41,14 @@ function App() {
       {
         connectMenuToggled && !connected ?
           <div className="selectmenu">
-            <a className="home selectmenu_close" onClick={() => { setConnectMenuToggled(false) }} >
-              <svg className="close_icon" alt="close icon" class="home selectmenu_close_svg" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-            </a>
+            <button className="home selectmenu_close" onClick={() => { setConnectMenuToggled(false) }} >
+              <svg alt="close icon" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
             <p className="home selectmenu_title">Connect to a wallet</p>
             <a className="home warning" href="https://cronos.crypto.org/docs/getting-started/metamask.html#connecting-to-the-cronos-mainnet-beta" target="https://cronos.crypto.org/docs/getting-started/metamask.html#connecting-to-the-cronos-mainnet-beta">
-            <svg className="home warning_icon v1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-            <p className="home warning_text">Using MetaMask with Cronos</p>
-            <svg className="home warning_icon v2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+              <svg className="home warning_icon v1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+              <p className="home warning_text">Using MetaMask with Cronos</p>
+              <svg className="home warning_icon v2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
             </a>
 
             {Object.keys(connectorsByName).map(name => {
@@ -73,19 +72,8 @@ function App() {
                     activate(connectorsByName[name])
                   }}
                 >
-                  <div
-                    style={{
-                      position: 'absolute',
-                      top: '0',
-                      left: '0',
-                      height: '100%',
-                      display: 'flex',
-                      alignItems: 'center',
-                      color: 'black',
-                      margin: '0 0 0 1rem'
-                    }}
-                  >
-                    {activating && <Spinner color={'black'} style={{ height: '25%', marginLeft: '-1rem' }} />}
+                  <div className="home loading" >
+                    {activating && <Spinner color={'white'} style={{ height: '22px', marginLeft: '-2rem' }} />}
                   </div>
                   {name}
                 </button>
