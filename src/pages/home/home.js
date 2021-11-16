@@ -42,10 +42,15 @@ function App() {
       {
         connectMenuToggled && !connected ?
           <div className="selectmenu">
-            <a onClick={() => { setConnectMenuToggled(false) }} >
-              <img className="close_icon" src={close} alt="close icon" />
+            <a className="home selectmenu_close" onClick={() => { setConnectMenuToggled(false) }} >
+              <svg className="close_icon" alt="close icon" class="home selectmenu_close_svg" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
             </a>
-
+            <p className="home selectmenu_title">Connect to a wallet</p>
+            <a className="home warning" href="https://cronos.crypto.org/docs/getting-started/metamask.html#connecting-to-the-cronos-mainnet-beta" target="https://cronos.crypto.org/docs/getting-started/metamask.html#connecting-to-the-cronos-mainnet-beta">
+            <svg className="home warning_icon v1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            <p className="home warning_text">Using MetaMask with Cronos</p>
+            <svg className="home warning_icon v2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+            </a>
 
             {Object.keys(connectorsByName).map(name => {
 
@@ -59,13 +64,8 @@ function App() {
 
               return (
                 <button
-                  style={{
-                    height: '3rem',
-                    borderRadius: '1rem',
-                    borderColor: activating ? 'orange' : 'unset',
-                    cursor: disabled ? 'unset' : 'pointer',
-                    position: 'relative'
-                  }}
+                  className="home selectmenu_button"
+                  style={{ borderColor: activating ? 'orange' : '#3f3f3f', cursor: disabled ? 'unset' : 'pointer' }}
                   disabled={disabled}
                   key={name}
                   onClick={() => {

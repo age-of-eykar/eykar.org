@@ -146,8 +146,94 @@ nav.home {
 
 .selectmenu {
   position: absolute;
-  margin: auto;
   align-self: center;
-  background-color: darkblue;
+  left: 50%;
+  transform: translateX(-50%);
+  background     : #191b1f;
+  backdrop-filter: blur(10px);
+  border-radius  : 20px;
   z-index : 1;
+  padding: 25px;
+  width: 100%;
+  max-width: 450px;
+  top: 50px;
+}
+.home.selectmenu_close {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  width: 30px;
+  stroke: white;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.home.selectmenu_close:hover {
+  stroke: rgb(124, 124, 124);
+}
+
+.home.selectmenu_title {
+  color: white;
+  font-family    : Verdana, sans-serif;
+  letter-spacing : 0.05em;
+  font-weight: bold;
+  margin-bottom: 95px;
+}
+
+.home.selectmenu_button {
+  height: '3rem';
+  border-radius: '1rem';
+  position: 'relative';
+  background-color: #202227;
+  border: 1px solid #3f3f3f;
+  display: block;
+  margin-top: 25px;
+  margin-bottom: 7px;
+  padding: 5px 50px 5px 50px;
+  border-radius: 15px;
+  width: calc(100% - 15px);
+  margin-left: 7.5px;
+  height: 50px;
+  color: white;
+  font-weight: bold;
+  letter-spacing: 1px;
+  transition: 0.2s;
+}
+.home.selectmenu_button:hover {
+  width: calc(100% - 8px);
+  margin-left: 4px;
+}
+
+.home.warning {
+  text-decoration: none;
+  color: white;
+  background-color: #bb9b49;
+  position: absolute;
+  top: 70px;
+  width: calc(100% - 65px);
+  border-radius: 15px;
+  height: 40px;
+  padding-left: 50px;
+  margin-left: 7.5px;
+}
+
+.home.warning_text {
+  position: absolute;
+  top: 9px;
+  font-family    : Verdana, sans-serif;
+  font-size     : 15px;
+}
+
+.home.warning_icon {
+  width: 20px;
+  position: absolute;
+}
+.home.warning_icon.v1 {
+  width: 27px;
+  position: absolute;
+  left: 10px;
+  top: 6px;
+}
+.home.warning_icon.v2 {
+  right: 10px;
+  top: 8px;
 }
