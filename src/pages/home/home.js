@@ -9,9 +9,9 @@ import { injected, network, ledger } from '../../utils/connectors'
 import { Spinner } from '../../components/spinner'
 
 const connectorsByName = {
-  ['Metamask']: injected,
-  ['Network']: network,
-  ['Ledger']: ledger
+  'Metamask': injected,
+  'Network': network,
+  'Ledger': ledger
 }
 
 function App() {

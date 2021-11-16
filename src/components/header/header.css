@@ -5,7 +5,7 @@ nav.header {
     width          : 562px;
     height         : 60px;
     border-radius  : 0px 0px 16px 16px;
-    background     : rgba(74, 66, 63, 0.4);
+    background     : rgba(49, 44, 42, 0.6);
     box-shadow     : 0px 0px 150px rgba(0, 0, 0, 0.25);
     backdrop-filter: blur(16px);
 }
@@ -55,6 +55,10 @@ nav.header {
 
 .header.button.highlighted {
     color: #F4E9CB;
+}
+
+.header.button.error {
+    color: #e17055;
 }
 
 .header.button_text {
