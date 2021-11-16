@@ -1,4 +1,4 @@
-.card {
+.cell_card {
   z-index: 2;
   position: fixed;
   bottom: 30px;
@@ -12,13 +12,13 @@
 }
 
 @media (min-width: 768px) {
-    .card {
+    .cell_card {
       width: 280px;
       height: 250px;
     }
   }
 
-.card-body {
+.cell_card_body {
     padding: 2vh;
     color : white;
     font-family: Verdana, sans-serif;

@@ -10,8 +10,8 @@ function cellCard({ cellNumber, coord, coordinatesPerId }) {
   }
 
   return (
-    <div className="card">
-      <div className="card-body">
+    <div className="cell_card">
+      <div className="cell_card_body">
         <p>Cell number: {cellNumber}</p>
         <p>
           Screen coordinates: {coord.x}, {coord.y}

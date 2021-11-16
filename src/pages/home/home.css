@@ -33,13 +33,13 @@ nav.home {
 }
 
 .home.button {
-  font-family   : Verdana, sans-serif;
-  letter-spacing: 0.05em;
-  text-align    : left;
-  font-style    : normal;
-  font-size     : 20px;
-  line-height   : 62px;
-
+  font-family    : Verdana, sans-serif;
+  letter-spacing : 0.05em;
+  text-align     : left;
+  font-style     : normal;
+  font-size      : 20px;
+  line-height    : 62px;
+  cursor         : pointer;
   list-style-type: none;
   display        : block;
   margin         : 1.5em 1em 0.5em 0.1em;
@@ -74,6 +74,8 @@ nav.home {
   border          : 2px solid #E7C878;
   box-sizing      : border-box;
 }
+
+
 
 .home.logo {
   width  : 65%;
@@ -131,4 +133,21 @@ nav.home {
 
 .home.button.highlighted:hover .button_div {
   border: solid 1px #ffe1a9;
+}
+
+.home.button.highlighted.toggled {
+  color : #c2b697;
+  border: 1px solid #887b5b;
+}
+
+.home.button.highlighted.toggled:hover .button_div {
+  border: 1px solid #887b5b;
+}
+
+.selectmenu {
+  position: absolute;
+  margin: auto;
+  align-self: center;
+  background-color: darkblue;
+  z-index : 1;
 }

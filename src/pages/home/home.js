@@ -1,22 +1,110 @@
 import "./home.css"
-
 import { Link } from "react-router-dom";
 import logo from "../../img/logo.svg";
+import close from "../../img/close.svg";
+import React from 'react'
+import { useWeb3React } from '@web3-react/core'
+import { useEagerConnect, useInactiveListener } from '../../utils/web3hooks'
+
+import { injected, network, ledger } from '../../utils/connectors'
+import { Spinner } from '../../components/spinner'
+
+const connectorsByName = {
+  ['injected']: injected,
+  ['network']: network,
+  ['ledger']: ledger
+}
 
 function App() {
+
+  const context = useWeb3React();
+  const { connector, library, chainId, account, activate, deactivate, active, error } = context;
+
+  // handle logic to recognize the connector currently being activated
+  const [activatingConnector, setActivatingConnector] = React.useState();
+  React.useEffect(() => {
+    if (activatingConnector && activatingConnector === connector) {
+      setActivatingConnector(undefined)
+    }
+  }, [activatingConnector, connector])
+
+  // handle logic to eagerly connect to the injected ethereum provider, if it exists and has granted access already
+  const triedEager = useEagerConnect()
+
+  // handle logic to connect in reaction to certain events on the injected ethereum provider, if it exists
+  useInactiveListener(!triedEager || !!activatingConnector)
+
+  const [connectMenuToggled, setConnectMenuToggled] = React.useState(false);
+  const [connected, setConnected] = React.useState(false);
+
   return (
     <div className="default_background">
+      {
+        connectMenuToggled && !connected ?
+          <div className="selectmenu">
+            <a onClick={() => { setConnectMenuToggled(false) }} >
+              <img className="close_icon" src={close} alt="close icon" />
+            </a>
+
+
+            {Object.keys(connectorsByName).map(name => {
+
+              const currentConnector = connectorsByName[name]
+              const activating = currentConnector === activatingConnector
+              if (currentConnector === connector) {
+                setConnectMenuToggled(false);
+                setConnected(true);
+              }
+              const disabled = !triedEager || !!activatingConnector || connected || !!error
+
+              return (
+                <button
+                  style={{
+                    height: '3rem',
+                    borderRadius: '1rem',
+                    borderColor: activating ? 'orange' : 'unset',
+                    cursor: disabled ? 'unset' : 'pointer',
+                    position: 'relative'
+                  }}
+                  disabled={disabled}
+                  key={name}
+                  onClick={() => {
+                    setActivatingConnector(currentConnector)
+                    activate(connectorsByName[name])
+                  }}
+                >
+                  <div
+                    style={{
+                      position: 'absolute',
+                      top: '0',
+                      left: '0',
+                      height: '100%',
+                      display: 'flex',
+                      alignItems: 'center',
+                      color: 'black',
+                      margin: '0 0 0 1rem'
+                    }}
+                  >
+                    {activating && <Spinner color={'black'} style={{ height: '25%', marginLeft: '-1rem' }} />}
+                  </div>
+                  {name}
+                </button>
+              )
+            })}
+          </div>
+          : null
+      }
       <nav className="home">
         <img className="home logo" src={logo} alt="Eykar Logo" />
-        <Link className="home button highlighted" to="/">
+        <button className={"home button highlighted" + (connectMenuToggled ? " toggled" : "")} onClick={() => setConnectMenuToggled(!connectMenuToggled)} >
           <div className="home button_div"></div>
           <svg className="home icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
           </svg>
           <p className="home button_text">
-            Connect to a wallet
+            {connected ? "Connected" : "Connect to a wallet"}
           </p>
-        </Link>
+        </button>
         <Link className="home button normal" to="/discover" >
           <div className="home button_div"></div>
           <svg className="home icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
