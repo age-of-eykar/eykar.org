@@ -75,7 +75,29 @@ nav.home {
   box-sizing      : border-box;
 }
 
+.home.button.highlighted:hover .button_div {
+  border: solid 1px #ffe1a9;
+}
 
+.home.button.highlighted.toggled {
+  color : #c2b697;
+  border: 1px solid #887b5b;
+}
+
+.home.button.highlighted.toggled:hover .button_div {
+  border: 1px solid #887b5b;
+}
+
+.home.button.play {
+  color           : #ffe1a9;
+  background-color: #232020b7;
+  border          : 2px solid #d6ad45;
+  box-sizing      : border-box;
+}
+
+.home.button.play:hover {
+  border: solid 1px #FFCC4A;
+}
 
 .home.logo {
   width  : 65%;
@@ -88,6 +110,23 @@ nav.home {
   display  : inline-block;
   position : absolute;
   left     : 1.3em;
+  top      : 50%;
+  transform: translateY(-50%);
+}
+
+.home.playicon {
+  position : absolute;
+  height   : 55%;
+  left     : calc(50% - 2.25em);
+  transform: translateX(-50%);
+  top      : 50%;
+  transform: translateY(-50%);
+}
+
+.home.play_button_text {
+  position : absolute;
+  left     : calc(50% - 0.25em);
+  transform: translateX(-50%);
   top      : 50%;
   transform: translateY(-50%);
 }
@@ -131,23 +170,11 @@ nav.home {
   border: solid 1px #dddddd;
 }
 
-.home.button.highlighted:hover .button_div {
-  border: solid 1px #ffe1a9;
-}
-
-.home.button.highlighted.toggled {
-  color : #c2b697;
-  border: 1px solid #887b5b;
-}
-
-.home.button.highlighted.toggled:hover .button_div {
-  border: 1px solid #887b5b;
-}
 
 .selectmenu {
-  position: absolute;
-  margin: auto;
-  align-self: center;
+  position        : absolute;
+  margin          : auto;
+  align-self      : center;
   background-color: darkblue;
-  z-index : 1;
+  z-index         : 1;
 }

@@ -10,9 +10,9 @@ import { injected, network, ledger } from '../../utils/connectors'
 import { Spinner } from '../../components/spinner'
 
 const connectorsByName = {
-  ['injected']: injected,
-  ['network']: network,
-  ['ledger']: ledger
+  ['Metamask']: injected,
+  ['Network']: network,
+  ['Ledger']: ledger
 }
 
 function App() {
@@ -96,15 +96,27 @@ function App() {
       }
       <nav className="home">
         <img className="home logo" src={logo} alt="Eykar Logo" />
-        <button className={"home button highlighted" + (connectMenuToggled ? " toggled" : "")} onClick={() => setConnectMenuToggled(!connectMenuToggled)} >
-          <div className="home button_div"></div>
-          <svg className="home icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-          </svg>
-          <p className="home button_text">
-            {connected ? "Connected" : "Connect to a wallet"}
-          </p>
-        </button>
+        {connected ?
+          <Link className="home button play" to="/play" >
+            <div className="home button_div"></div>
+            <svg className="home playicon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <p className="home play_button_text">
+
+              Play
+            </p>
+          </Link>
+          :
+          <button className={"home button highlighted" + (connectMenuToggled ? " toggled" : "")} onClick={() => setConnectMenuToggled(!connectMenuToggled)} >
+            <div className="home button_div"></div>
+            <svg className="home icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+            </svg>
+            <p className="home button_text">
+              Connect to a wallet
+            </p>
+          </button>}
         <Link className="home button normal" to="/discover" >
           <div className="home button_div"></div>
           <svg className="home icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
