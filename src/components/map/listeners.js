@@ -1,16 +1,36 @@
 import { findCell, drawCell } from "./gridManager";
 
+export class WListener {
+  constructor(bottomRight, topLeft, setZoomIn, canvas) {
+    this.bottomRight = bottomRight;
+    this.topLeft = topLeft;
+    this.setZoomIn = setZoomIn;
+    this.canvas = canvas;
+  }
+
+  handleMouseWheel(event) {
+    const mapWidth = this.bottomRight.x - this.topLeft.x;
+    const mapHeight = this.bottomRight.y - this.topLeft.y;
+    const mousePositionX = event.offsetX / this.canvas.clientWidth * mapWidth;
+    const mousePositionY = event.offsetY / this.canvas.clientHeight * mapHeight;
+    if (event.deltaY < 0) {
+      this.setZoomIn({ x: mousePositionX, y: mousePositionY, zoom: 1 });
+    }
+    else {
+      this.setZoomIn({ x: mousePositionX, y: mousePositionY, zoom: -1 });
+    }
+    event.preventDefault();
+  }
+}
+
 export class MListeners {
-    constructor(context, voronoi, drew, canvas, bottomRight, topLeft, setZoomIn, setCell, setCoord) {
-        this.context = context
-        this.voronoi = voronoi
-        this.drew = drew
-        this.canvas = canvas
-        this.bottomRight = bottomRight
-        this.topLeft = topLeft
-        this.setZoomIn = setZoomIn
-        this.setCell = setCell
-        this.setCoord = setCoord
+    constructor(context, voronoi, drew, canvas, setCell, setCoord) {
+        this.context = context;
+        this.voronoi = voronoi;
+        this.drew = drew;
+        this.canvas = canvas;
+        this.setCell = setCell;
+        this.setCoord = setCoord;
     }
 
     handleMouseMove(event) {
@@ -18,28 +38,14 @@ export class MListeners {
         if (this.drew !== cell) {
             drawCell(this.context, cell, '#ff0000', this.voronoi, "#ffffff");
             drawCell(this.context, this.drew, '#1C1709', this.voronoi, "#ffffff");
-            this.drew = cell
-            this.setCell(cell)
-            this.setCoord({ x: event.offsetX, y: event.offsetY })
+            this.drew = cell;
+            this.setCell(cell);
+            this.setCoord({ x: event.offsetX, y: event.offsetY });
         }
     }
     
     handleMouseOut() {
         drawCell(this.context, this.drew, '#1C1709', this.voronoi);
-    }
-    
-    handleMouseWheel(event) {
-        const mapWidth = this.bottomRight.x - this.topLeft.x;
-        const mapHeight = this.bottomRight.y - this.topLeft.y;
-        const mousePositionX = event.offsetX / this.canvas.clientWidth * mapWidth;
-        const mousePositionY = event.offsetY / this.canvas.clientHeight * mapHeight;
-        if (event.deltaY < 0) {
-          this.setZoomIn({ x: mousePositionX, y: mousePositionY, zoom: 1 });
-        }
-        else {
-          this.setZoomIn({ x: mousePositionX, y: mousePositionY, zoom: -1 });
-        }
-        event.preventDefault();
     }
 }
 

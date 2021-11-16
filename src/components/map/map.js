@@ -1,8 +1,9 @@
 import { Delaunay } from "d3-delaunay"
 import "./map.css"
 import React, { useRef, useEffect, useState } from "react"
-import { MListeners, KListeners } from "./listeners.js"
-import { getTileCenter } from "./gridManager.js"
+import { MListeners, KListeners, WListener } from "./listeners"
+import { getTileCenter } from "./gridManager"
+import { drawMap } from "./biomes"
 
 function MapCanvas({ initialBottomRight, initialTopLeft, setCell, setCoord, coordinatesPerId }) {
   
@@ -54,11 +55,11 @@ function MapCanvas({ initialBottomRight, initialTopLeft, setCell, setCoord, coor
     };
     const voronoi = Delaunay.from(Iterator).voronoi([0, 0, canvas.width, canvas.height]);
     let drew;
-    const listeners = new MListeners(context, voronoi, drew, canvas,
-      bottomRight, topLeft, setZoomIn, setCell, setCoord);
+    const listeners = new MListeners(context, voronoi, drew, canvas, setCell, setCoord);
+    const wlisterner = new WListener(bottomRight, topLeft, setZoomIn, canvas);
 
     const listenMouseOut = listeners.handleMouseOut.bind(listeners);
-    const listenMouseWheel = listeners.handleMouseWheel.bind(listeners);
+    const listenMouseWheel = wlisterner.handleMouseWheel.bind(wlisterner);
     const listenMouseMove = listeners.handleMouseMove.bind(listeners);
 
     canvas.addEventListener('mousewheel', listenMouseWheel);
@@ -66,9 +67,7 @@ function MapCanvas({ initialBottomRight, initialTopLeft, setCell, setCoord, coor
     canvas.addEventListener('mouseout', listenMouseOut);
 
     context.beginPath();
-    context.fillStyle = '#1C1709';
-    context.strokeStyle = '#ffffff';
-    voronoi.render(context);
+    drawMap(coordinatesPerId, context, voronoi);
     context.fill();
     context.stroke();
     context.closePath();
