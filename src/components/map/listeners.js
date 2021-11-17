@@ -1,4 +1,5 @@
-import { findCell, drawCell } from "./gridManager";
+import { findCell, drawCell, unDrawCanvas } from "./gridManager";
+import { biomeData } from "../../components/map/biomes"
 
 export class WListener {
   constructor(bottomRight, topLeft, setZoomIn, canvas) {
@@ -24,20 +25,23 @@ export class WListener {
 }
 
 export class MListeners {
-    constructor(context, voronoi, drew, canvas, setCell, setCoord) {
+    constructor(context, voronoi, drew, canvas, topLeft, setCell, setCoord, setBiome) {
         this.context = context;
         this.voronoi = voronoi;
         this.drew = drew;
         this.canvas = canvas;
         this.setCell = setCell;
         this.setCoord = setCoord;
+        this.topLeft = topLeft;
+        this.setBiome = setBiome;
     }
 
     handleMouseMove(event) {
         const cell = findCell(event.offsetX, event.offsetY, this.voronoi);
         if (this.drew !== cell) {
-            drawCell(this.context, cell, '#ff0000', this.voronoi, "#ffffff");
-            drawCell(this.context, this.drew, '#1C1709', this.voronoi, "#ffffff");
+            unDrawCanvas(this.context, this.canvas);
+            drawCell(this.context, cell, '#cc0000', this.voronoi, "#cc0000");
+            this.setBiome(biomeData(event.offsetX + this.topLeft.x, event.offsetY + this.topLeft.y));
             this.drew = cell;
             this.setCell(cell);
             this.setCoord({ x: event.offsetX, y: event.offsetY });
@@ -45,7 +49,7 @@ export class MListeners {
     }
     
     handleMouseOut() {
-        drawCell(this.context, this.drew, '#1C1709', this.voronoi);
+      unDrawCanvas(this.context, this.canvas);
     }
 }
 

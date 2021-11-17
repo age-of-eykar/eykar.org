@@ -1,7 +1,7 @@
 import React from "react";
 import "./card.css";
 
-function cellCard({ cellNumber, coord, coordinatesPerId }) {
+function cellCard({ cellNumber, coord, coordinatesPerId, biome }) {
   const trueCoords = coordinatesPerId.get(cellNumber)
   let x = 0, y = 0;
   if (typeof trueCoords !== 'undefined') {
@@ -16,7 +16,12 @@ function cellCard({ cellNumber, coord, coordinatesPerId }) {
         <p>
           Screen coordinates: {coord.x}, {coord.y}
         </p>
-        <p>True coordinates: {x}, {y} </p>
+        <p>
+          True coordinates: {x}, {y}
+        </p>
+        <p>Biome: {biome[2]}</p>
+        <p>Temperatue: {Math.floor(biome[0])}</p>
+        <p>Elevation: {Math.floor(biome[1])}</p>
       </div>
     </div>
   );

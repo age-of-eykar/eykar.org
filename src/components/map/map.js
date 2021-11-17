@@ -1,15 +1,13 @@
 import { Delaunay } from "d3-delaunay"
 import "./map.css"
 import React, { useRef, useEffect, useState } from "react"
-import { MListeners, KListeners, WListener } from "./listeners"
+import { KListeners, WListener } from "./listeners"
 import { getTileCenter } from "./gridManager"
 import { drawMap } from "./biomes"
 
-function MapCanvas({ initialBottomRight, initialTopLeft, setCell, setCoord, coordinatesPerId }) {
-  
-  const canvasRef = useRef(null)
-  const [bottomRight, setBottomRight] = useState(initialBottomRight);
-  const [topLeft, setTopLeft] = useState(initialTopLeft);
+function MapCanvas({ topLeft, setTopLeft, bottomRight, setBottomRight, coordinatesPerId, voronoi }) {
+
+  const canvasRef = useRef(null);
   const [xPrefix, setXPrefix] = useState(0);
   const [yPrefix, setYPrefix] = useState(0);
   const [zoomIn, setZoomIn] = useState({ x: 0, y: 0, zoom: 0 });
@@ -17,7 +15,7 @@ function MapCanvas({ initialBottomRight, initialTopLeft, setCell, setCoord, coor
   const yStep = useRef(1);
 
   useEffect(() => {
-    
+
     const scale = window.devicePixelRatio;
     const canvas = canvasRef.current;
     canvas.width = canvas.clientWidth * scale;
@@ -53,18 +51,12 @@ function MapCanvas({ initialBottomRight, initialTopLeft, setCell, setCoord, coor
         }
       }
     };
-    const voronoi = Delaunay.from(Iterator).voronoi([0, 0, canvas.width, canvas.height]);
-    let drew;
-    const listeners = new MListeners(context, voronoi, drew, canvas, setCell, setCoord);
+    voronoi.setVoronoi = Delaunay.from(Iterator).voronoi([0, 0, canvas.width, canvas.height]);
+    
     const wlisterner = new WListener(bottomRight, topLeft, setZoomIn, canvas);
-
-    const listenMouseOut = listeners.handleMouseOut.bind(listeners);
     const listenMouseWheel = wlisterner.handleMouseWheel.bind(wlisterner);
-    const listenMouseMove = listeners.handleMouseMove.bind(listeners);
 
     canvas.addEventListener('mousewheel', listenMouseWheel);
-    canvas.addEventListener('mousemove', listenMouseMove);
-    canvas.addEventListener('mouseout', listenMouseOut);
 
     context.beginPath();
     drawMap(coordinatesPerId, context, voronoi);
@@ -73,30 +65,30 @@ function MapCanvas({ initialBottomRight, initialTopLeft, setCell, setCoord, coor
     context.closePath();
 
     return () => {
-      canvas.removeEventListener('mousewheel', listenMouseWheel)
-      canvas.removeEventListener('mousemove', listenMouseMove)
-      canvas.removeEventListener('mouseout', listenMouseOut)
+      canvas.removeEventListener('mousewheel', listenMouseWheel);
     }
-  }, [bottomRight, topLeft, xPrefix, yPrefix, coordinatesPerId, setCell, setCoord]);
+  }, [bottomRight, topLeft, xPrefix, yPrefix]);
 
-  if (zoomIn.zoom !== 0) {
-    const mapWidth = bottomRight.x - topLeft.x;
-    const mapHeight = bottomRight.y - topLeft.y;
-    setZoomIn({ x: zoomIn.x, y: zoomIn.y, zoom: 0 });
-    if (zoomIn.zoom === 1) {
-      const newTopLeft = { x: topLeft.x + 0.05 * zoomIn.x, y: topLeft.y + 0.05 * zoomIn.y };
-      const newBottomRight = { x: 0.95 * mapWidth + newTopLeft.x, y: 0.95 * mapHeight + newTopLeft.y };
-      setXPrefix(newTopLeft.x - Math.trunc(newTopLeft.x));
-      setYPrefix(newTopLeft.y - Math.trunc(newTopLeft.y));
-      setTopLeft(newTopLeft);
-      setBottomRight(newBottomRight);
-    } else {
-      const newTopLeft = { x: topLeft.x - 0.05 * zoomIn.x, y: topLeft.y - 0.05 * zoomIn.y };
-      const newBottomRight = { x: 1.05 * mapWidth + newTopLeft.x, y: 1.05 * mapHeight + newTopLeft.y };
-      setTopLeft(newTopLeft);
-      setBottomRight(newBottomRight);
+  useEffect(() => {
+    if (zoomIn.zoom !== 0) {
+      const mapWidth = bottomRight.x - topLeft.x;
+      const mapHeight = bottomRight.y - topLeft.y;
+      setZoomIn({ x: zoomIn.x, y: zoomIn.y, zoom: 0 });
+      if (zoomIn.zoom === 1) {
+        const newTopLeft = { x: topLeft.x + 0.05 * zoomIn.x, y: topLeft.y + 0.05 * zoomIn.y };
+        const newBottomRight = { x: 0.95 * mapWidth + newTopLeft.x, y: 0.95 * mapHeight + newTopLeft.y };
+        setXPrefix(newTopLeft.x - Math.trunc(newTopLeft.x));
+        setYPrefix(newTopLeft.y - Math.trunc(newTopLeft.y));
+        setTopLeft(newTopLeft);
+        setBottomRight(newBottomRight);
+      } else {
+        const newTopLeft = { x: topLeft.x - 0.05 * zoomIn.x, y: topLeft.y - 0.05 * zoomIn.y };
+        const newBottomRight = { x: 1.05 * mapWidth + newTopLeft.x, y: 1.05 * mapHeight + newTopLeft.y };
+        setTopLeft(newTopLeft);
+        setBottomRight(newBottomRight);
+      }
     }
-  }
+  }, [zoomIn]);
 
   const [repeatStreak, setRepeatStreak] = useState(0);
 
@@ -109,4 +101,4 @@ function MapCanvas({ initialBottomRight, initialTopLeft, setCell, setCoord, coor
     tabIndex={0} ref={canvasRef} />
 }
 
-export default MapCanvas
+export default MapCanvas;
