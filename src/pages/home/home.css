@@ -237,9 +237,9 @@ nav.home {
 .home.warning {
   text-decoration : none;
   color           : white;
-  background-color: #bb9b49;
+  background-color: #9e7231;
   position        : absolute;
-  top             : 70px;
+  top             : 72px;
   width           : calc(100% - 65px);
   border-radius   : 15px;
   height          : 40px;
