@@ -1,5 +1,5 @@
 import { findCell, drawCell, unDrawCanvas } from "./gridManager";
-import { biomeData } from "../../components/map/biomes"
+import { biomeData } from "./biomes"
 
 export class WListener {
   constructor(bottomRight, topLeft, setZoomIn, canvas) {

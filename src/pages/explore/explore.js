@@ -1,11 +1,9 @@
 import { useEffect, useState } from "react";
+import debounce from "debounce";
+import { getDimensions } from "../../components/map/grid/gridManager";
 import Header from "../../components/header/header";
 import MapCanvas from "../../components/map/map";
-import { getDimensions } from "../../components/map/gridManager";
-import debounce from "debounce";
-import CardCell from "../../components/map/cellCard/card";
-import Cursor from "../../components/map/exploreCursor";
-import { Delaunay } from "d3-delaunay"
+import Cursor from "../../components/cursor/exploreCursor";
 
 function Explore() {
 
@@ -18,10 +16,6 @@ function Explore() {
     return () => window.removeEventListener("resize", handler)
   });
 
-  const [cell, setCell] = useState(0);
-  const [coord, setCoord] = useState({ x: 0, y: 0 });
-  const [coordinatesPerId, setCoordinatesPerId] = useState(new Map());
-  const [biome, setBiome] = useState([0, 0, ""]);
   const voronoi = {
     data : null,
     get getVoronoi() {
@@ -34,6 +28,11 @@ function Explore() {
       this.data = newValue;
     }
   }
+
+  const [cell, setCell] = useState(0);
+  const [coord, setCoord] = useState({ x: 0, y: 0 });
+  const [coordinatesPerId, setCoordinatesPerId] = useState(new Map());
+  const [biome, setBiome] = useState([0, 0, ""]);
   const [topLeft, setTopLeft] = useState(dimensions.topLeft);
   const [bottomRight, setBottomRight] = useState(dimensions.bottomRight);
 
@@ -42,9 +41,8 @@ function Explore() {
       <Header />
       <MapCanvas key={key} topLeft={topLeft} setTopLeft={setTopLeft} bottomRight={bottomRight} setBottomRight={setBottomRight}
         coordinatesPerId={coordinatesPerId} voronoi={voronoi} />
-      <CardCell cellNumber={cell} coord={coord} coordinatesPerId={coordinatesPerId} biome={biome}/>
-      <Cursor setCell={setCell} setCoord={setCoord} coordinatesPerId={coordinatesPerId} setBiome={setBiome}
-        voronoi={voronoi} topLeft={topLeft} />
+      <Cursor setCoord={setCoord} setCell={setCell} coordinatesPerId={coordinatesPerId} voronoi={voronoi} topLeft={topLeft}
+        setBiome={setBiome} />
     </div>
   );
 

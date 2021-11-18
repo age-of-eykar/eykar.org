@@ -1,4 +1,4 @@
-import { lcg, szudzik } from "../../utils/deterministic.js"
+import { lcg, szudzik } from "../../../utils/deterministic.js"
 
 export function findCell(x, y, voronoi) {
   let cell = 0;

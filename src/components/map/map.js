@@ -1,9 +1,9 @@
 import { Delaunay } from "d3-delaunay"
 import "./map.css"
 import React, { useRef, useEffect, useState } from "react"
-import { KListeners, WListener } from "./listeners"
-import { getTileCenter } from "./gridManager"
-import { drawMap } from "./biomes"
+import { KListeners, WListener } from "./grid/listeners"
+import { getTileCenter } from "./grid/gridManager"
+import { drawMap } from "./grid/biomes"
 
 function MapCanvas({ topLeft, setTopLeft, bottomRight, setBottomRight, coordinatesPerId, voronoi }) {
 
@@ -67,7 +67,7 @@ function MapCanvas({ topLeft, setTopLeft, bottomRight, setBottomRight, coordinat
     return () => {
       canvas.removeEventListener('mousewheel', listenMouseWheel);
     }
-  }, [bottomRight, topLeft, xPrefix, yPrefix]);
+  }, [bottomRight, topLeft, xPrefix, yPrefix, coordinatesPerId, voronoi]);
 
   useEffect(() => {
     if (zoomIn.zoom !== 0) {
@@ -88,7 +88,7 @@ function MapCanvas({ topLeft, setTopLeft, bottomRight, setBottomRight, coordinat
         setBottomRight(newBottomRight);
       }
     }
-  }, [zoomIn]);
+  }, [zoomIn.zoom, zoomIn.x, zoomIn.y, bottomRight.x, bottomRight.y, topLeft.x, topLeft.y, setTopLeft, setBottomRight]);
 
   const [repeatStreak, setRepeatStreak] = useState(0);
 

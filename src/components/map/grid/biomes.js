@@ -1,4 +1,4 @@
-import { perlin } from "../../utils/perlinNoise";
+import { perlin } from "../../../utils/perlinNoise";
 import { drawCell } from "./gridManager";
 
 function getElevation(x, y) {

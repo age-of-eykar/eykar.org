@@ -1,9 +1,6 @@
 import { useEffect, useRef } from 'react';
-import { MListeners } from './listeners'
+import { MListeners } from '../map/grid/listeners'
 
-// fonction principale qui gere les listeners
-// cree un canvas et colore la case pointee
-// calcule biome(offset.x, offset.y) et renvoie les donnees au parent (explore)
 function Cursor({ setCell, setCoord, coordinatesPerId, setBiome, voronoi, topLeft }) {
     const canvasRef = useRef(null)
 
