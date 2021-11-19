@@ -5,14 +5,9 @@ import { KListeners, WListener } from "./grid/listeners"
 import { getTileCenter } from "./grid/gridManager"
 import { drawMap } from "./grid/biomes"
 
-function MapCanvas({ topLeft, setTopLeft, bottomRight, setBottomRight, coordinatesPerId, voronoi }) {
+function MapCanvas({ xStep, yStep, xPrefix, yPrefix, topLeft, setTopLeft, bottomRight, setBottomRight, coordinatesPerId, voronoi }) {
 
   const canvasRef = useRef(null);
-  const [xPrefix, setXPrefix] = useState(0);
-  const [yPrefix, setYPrefix] = useState(0);
-  const [zoomIn, setZoomIn] = useState({ x: 0, y: 0, zoom: 0 });
-  const xStep = useRef(1);
-  const yStep = useRef(1);
 
   useEffect(() => {
 
@@ -22,7 +17,6 @@ function MapCanvas({ topLeft, setTopLeft, bottomRight, setBottomRight, coordinat
     canvas.height = canvas.clientHeight * scale;
     const context = canvas.getContext('2d')
     context.scale(scale, scale);
-
     const mapWidth = bottomRight.x - topLeft.x;
     const mapHeight = bottomRight.y - topLeft.y;
     xStep.current = context.canvas.width / (scale * (mapWidth + 1));
@@ -53,52 +47,15 @@ function MapCanvas({ topLeft, setTopLeft, bottomRight, setBottomRight, coordinat
     };
     voronoi.setVoronoi = Delaunay.from(Iterator).voronoi([0, 0, canvas.width, canvas.height]);
     
-    const wlisterner = new WListener(bottomRight, topLeft, setZoomIn, canvas);
-    const listenMouseWheel = wlisterner.handleMouseWheel.bind(wlisterner);
-
-    canvas.addEventListener('mousewheel', listenMouseWheel);
-
     context.beginPath();
     drawMap(coordinatesPerId, context, voronoi);
     context.fill();
     context.stroke();
     context.closePath();
 
-    return () => {
-      canvas.removeEventListener('mousewheel', listenMouseWheel);
-    }
-  }, [bottomRight, topLeft, xPrefix, yPrefix, coordinatesPerId, voronoi]);
+  }, [bottomRight, topLeft, xPrefix, yPrefix, coordinatesPerId, voronoi, xStep, yStep]);
 
-  useEffect(() => {
-    if (zoomIn.zoom !== 0) {
-      const mapWidth = bottomRight.x - topLeft.x;
-      const mapHeight = bottomRight.y - topLeft.y;
-      setZoomIn({ x: zoomIn.x, y: zoomIn.y, zoom: 0 });
-      if (zoomIn.zoom === 1) {
-        const newTopLeft = { x: topLeft.x + 0.05 * zoomIn.x, y: topLeft.y + 0.05 * zoomIn.y };
-        const newBottomRight = { x: 0.95 * mapWidth + newTopLeft.x, y: 0.95 * mapHeight + newTopLeft.y };
-        setXPrefix(newTopLeft.x - Math.trunc(newTopLeft.x));
-        setYPrefix(newTopLeft.y - Math.trunc(newTopLeft.y));
-        setTopLeft(newTopLeft);
-        setBottomRight(newBottomRight);
-      } else {
-        const newTopLeft = { x: topLeft.x - 0.05 * zoomIn.x, y: topLeft.y - 0.05 * zoomIn.y };
-        const newBottomRight = { x: 1.05 * mapWidth + newTopLeft.x, y: 1.05 * mapHeight + newTopLeft.y };
-        setTopLeft(newTopLeft);
-        setBottomRight(newBottomRight);
-      }
-    }
-  }, [zoomIn.zoom, zoomIn.x, zoomIn.y, bottomRight.x, bottomRight.y, topLeft.x, topLeft.y, setTopLeft, setBottomRight]);
-
-  const [repeatStreak, setRepeatStreak] = useState(0);
-
-  const kListeners = new KListeners(
-    xStep, yStep, setRepeatStreak, repeatStreak, xPrefix, yPrefix, setXPrefix, setYPrefix,
-    bottomRight, setBottomRight, topLeft, setTopLeft
-  );
-
-  return <canvas className="map" onKeyDown={kListeners.onKeyPressed.bind(kListeners)}
-    tabIndex={0} ref={canvasRef} />
+  return <canvas className="map" ref={canvasRef} />
 }
 
 export default MapCanvas;

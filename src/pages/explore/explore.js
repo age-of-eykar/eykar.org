@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import debounce from "debounce";
 import { getDimensions } from "../../components/map/grid/gridManager";
 import Header from "../../components/header/header";
@@ -35,14 +35,18 @@ function Explore() {
   const [biome, setBiome] = useState([0, 0, ""]);
   const [topLeft, setTopLeft] = useState(dimensions.topLeft);
   const [bottomRight, setBottomRight] = useState(dimensions.bottomRight);
+  const [xPrefix, setXPrefix] = useState(0);
+  const [yPrefix, setYPrefix] = useState(0);
+  const xStep = useRef(1);
+  const yStep = useRef(1);
 
   return (
     <div className="">
       <Header />
-      <MapCanvas key={key} topLeft={topLeft} setTopLeft={setTopLeft} bottomRight={bottomRight} setBottomRight={setBottomRight}
+      <MapCanvas key={key} xStep={xStep} yStep={yStep} xPrefix={xPrefix} yPrefix={yPrefix} topLeft={topLeft} setTopLeft={setTopLeft} bottomRight={bottomRight} setBottomRight={setBottomRight}
         coordinatesPerId={coordinatesPerId} voronoi={voronoi} />
-      <Cursor setCoord={setCoord} setCell={setCell} coordinatesPerId={coordinatesPerId} voronoi={voronoi} topLeft={topLeft}
-        setBiome={setBiome} />
+      <Cursor xStep={xStep} yStep={yStep} xPrefix={xPrefix} setXPrefix={setXPrefix} yPrefix={yPrefix} setYPrefix={setYPrefix} setCoord={setCoord} setCell={setCell} coordinatesPerId={coordinatesPerId} voronoi={voronoi} setTopLeft={setTopLeft} topLeft={topLeft}
+        setBiome={setBiome} bottomRight={bottomRight} setBottomRight={setBottomRight} />
     </div>
   );
 
