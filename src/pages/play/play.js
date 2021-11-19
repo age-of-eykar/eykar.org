@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import debounce from "debounce";
 import { getDimensions } from "../../components/map/grid/gridManager";
 import PlayHeader from "../../components/header/playheader";
@@ -36,15 +36,20 @@ function Play() {
 
     const [topLeft, setTopLeft] = useState(dimensions.topLeft);
     const [bottomRight, setBottomRight] = useState(dimensions.bottomRight);
-    
+
+    const [xPrefix, setXPrefix] = useState(0);
+    const [yPrefix, setYPrefix] = useState(0);
+    const xStep = useRef(1);
+    const yStep = useRef(1);
+
     return (
         <div className="">
             <PlayHeader />
-            <MapCanvas key={key} topLeft={topLeft} setTopLeft={setTopLeft} bottomRight={bottomRight} setBottomRight={setBottomRight}
-                setCell={setCell} setCoord={setCoord} coordinatesPerId={coordinatesPerId} voronoi={voronoi}/>
+            <MapCanvas key={key} xStep={xStep} yStep={yStep} xPrefix={xPrefix} yPrefix={yPrefix} topLeft={topLeft} setTopLeft={setTopLeft} bottomRight={bottomRight} setBottomRight={setBottomRight}
+              coordinatesPerId={coordinatesPerId} voronoi={voronoi} />
             <CardCell cellNumber={cell} coord={coord} coordinatesPerId={coordinatesPerId} biome={biome}/>
-            <Cursor setCell={setCell} setCoord={setCoord} coordinatesPerId={coordinatesPerId} setBiome={setBiome}
-                voronoi={voronoi} topLeft={topLeft} />
+            <Cursor xStep={xStep} yStep={yStep} xPrefix={xPrefix} setXPrefix={setXPrefix} yPrefix={yPrefix} setYPrefix={setYPrefix} setCoord={setCoord} setCell={setCell} coordinatesPerId={coordinatesPerId} voronoi={voronoi} setTopLeft={setTopLeft} topLeft={topLeft}
+              setBiome={setBiome} bottomRight={bottomRight} setBottomRight={setBottomRight} />
         </div>
     );
 
