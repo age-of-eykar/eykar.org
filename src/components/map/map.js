@@ -1,11 +1,10 @@
 import { Delaunay } from "d3-delaunay"
 import "./map.css"
-import React, { useRef, useEffect, useState } from "react"
-import { KListeners, WListener } from "./grid/listeners"
+import React, { useRef, useEffect } from "react"
 import { getTileCenter } from "./grid/gridManager"
 import { drawMap } from "./grid/biomes"
 
-function MapCanvas({ xStep, yStep, xPrefix, yPrefix, topLeft, setTopLeft, bottomRight, setBottomRight, coordinatesPerId, voronoi }) {
+function MapCanvas({ xStep, yStep, xPrefix, yPrefix, topLeft, bottomRight, coordinatesPerId, voronoi }) {
 
   const canvasRef = useRef(null);
 
@@ -46,7 +45,6 @@ function MapCanvas({ xStep, yStep, xPrefix, yPrefix, topLeft, setTopLeft, bottom
       }
     };
     voronoi.setVoronoi = Delaunay.from(Iterator).voronoi([0, 0, canvas.width, canvas.height]);
-    
     context.beginPath();
     drawMap(coordinatesPerId, context, voronoi);
     context.fill();

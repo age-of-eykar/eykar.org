@@ -1,14 +1,10 @@
 import "./header.css"
 
 import { Link } from "react-router-dom";
-import logo from "../../img/logo.svg";
-
 import { useWeb3React } from '@web3-react/core'
 
 function Account() {
-    const { account, library } = useWeb3React();
-
-
+    const { account } = useWeb3React();
 
     if (account)
         return (
@@ -22,7 +18,7 @@ function Account() {
             </div>)
 
     return (<div className="header button error button_div">
-        <svg className="header icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" ><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        <svg className="header icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" ><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
         <span className="header button_text">
             Not connected
         </span>
