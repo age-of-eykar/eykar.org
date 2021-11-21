@@ -24,7 +24,7 @@ function Play() {
 
   useEffect(() => {
     const { abi } = require("../../contracts/Eykar.json");
-    const loadedContract = new Contract("0x9275574657b07fC74ae42aCA2d2c6514B7D6aDc1", abi, library
+    const loadedContract = new Contract("0xf26DCd183f02E37e6Bc4B8934c76688e7a87a595", abi, library
       .getSigner(account));
     setContract(loadedContract);
     (async () => { setColonies(await loadedContract.getColonies(account)); })();

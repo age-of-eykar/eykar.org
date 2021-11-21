@@ -6,6 +6,9 @@ import { generateName } from '../../../utils/name';
 function Select({ contract, colonies }) {
 
     const [name, setName] = useState(generateName());
+    (async () => { 
+        console.log(1);
+        console.log(await contract.getPlots(0, 0, 15, 15)); })();
 
     return (
         <div>
