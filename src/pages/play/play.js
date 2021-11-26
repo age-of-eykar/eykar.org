@@ -24,7 +24,7 @@ function Play() {
 
   useEffect(() => {
     const { abi } = require("../../contracts/Eykar.json");
-    const loadedContract = new Contract("0xf26DCd183f02E37e6Bc4B8934c76688e7a87a595", abi, library
+    const loadedContract = new Contract("0xb7dC5Ef6D9B574b9E53b3401409003D575ec9957", abi, library
       .getSigner(account));
     setContract(loadedContract);
     (async () => { setColonies(await loadedContract.getColonies(account)); })();
@@ -85,7 +85,9 @@ function Play() {
       break;
 
     case 2:
-      component = <Select contract={contract} colonies={colonies} />
+      component = <Select setGameState={setGameState}
+        setTopLeft={setTopLeft} setBottomRight={setBottomRight}
+        contract={contract} colonies={colonies} />
       break;
 
     case 3:
@@ -99,7 +101,9 @@ function Play() {
   return (
     <div className="">
       <PlayHeader />
-      <MapCanvas key={key} xStep={xStep} yStep={yStep} xPrefix={xPrefix} yPrefix={yPrefix} topLeft={topLeft} setTopLeft={setTopLeft} bottomRight={bottomRight} setBottomRight={setBottomRight}
+      <MapCanvas key={key} xStep={xStep} yStep={yStep} xPrefix={xPrefix} yPrefix={yPrefix}
+        topLeft={topLeft} setTopLeft={setTopLeft} bottomRight={bottomRight}
+        setBottomRight={setBottomRight}
         coordinatesPerId={coordinatesPerId} voronoi={voronoi} />
       {component}
     </div>

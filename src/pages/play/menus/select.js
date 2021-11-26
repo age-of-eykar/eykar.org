@@ -2,27 +2,33 @@ import "./menus.css"
 
 import React, { useState } from 'react';
 import { generateName } from '../../../utils/name';
+import { getDimensions } from "../../../components/map/grid/gridManager"
 
-function Select({ contract, colonies }) {
+function setColony(setGameState, setTopLeft, setBottomRight, colony) {
+    (async () => {
+        const dimensions = getDimensions({ x: colony.xLocation.toNumber(), y: colony.yLocation.toNumber() }, 32);
+        setTopLeft(dimensions.topLeft);
+        setBottomRight(dimensions.bottomRight);
+        setGameState(3);
+    })();
+}
+
+function Select({ setGameState, setTopLeft, setBottomRight, colonies }) {
 
     const [name, setName] = useState(generateName());
-    (async () => { 
-        console.log(1);
-        console.log(await contract.getPlots(0, 0, 15, 15)); })();
-
     return (
         <div>
             <h1>Select a colony</h1>
-
             {
                 colonies.map(colony => {
-                    return <button key={colony.location} >
+                    return <button key={colony.location} onClick={
+                        () => setColony(setGameState, setTopLeft, setBottomRight, colony)} >
                         <h2>{colony.name}</h2>
                         <ol>
-                            <li>plots: {colony.plotsAmount.toString()}</li>
-                            <li>people: {colony.people.toString()}</li>
-                            <li>materials: {colony.materials.toString()}</li>
-                            <li>food: {colony.food.toString()}</li>
+                            <li key="plots" >plots: {colony.plotsAmount.toString()}</li>
+                            <li key="people" >people: {colony.people.toString()}</li>
+                            <li key="materials" >materials: {colony.materials.toString()}</li>
+                            <li key="food">food: {colony.food.toString()}</li>
                         </ol>
 
                     </button>
