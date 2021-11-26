@@ -153,3 +153,14 @@ export class KListeners {
     }
   }
 }
+
+export class CListener {
+  constructor(setCoord) {
+    this.setCoord = setCoord;
+  }
+
+  handleMouseClick(event) {
+    this.setCoord({ x: event.offsetX, y: event.offsetY });
+  }
+
+}
