@@ -3,11 +3,11 @@ import "./header.css"
 import { Link } from "react-router-dom";
 import { useWeb3React } from '@web3-react/core'
 
-function Account() {
+function Account({ gameState, setGameState }) {
     const { account } = useWeb3React();
-
     if (account)
-        return (
+        return (gameState != 3) ?
+
             <div className="header button highlighted button_div">
                 <svg className="header icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
@@ -15,7 +15,17 @@ function Account() {
                 <span className="header button_text">
                     {account.substring(0, 6)}...{account.substring(account.length - 4)}
                 </span>
-            </div>)
+            </div>
+            :
+            <button className="header button highlighted button_div" onClick={() => setGameState(2)}>
+                <svg className="header icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
+                <span className="header button_text" >
+                    My colonies
+                </span>
+            </button>
+
 
     return (<div className="header button error button_div">
         <svg className="header icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" ><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
@@ -23,16 +33,14 @@ function Account() {
             Not connected
         </span>
     </div>)
-
-
 }
 
-function PlayHeader() {
+function PlayHeader({ gameState, setGameState }) {
     return (
         <nav className="header">
             <div className="header icons">
 
-                <Account />
+                <Account gameState={gameState} setGameState={setGameState} />
 
                 <Link className="header button normal" to="/discover" >
                     <div className="header button_div">

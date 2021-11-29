@@ -24,7 +24,7 @@ function Play() {
 
   useEffect(() => {
     const { abi } = require("../../contracts/Eykar.json");
-    const loadedContract = new Contract("0xb7dC5Ef6D9B574b9E53b3401409003D575ec9957", abi, library
+    const loadedContract = new Contract("0x46C65e6C9662E176629c496bC4716a925182Ea06", abi, library
       .getSigner(account));
     setContract(loadedContract);
     (async () => { setColonies(await loadedContract.getColonies(account)); })();
@@ -100,7 +100,7 @@ function Play() {
 
   return (
     <div className="">
-      <PlayHeader />
+      <PlayHeader gameState={gameState} setGameState={setGameState} />
       <MapCanvas key={key} xStep={xStep} yStep={yStep} xPrefix={xPrefix} yPrefix={yPrefix}
         topLeft={topLeft} setTopLeft={setTopLeft} bottomRight={bottomRight}
         setBottomRight={setBottomRight}
