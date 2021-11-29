@@ -17,24 +17,25 @@ function Select({ setGameState, setTopLeft, setBottomRight, colonies }) {
 
     const [name, setName] = useState(generateName());
     return (
-        <div>
-            <h1>Select a colony</h1>
-            {
-                colonies.map(colony => {
-                    return <button key={colony.location} onClick={
-                        () => setColony(setGameState, setTopLeft, setBottomRight, colony)} >
-                        <h2>{colony.name}</h2>
-                        <ol>
-                            <li key="plots" >plots: {colony.plotsAmount.toString()}</li>
-                            <li key="people" >people: {colony.people.toString()}</li>
-                            <li key="materials" >materials: {colony.materials.toString()}</li>
-                            <li key="food">food: {colony.food.toString()}</li>
-                        </ol>
+        <div className="game overlay" >
+            <h1 className="game title" >Chose a colony</h1>
+            <div className="game colonies">
+                {
+                    colonies.map(colony => {
+                        return <button className="game colony box" key={colony.location} onClick={
+                            () => setColony(setGameState, setTopLeft, setBottomRight, colony)} >
+                            <h2 className="game colony">{colony.name}</h2>
+                            <div className="game colony content">
+                                <div>🏛️ Plots: {colony.plotsAmount.toString()}</div>
+                                <div>🧑‍🌾 People: {colony.people.toString()}</div>
+                                <div>🪵 Materials: {colony.materials.toString()}</div>
+                                <div>🥕 Food: {colony.food.toString()}</div>
+                            </div>
 
-                    </button>
-                })
-            }
-
+                        </button>
+                    })
+                }
+            </div>
         </div>
     );
 }

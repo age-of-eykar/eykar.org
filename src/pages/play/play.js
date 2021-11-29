@@ -1,3 +1,5 @@
+import "./play.css"
+
 import { useEffect, useState, useRef } from "react";
 import debounce from "debounce";
 import { getDimensions } from "../../components/map/grid/gridManager";
@@ -99,7 +101,7 @@ function Play() {
 
 
   return (
-    <div className="">
+    <div className="game screen">
       <PlayHeader gameState={gameState} setGameState={setGameState} />
       <MapCanvas key={key} xStep={xStep} yStep={yStep} xPrefix={xPrefix} yPrefix={yPrefix}
         topLeft={topLeft} setTopLeft={setTopLeft} bottomRight={bottomRight}

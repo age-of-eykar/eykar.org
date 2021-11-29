@@ -1,0 +1,53 @@
+.game.overlay {
+    background-color: red;
+    height          : 100%;
+    display         : flex;
+    flex-direction  : column;
+    justify-content : center;
+    background      : radial-gradient(circle at top, rgba(19, 4, 0, 0.836) 0%, rgba(19, 4, 0, 0.007) 100%);
+}
+
+.game.title {
+    margin     : 48px auto 0;
+    font-family: Verdana, sans-serif;
+    font-style : normal;
+    font-weight: bold;
+    font-size  : 35px;
+    padding    : 30px 45px;
+    color      : #FFFFFF;
+}
+
+.game.colonies {
+    display: flex;
+    height : 100%;
+    width  : 100%;
+}
+
+.game.colony.box {
+    font-family     : Verdana, Sans-Serif;
+    color           : #1d1c1b;
+    background-color: rgba(128, 115, 101, 0.603);
+    backdrop-filter : blur(8px);
+    width           : fit-content;
+    height          : fit-content;
+    margin          : 16px;
+    border          : none;
+    border-radius   : 20px;
+    padding         : 16px;
+    cursor          : pointer;
+}
+
+h2.game.colony {
+    font-family: Verdana, Sans-Serif;
+    color      : #1d1c1b;
+    font-size  : 20px;
+}
+
+.game.colony.content {
+    font-family: Verdana, Sans-Serif;
+    text-align : justify;
+    color      : #141414;
+    font-size  : 16px;
+    width      : fit-content;
+    margin     : 10px auto 5px;
+}
