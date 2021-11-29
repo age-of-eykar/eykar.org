@@ -1,4 +1,4 @@
-import { findCell, drawCell, unDrawCanvas } from "./gridManager";
+import { findCell } from "./gridManager";
 import { biomeData } from "./biomes";
 
 export class WListener {
@@ -21,49 +21,6 @@ export class WListener {
       this.setZoomIn({ x: mousePositionX, y: mousePositionY, zoom: -1 });
     }
     event.preventDefault();
-  }
-}
-
-export class MListeners {
-  constructor(
-    context,
-    voronoi,
-    drew,
-    canvas,
-    topLeft,
-    setCell,
-    setCoord,
-    setBiome
-  ) {
-    this.context = context;
-    this.voronoi = voronoi;
-    this.drew = drew;
-    this.canvas = canvas;
-    this.setCell = setCell;
-    this.setCoord = setCoord;
-    this.topLeft = topLeft;
-    this.setBiome = setBiome;
-  }
-
-  handleMouseMove(event) {
-    const cell = findCell(event.offsetX, event.offsetY, this.voronoi);
-    if (this.drew !== cell) {
-      //unDrawCanvas(this.context, this.canvas);
-      drawCell(this.context, cell, "#cc0000", this.voronoi, "#cc0000");
-      this.setBiome(
-        biomeData(
-          event.offsetX + this.topLeft.x,
-          event.offsetY + this.topLeft.y
-        )
-      );
-      this.drew = cell;
-      this.setCell(cell);
-      this.setCoord({ x: event.offsetX, y: event.offsetY });
-    }
-  }
-
-  handleMouseOut() {
-    unDrawCanvas(this.context, this.canvas);
   }
 }
 
@@ -155,12 +112,29 @@ export class KListeners {
 }
 
 export class CListener {
-  constructor(setCoord) {
-    this.setCoord = setCoord;
+  constructor(setPlotInfo, voronoi, coordinatesPerId, setPlot, contract) {
+    this.voronoi = voronoi;
+    this.setPlotInfo = setPlotInfo;
+    this.coordinatesPerId = coordinatesPerId;
+    this.setPlot = setPlot;
+    this.contract = contract;
   }
 
   handleMouseClick(event) {
-    this.setCoord({ x: event.offsetX, y: event.offsetY });
+    const cell = findCell(event.offsetX, event.offsetY, this.voronoi);
+    const [x, y] = this.coordinatesPerId.get(cell);
+    let e, t, b;
+    if (typeof x !== "undefined")
+        [e, t, b] = biomeData(x, y);
+    this.setPlotInfo({
+      coord: { x: x, y: y },
+      elevation: e,
+      temperature: t,
+      biome: b,
+    });
+    (async () => {
+      this.setPlot(await this.contract.getPlot(x, y));
+    })();
   }
 
 }
