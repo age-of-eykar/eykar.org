@@ -26,7 +26,7 @@
 .game.colony.box {
     font-family     : Verdana, Sans-Serif;
     color           : #1d1c1b;
-    background-color: rgba(128, 115, 101, 0.603);
+    background-color: rgba(145, 132, 120, 0.603);
     backdrop-filter : blur(8px);
     width           : fit-content;
     height          : fit-content;

@@ -9,6 +9,7 @@ import CardCell from "../../components/cellCard/card"
 import Cursor from "../../components/cursor/exploreCursor";
 import Register from "./menus/register";
 import Select from "./menus/select";
+import { Spinner } from '../../components/spinner'
 
 import { Contract } from '@ethersproject/contracts'
 import { useWeb3React } from '@web3-react/core'
@@ -79,7 +80,10 @@ function Play() {
   let component;
   switch (gameState) {
     case 0:
-      component = <div>Loading...</div>;
+      component = <div className="game overlay fadeIn" >
+        <h1 className="game title" >Loading...</h1>
+        <Spinner color={'white'} className="game loading" />
+      </div>;
       break;
 
     case 1:
