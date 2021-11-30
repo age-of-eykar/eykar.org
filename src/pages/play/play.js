@@ -72,11 +72,12 @@ function Play() {
   };
   const [coordinatesPerId, setCoordinatesPerId] = useState(new Map());
   const [plotInfo, setPlotInfo] = useState({
-    biome: null,
-    temperature: null,
-    elevation: null,
     coord: { x: 0, y: 0 },
+    biome: null,
+    elevation: null,
+    temperature: null,
   });
+  const [plot, setPlot] = useState(null);
 
   let component;
   switch (gameState) {
@@ -106,10 +107,14 @@ function Play() {
       break;
 
     case 3:
-      component = <PlotBox plotInfo={plotInfo} plot={plot}/>
+      component = (
+        <PlotBox
+          plotInfo={plotInfo}
+          plot={plot}
+        />
+      );
       break;
   }
-
   return (
     <div className="">
       <PlayHeader />

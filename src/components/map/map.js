@@ -70,6 +70,7 @@ function MapCanvas({ topLeft, setTopLeft, bottomRight, setBottomRight, coordinat
     const wlisterner = new WListener(bottomRight, topLeft, setZoomIn, canvas);
     const listenMouseWheel = wlisterner.handleMouseWheel.bind(wlisterner);
     canvas.addEventListener("mousewheel", listenMouseWheel);
+    canvas.addEventListener("click", listenClick);
 
     let listenClick;
     if (inPlay) {

@@ -20,8 +20,7 @@ function biomes(x, y) {
   const colorS = "#1e272e20";
   if (elevation < -0.15) {
     // negative elevation
-    if (temperature < -0.4)
-        return [desertIce, desertIce]
+    if (temperature < -0.4) return [desertIce, desertIce];
     const r1 = 62 * (1 + elevation * 1.2);
     const g1 = 146 * (1 + elevation * 1.2);
     const b1 = 209 * (1 + elevation * 1.2);
@@ -75,20 +74,19 @@ export function drawMap(grid, context, voronoi) {
   let x = 0,
     y = 0;
   let colorF, colorS;
-    for (let i = 0; i < voronoi.getVoronoi._circumcenters.length; i++) {
-      if (typeof grid.get(i) !== "undefined") [x, y] = grid.get(i);
-        [colorF, colorS] = biomes(x, y);
-
-      drawCell(context, i, colorF, voronoi, colorS);
-    }
+  for (let i = 0; i < voronoi.getVoronoi._circumcenters.length; i++) {
+    if (typeof grid.get(i) !== "undefined") [x, y] = grid.get(i);
+    [colorF, colorS] = biomes(x, y);
+    drawCell(context, i, colorF, voronoi, colorS);
+  }
 }
 
 // returns [elevation, temperature, biome]
 export function biomeData(x, y) {
   const elevation = getElevation(x, y);
   const temperature = getTemperature(x, y);
-  const e = elevation * 45 + 5;
-  const t = temperature * 5000;
+  const e = (elevation + 0.15) * 1000;
+  const t = temperature * 100;
 
   if (elevation < -0.15) {
     return [e, t, "Sea"];
@@ -106,10 +104,6 @@ export function biomeData(x, y) {
       else return [e, t, "Savanna plain"];
     }
   } else {
-    if (temperature < 0 && elevation > 0.5) {
-      return [e, t, "Snowy mountains"];
-    } else {
-      return [e, t, "Rocky mountains"];
-    }
+    return [e, t, "Mountains"];
   }
 }
