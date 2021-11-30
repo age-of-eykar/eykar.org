@@ -7,6 +7,7 @@ import { useEagerConnect, useInactiveListener } from '../../utils/web3hooks'
 
 import { injected, network, ledger } from '../../utils/connectors'
 import { Spinner } from '../../components/spinner'
+import Powered from '../../components/powered/powered'
 
 const connectorsByName = {
   'Metamask': injected,
@@ -38,6 +39,7 @@ function App() {
 
   return (
     <div className="default_background">
+      <Powered />
       {
         connectMenuToggled && !connected ?
           <div className="selectmenu">

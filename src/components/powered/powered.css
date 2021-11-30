@@ -1,0 +1,21 @@
+.powered.setup {
+    width : fit-content;
+    height: fit-content;
+    background-color: rgba(223, 219, 213, 0.2);
+    cursor          : pointer;
+    border-radius   : 45px;
+    border          : 1px solid;
+    border-color    : rgba(255, 255, 255, 0.3);
+    backdrop-filter : blur(8px);
+}
+
+.powered.text {
+    font-family: Verdana, sans-serif;
+    font-size  : 14px;
+    color      : white;
+}
+
+.powered.logo {
+    height: 28px;
+    margin: 2px 4px;
+}
