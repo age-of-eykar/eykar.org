@@ -19,7 +19,7 @@ function Page1() {
             </p>
             <p>
               To register your address to the game, you will have to pay about
-              50 CRO (the equivalent of $10). This will allow you to acquire your
+              10 CRO (a bit less than $10). This will allow you to acquire your
               first land. From there you can start recruiting men, to explore
               and conquer territory. As you expand, you will eventually meet
               other kingdoms. You can ally with them or start a ruthless war to
