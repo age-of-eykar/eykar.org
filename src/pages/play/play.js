@@ -42,7 +42,7 @@ function Play() {
     if (colonies.length === 0)
       setGameState(1);
     else
-      setGameState(2);
+      setGameState(1);
   }, [colonies]);
 
   useEffect(() => {
@@ -87,7 +87,7 @@ function Play() {
       break;
 
     case 1:
-      component = <Register contract={contract} />;
+      component = <Register setGameState={setGameState} contract={contract} />;
       break;
 
     case 2:
