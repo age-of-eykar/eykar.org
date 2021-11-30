@@ -13,10 +13,8 @@
 }
 
 .game.colonies {
-    display  : flex;
-    flex-wrap: wrap;
-    height   : 100%;
-    width    : 100%;
+    height: 100%;
+    width : 100%;
 }
 
 .game.colony.box {
@@ -24,6 +22,7 @@
     color           : #1d1c1b;
     background-color: rgba(196, 184, 174, 0.55);
     backdrop-filter : blur(8px);
+    max-width       : fit-content;
     height          : fit-content;
     margin          : 16px;
     border          : none;
@@ -58,8 +57,7 @@ h2.game.colony {
 }
 
 .game.register.box {
-    width: 400px;
-
+    width          : 400px;
     margin         : auto;
     border-radius  : 16px;
     background     : rgba(49, 44, 42, 0.6);
@@ -224,25 +222,57 @@ input.game.register:focus~.highlight {
 }
 
 .game.register.buttons {
-    display         : flex;
-    justify-content : center;
+    display        : flex;
+    justify-content: center;
 }
 
-button.game.register {
-    font-family: Verdana, sans-serif;
-    font-style : normal;
-    font-size  : 15px;
-    color      : #F4E9CB;
-    background : #1d1c1b;
-    border     : none;
+.button.game.register {
+    white-space: nowrap;
+
+    font-family  : Verdana, sans-serif;
+    font-style   : normal;
+    font-size    : 15px;
+    color        : #F4E9CB;
+    background   : #1d1c1b;
+    border       : none;
     border-radius: 16px;
-    padding    : 10px;
-    margin : 10px 8% 22px 5%;
-    cursor     : pointer;
+    padding      : 10px;
+    margin       : 8px 16px 26px;
+    cursor       : pointer;
 }
 
-button.game.register.disabled {
-    color      : #f4e9cb8f;
-    background : #1d1c1b8f;
-    cursor     : default;
+.button.game.register.disabled {
+    color     : #f4e9cb8f;
+    background: #1d1c1b8f;
+    cursor    : default;
+}
+
+.game.register.sign {
+    margin   : 10px 0 -5px 35px;
+    font-size: 16px;
+}
+
+.game.register.minting {
+    margin-top     : 40px;
+    height         : 120px;
+    display        : flex;
+    flex-direction : column;
+    justify-content: center;
+}
+
+.game.register.minting.spinner {
+    height      : 22px;
+    margin-top  : -3px;
+    margin-right: 8px;
+}
+
+.game.register.minting.text {
+    display       : flex;
+    flex-direction: row;
+}
+
+.game.register.constraint.button {
+    text-decoration: none;
+    width          : fit-content;
+    margin         : 0 auto 22px;
 }

@@ -42,7 +42,7 @@ function Play() {
     if (colonies.length === 0)
       setGameState(1);
     else
-      setGameState(1);
+      setGameState(2);
   }, [colonies]);
 
   useEffect(() => {
