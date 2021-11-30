@@ -36,7 +36,7 @@ function Select({ setGameState, setTopLeft, setBottomRight, colonies }) {
                     })
                 }
 
-                <button className="game colony box create" key="buy" onClick={
+                <button className="game colony box create" key={-1} onClick={
                     () => setGameState(1)} >
                     <h2 className="game colony">💰 Buy a colony</h2>
                     <div className="game colony content">
