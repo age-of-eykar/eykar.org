@@ -77,7 +77,6 @@ function Play() {
     elevation: null,
     temperature: null,
   });
-  const [plot, setPlot] = useState(null);
 
   let component;
   switch (gameState) {
