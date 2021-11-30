@@ -28,7 +28,7 @@ function Play() {
   useEffect(() => {
     const { abi } = require("../../contracts/Eykar.json");
     const loadedContract = new Contract(
-      "0x4E83C1eA2B08D88Abe6e3C15AEE01c3AD7FB7d2E", //"0x46C65e6C9662E176629c496bC4716a925182Ea06",
+      "0x46C65e6C9662E176629c496bC4716a925182Ea06", //"0x46C65e6C9662E176629c496bC4716a925182Ea06",
       abi,
       library.getSigner(account)
     );
@@ -115,7 +115,7 @@ function Play() {
       break;
   }
   return (
-    <div className="">
+    <div className="game screen">
       <PlayHeader />
       <MapCanvas
         key={key}
