@@ -1,7 +1,6 @@
 import "./menus.css"
 
 import React, { useState } from 'react';
-import { generateName } from '../../../utils/name';
 import { ethers } from "ethers";
 import { Spinner } from '../../../components/spinner'
 
@@ -71,6 +70,8 @@ function Register({ setGameState, contract }) {
                 <div className="game register text element" >
                 </div>
             </div>
+            break;
+        default:
             break;
 
     }

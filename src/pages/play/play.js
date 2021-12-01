@@ -1,5 +1,4 @@
 import "./play.css";
-
 import { useEffect, useState } from "react";
 import debounce from "debounce";
 import { getDimensions } from "../../components/map/grid/gridManager";
@@ -28,7 +27,7 @@ function Play() {
   useEffect(() => {
     const { abi } = require("../../contracts/Eykar.json");
     const loadedContract = new Contract(
-      "0xff9bE92B190793B5b0600043090aC71AD43c9B53", //"0x46C65e6C9662E176629c496bC4716a925182Ea06",
+      "0x0Aa2946965b787d0Fb9A68787716bF6cf9232687", //"0x46C65e6C9662E176629c496bC4716a925182Ea06",
       abi,
       library.getSigner(account)
     );
@@ -107,6 +106,8 @@ function Play() {
 
     case 3:
       component = <PlotBox plotInfo={plotInfo} plot={plot} />;
+      break;
+    default:
       break;
   }
   return (

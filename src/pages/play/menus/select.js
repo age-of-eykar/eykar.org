@@ -1,7 +1,6 @@
 import "./menus.css"
 
-import React, { useState } from 'react';
-import { generateName } from '../../../utils/name';
+import React from 'react';
 import { getDimensions } from "../../../components/map/grid/gridManager"
 
 function setColony(setGameState, setTopLeft, setBottomRight, colony) {
@@ -15,7 +14,6 @@ function setColony(setGameState, setTopLeft, setBottomRight, colony) {
 
 function Select({ setGameState, setTopLeft, setBottomRight, colonies }) {
 
-    const [name, setName] = useState(generateName());
     return (
         <div className="game overlay" >
             <h1 className="game title" >Chose a colony</h1>

@@ -95,6 +95,7 @@ function MapCanvas({ topLeft, setTopLeft, bottomRight, setBottomRight, coordinat
     setPlotInfo,
     setPlot,
     contract,
+    inPlay,
   ]);
 
   useEffect(() => {

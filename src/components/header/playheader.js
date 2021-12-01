@@ -6,7 +6,7 @@ import { useWeb3React } from '@web3-react/core'
 function Account({ gameState, setGameState }) {
     const { account } = useWeb3React();
     if (account)
-        return (gameState != 3) ?
+        return (gameState !== 3) ?
 
             <div className="header button highlighted button_div">
                 <svg className="header icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
