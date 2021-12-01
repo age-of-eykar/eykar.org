@@ -1,7 +1,16 @@
 .game.screen {
+    pointer-events: none;
     height  : 100%;
     width   : 100%;
     position: absolute;
+}
+
+.game.interactive {
+    pointer-events: auto;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    z-index: 1;
 }
 
 .game.loading {

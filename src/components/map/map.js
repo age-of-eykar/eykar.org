@@ -16,6 +16,7 @@ function MapCanvas({ topLeft, setTopLeft, bottomRight, setBottomRight, coordinat
   useEffect(() => {
     const scale = window.devicePixelRatio;
     const canvas = canvasRef.current;
+    canvas.focus();
     canvas.width = canvas.clientWidth * scale;
     canvas.height = canvas.clientHeight * scale;
     const context = canvas.getContext("2d");
@@ -162,7 +163,7 @@ function MapCanvas({ topLeft, setTopLeft, bottomRight, setBottomRight, coordinat
       className="map"
       ref={canvasRef}
       onKeyDown={kListeners.onKeyPressed.bind(kListeners)}
-      tabIndex={0}
+      tabIndex={1}
     />
   );
 }

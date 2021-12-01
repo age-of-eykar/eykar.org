@@ -36,13 +36,15 @@ export default function PlotBox({ plotInfo, plot }) {
   }
 
   return (
-    <div className="plotBox">
-      <img className="plotBox__image" src={source} alt="Plot" />
-      <div className="plotBox__body">
-        <p className="structure">{structure}</p>
-        <p className="info">Biome: {plotInfo.biome}</p>
-        <p className="info">Temperature: {Math.floor(plotInfo.temperature)}</p>
-        <p className="info">Elevation: {Math.floor(plotInfo.elevation)}</p>
+    <div className="plotBox box">
+      <img className="plotBox image" src={source} alt="Plot" />
+      <div className="plotBox body">
+        <h1 className="plotBox structure">{structure}</h1>
+        <p className="plotBox info">
+          Biome: <span className="plotBox result">{plotInfo.biome}</span><br/>
+          Temperature: <span className="plotBox result">{Math.floor(plotInfo.temperature)}</span><br/>
+          Elevation: <span className="plotBox result">{Math.floor(plotInfo.elevation)}</span>
+        </p>
       </div>
     </div>
   );

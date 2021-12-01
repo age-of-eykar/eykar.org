@@ -28,7 +28,7 @@ function Play() {
   useEffect(() => {
     const { abi } = require("../../contracts/Eykar.json");
     const loadedContract = new Contract(
-      "0x7E943f153102feCC648D7121a5480853594B7636", //"0x46C65e6C9662E176629c496bC4716a925182Ea06",
+      "0xff9bE92B190793B5b0600043090aC71AD43c9B53", //"0x46C65e6C9662E176629c496bC4716a925182Ea06",
       abi,
       library.getSigner(account)
     );
@@ -106,31 +106,28 @@ function Play() {
       break;
 
     case 3:
-      component = (
-        <PlotBox
-          plotInfo={plotInfo}
-          plot={plot}
-        />
-      );
+      component = <PlotBox plotInfo={plotInfo} plot={plot} />;
       break;
   }
   return (
     <div className="game screen">
-      <PlayHeader gameState={gameState} setGameState={setGameState} />
-      <MapCanvas
-        key={key}
-        coordinatesPerId={coordinatesPerId}
-        voronoi={voronoi}
-        bottomRight={bottomRight}
-        setBottomRight={setBottomRight}
-        topLeft={topLeft}
-        setTopLeft={setTopLeft}
-        setPlotInfo={setPlotInfo}
-        setPlot={setPlot}
-        contract={contract}
-        inPlay={inPlay}
-      />
-      {component}
+      <div className="game interactive">
+        <PlayHeader gameState={gameState} setGameState={setGameState} />
+        <MapCanvas
+          key={key}
+          coordinatesPerId={coordinatesPerId}
+          voronoi={voronoi}
+          bottomRight={bottomRight}
+          setBottomRight={setBottomRight}
+          topLeft={topLeft}
+          setTopLeft={setTopLeft}
+          setPlotInfo={setPlotInfo}
+          setPlot={setPlot}
+          contract={contract}
+          inPlay={inPlay}
+        />
+        {component}
+      </div>
     </div>
   );
 }
