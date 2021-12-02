@@ -27,7 +27,7 @@ function Play() {
   useEffect(() => {
     const { abi } = require("../../contracts/Eykar.json");
     const loadedContract = new Contract(
-      "0x0Aa2946965b787d0Fb9A68787716bF6cf9232687", //"0x46C65e6C9662E176629c496bC4716a925182Ea06",
+      "0xa7cf03744ac1490d3034114bfdf8049841F156d9", //"0x46C65e6C9662E176629c496bC4716a925182Ea06",
       abi,
       library.getSigner(account)
     );
@@ -105,11 +105,14 @@ function Play() {
       break;
 
     case 3:
-      component = <PlotBox plotInfo={plotInfo} plot={plot} />;
+      if (plot !== null) {
+        component = <PlotBox plotInfo={plotInfo} plot={plot} />;
+      }
       break;
     default:
       break;
   }
+  //console.log(plot)
   return (
     <div className="game screen">
       <div className="game interactive">

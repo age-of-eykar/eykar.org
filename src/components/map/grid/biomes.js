@@ -26,47 +26,12 @@ function biomes(x, y) {
     const b1 = 209 * (1 + elevation * 1.2);
     const grad1 = "rgb(" + r1 + "," + g1 + "," + b1 + ")";
     return [grad1, grad1];
-  } else if (elevation < 0.16) {
-    // medium elevation
-    // sable ?
-    if (elevation > 0.05) {
-      if (temperature > 0) {
-        const r2 = 11 + (11 / 3) * temperature;
-        const g2 = 102 + (102 / 3) * temperature;
-        const b2 = 35 + (35 / 3) * temperature;
-        const grad2 = "rgb(" + r2 + "," + g2 + "," + b2 + ")";
-        return [grad2, colorS];
-      } else {
-        const r3 = 11 / (3 - 2 * (1 + temperature));
-        const g3 = 102 / (3 - 2 * (1 + temperature));
-        const b3 = 35 / (3 - 2 * (1 + temperature));
-        const grad3 = "rgb(" + r3 + "," + g3 + "," + b3 + ")";
-        return [grad3, colorS];
-      }
-    } else {
-      if (temperature < -0.2) {
-        return [desertIce, desertIce];
-      } else if (temperature > 0.3) {
-        return [desertSand, colorS];
-      } else {
-        return [plainContinental, colorS];
-      }
-    }
   } else {
-    // High elevation
-    if (temperature < 0 && elevation > 0.5) {
-      // cold
-      const x4 = 228 + 20 * elevation;
-      const grad4 = "rgb(" + x4 + "," + x4 + "," + x4 + ")";
-      return [grad4, "#1e272e0f"];
-    } else {
-      // medium
-      const r5 = 22 * (0.75 + elevation * 3.1);
-      const g5 = 20 * (0.75 + elevation * 3.1);
-      const b5 = 20 * (0.75 + elevation * 3.1);
-      const grad5 = "rgb(" + r5 + "," + g5 + "," + b5 + ")";
-      return [grad5, colorS];
-    }
+    const r2 = (178 + 27 * (elevation + 0.15)/ 1.15) * (1 - Math.abs(temperature) * 1.08);
+    const g2 = (152 + 51 * (elevation + 0.15)/ 1.15) * (1 - Math.abs(temperature) * 0.44);
+    const b2 = (91 + 92 * (elevation + 0.15) / 1.15) * (1 - Math.abs(temperature) * 1.25);
+    const grad2 = "rgb(" + r2 + "," + g2 + "," + b2 + ")";
+    return [grad2, colorS];
   }
 }
 
@@ -85,12 +50,13 @@ export function drawMap(grid, context, voronoi) {
 export function biomeData(x, y) {
   const elevation = getElevation(x, y);
   const temperature = getTemperature(x, y);
-  const e = (elevation + 0.15) * 1000;
-  const t = temperature * 100;
-
+  let e = (((elevation + 0.15)*20)**3);
+  if (e < 0) e = e*5;
+  const t = (temperature * 1.75 + 0.6) * 50 * (Math.log((Math.E - 1)*(1-elevation)/2+1)) - 4;
   if (elevation < -0.15) {
-    return [e, t, "Sea"];
-  } else if (elevation < 0.16) {
+    if (temperature < -0.2 && elevation > -0.17) return [e, t, "icefloe"];
+    else return [e, t, "Sea"];
+  } else if (elevation < 0.17) {
     if (temperature < -0.2) {
       if (temperature < -0.35) return [e, t, "Ice desert"];
       else if (elevation > 0.05) return [e, t, "Tundra forest"];
