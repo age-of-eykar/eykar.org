@@ -27,7 +27,7 @@ function Play() {
   useEffect(() => {
     const { abi } = require("../../contracts/Eykar.json");
     const loadedContract = new Contract(
-      "0x0Aa2946965b787d0Fb9A68787716bF6cf9232687", //"0x46C65e6C9662E176629c496bC4716a925182Ea06",
+      "0x0758f958138D7Ba8b648bA31e37C2Ec19A7929d0", //"0x46C65e6C9662E176629c496bC4716a925182Ea06",
       abi,
       library.getSigner(account)
     );
