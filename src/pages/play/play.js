@@ -106,7 +106,8 @@ function Play() {
       break;
 
     case 3:
-      component = <PlotBox plotInfo={plotInfo} plot={plot} />;
+      if (plot !== null)
+        component = <PlotBox plotInfo={plotInfo} plot={plot} />;
       break;
     default:
       break;

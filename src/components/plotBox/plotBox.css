@@ -20,14 +20,14 @@
   text-align : center;
   font-size  : 25px;
   font-weight: bold;
-  margin     : 20px auto 5px;
+  margin     : 20px auto 0px;
 }
 
 .plotBox.subtitle {
   text-align : center;
   font-size  : 14px;
   font-weight: normal;
-  margin     : 0px auto 20px;
+  margin     : 0px auto 15px;
 }
 
 .plotBox.coo {
