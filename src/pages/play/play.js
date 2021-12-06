@@ -18,7 +18,7 @@ function Play() {
   if (library === undefined) window.location.href = "/";
   const [contract, setContract] = useState(undefined);
   const [gameState, setGameState] = useState(0);
-  const [colonies, setColonies] = useState([]);
+  const [colonies, setColonies] = useState(undefined);
   const [bottomRight, setBottomRight] = useState(dimensions.bottomRight);
   const [topLeft, setTopLeft] = useState(dimensions.topLeft);
   const [plot, setPlot] = useState(null);
@@ -47,6 +47,7 @@ function Play() {
   }, [library, account]);
 
   useEffect(() => {
+    if (colonies === undefined) return;
     if (colonies.length === 0) setGameState(1);
     else if (gameState < 2) setGameState(2);
   }, [colonies]);
