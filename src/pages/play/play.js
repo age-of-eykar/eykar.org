@@ -48,7 +48,7 @@ function Play() {
 
   useEffect(() => {
     if (colonies.length === 0) setGameState(1);
-    else setGameState(2);
+    else if (gameState < 2) setGameState(2);
   }, [colonies]);
 
   useEffect(() => {
