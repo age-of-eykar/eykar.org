@@ -10,6 +10,7 @@ import PlotBox from "../../components/plotBox/plotBox";
 import Register from "./menus/register";
 import { Contract } from "@ethersproject/contracts";
 import { useWeb3React } from "@web3-react/core";
+import { szudzik } from "../../utils/deterministic.js"
 
 function Play() {
   const dimensions = getDimensions({ x: 0, y: 0 }, 48);
@@ -22,6 +23,7 @@ function Play() {
   const [bottomRight, setBottomRight] = useState(dimensions.bottomRight);
   const [topLeft, setTopLeft] = useState(dimensions.topLeft);
   const [plot, setPlot] = useState(null);
+  const [activePlots, setActivePlots] = useState(new Map());
   const inPlay = true;
 
   useEffect(() => {
@@ -45,6 +47,28 @@ function Play() {
       library.removeListener("block", onBlock);
     };
   }, [library, account]);
+
+  useEffect(() => {
+    if (gameState === 3) {
+      console.log("looking for new plots");
+      (async () => {
+        const startX = Math.trunc(topLeft.x / 8);
+        const startY = Math.trunc(topLeft.y / 8);
+        const endX = Math.trunc(bottomRight.x / 8) + 1;
+        const endY = Math.trunc(bottomRight.y / 8) + 1;
+        console.log(startX, startY, endX, endY);
+        for (let i = startX; i < endX; i++)
+          for (let j = startY; j < endY; j++) {
+            const output = await contract.getPlots(i, j);
+            for (let k = 0; k < output.plots.length; k++)
+              activePlots.set(szudzik(output.xArray[k], output.yArray[k]), output.plots[k]);
+          }
+          console.log("new activePlots", activePlots);
+
+        setActivePlots(activePlots);
+      })();
+    }
+  }, [gameState]);
 
   useEffect(() => {
     if (colonies === undefined) return;
@@ -128,6 +152,7 @@ function Play() {
           setPlot={setPlot}
           contract={contract}
           inPlay={inPlay}
+          activePlots={activePlots}
         />
         {component}
       </div>

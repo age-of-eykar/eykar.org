@@ -1,5 +1,6 @@
 import { perlin } from "../../../utils/perlinNoise";
 import { drawCell } from "./gridManager";
+import { lcg, szudzik } from "../../../utils/deterministic.js"
 
 function getElevation(x, y) {
   return perlin(x, y, 3, 0.5, 0.01, 0);
@@ -70,14 +71,21 @@ function biomes(x, y) {
   }
 }
 
-export function drawMap(grid, context, voronoi) {
+export function drawMap(activePlots, grid, context, voronoi) {
   let x = 0,
     y = 0;
   let colorF, colorS;
   for (let i = 0; i < voronoi.getVoronoi._circumcenters.length; i++) {
     if (typeof grid.get(i) !== "undefined") [x, y] = grid.get(i);
     [colorF, colorS] = biomes(x, y);
-    drawCell(context, i, colorF, voronoi, colorS);
+
+    const plot = activePlots.get(szudzik(x, y));
+    if (plot !== undefined) {
+      const tint = lcg(plot.owner.toNumber());
+      drawCell(context, i, "hsl(" + (tint % 360) + ",90%,61%)", voronoi, colorS);
+    } else {
+      drawCell(context, i, colorF, voronoi, colorS);
+    }
   }
 }
 
