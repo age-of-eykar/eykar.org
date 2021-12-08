@@ -5,7 +5,7 @@ import { getTileCenter } from "./grid/gridManager";
 import { drawMap } from "./grid/biomes";
 import { CListener, KListeners, WListener } from "../map/grid/listeners";
 
-function MapCanvas({ topLeft, setTopLeft, bottomRight, setBottomRight, coordinatesPerId, voronoi, setPlotInfo, setPlot, contract, inPlay }) {
+function MapCanvas({ topLeft, setTopLeft, bottomRight, setBottomRight, coordinatesPerId, activePlots, voronoi, setPlotInfo, setPlot, contract, inPlay }) {
   const canvasRef = useRef(null);
   const [xPrefix, setXPrefix] = useState(0);
   const [yPrefix, setYPrefix] = useState(0);
@@ -66,7 +66,7 @@ function MapCanvas({ topLeft, setTopLeft, bottomRight, setBottomRight, coordinat
       canvas.width,
       canvas.height,
     ]);
-    drawMap(coordinatesPerId, context, voronoi);
+    drawMap(activePlots, coordinatesPerId, context, voronoi);
 
     const wlisterner = new WListener(bottomRight, topLeft, setZoomIn, canvas);
     const listenMouseWheel = wlisterner.handleMouseWheel.bind(wlisterner);
@@ -92,10 +92,8 @@ function MapCanvas({ topLeft, setTopLeft, bottomRight, setBottomRight, coordinat
     voronoi,
     xStep,
     yStep,
-    setPlotInfo,
-    setPlot,
-    contract,
     inPlay,
+    activePlots
   ]);
 
   useEffect(() => {

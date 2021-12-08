@@ -1,7 +1,7 @@
-import camp from "../../img/camp.png";
-import undiscovered from "../../img/undiscovered.jpg";
-import hamlet from "../../img/hamlet.jpg";
-import town from "../../img/town.jpg";
+import camp from "../../img/camp.webp";
+import undiscovered from "../../img/undiscovered.webp";
+import hamlet from "../../img/hamlet.webp";
+import town from "../../img/town.webp";
 import logo from "../../img/logo.svg";
 import "./plotBox.css";
 

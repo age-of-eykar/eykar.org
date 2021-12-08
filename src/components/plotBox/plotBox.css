@@ -49,6 +49,7 @@
   display                : block;
   width                  : 100%;
   height                 : 45%;
+  object-fit             : cover;
 }
 
 @media (max-width: 700px) {
