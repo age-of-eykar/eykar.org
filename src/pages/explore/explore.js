@@ -9,6 +9,7 @@ function Explore() {
   const [key, setKey] = useState(0);
   const [bottomRight, setBottomRight] = useState(dimensions.bottomRight);
   const [topLeft, setTopLeft] = useState(dimensions.topLeft);
+  const [activePlots, setActivePlots] = useState(new Map());
   const inPlay = false;
 
   useEffect(() => {
@@ -37,13 +38,14 @@ function Explore() {
       <Header />
       <MapCanvas
         key={key}
+        coordinatesPerId={coordinatesPerId}
+        voronoi={voronoi}
         bottomRight={bottomRight}
         setBottomRight={setBottomRight}
         topLeft={topLeft}
-        setTopLeft={setTopLeft}
-        coordinatesPerId={coordinatesPerId}
-        voronoi={voronoi}
+        setTopLeft={setTopLeft}       
         inPlay={inPlay}
+        activePlots={activePlots}
       />
     </div>
   );
