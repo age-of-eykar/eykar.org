@@ -16,6 +16,22 @@ const connectorsByName = {
 }
 
 function App() {
+  try {
+    window.ethereum.request({
+      method: "wallet_addEthereumChain",
+      params: [{
+        chainId: "0x152",
+        rpcUrls: ["https://cronos-testnet-3.crypto.org:8545"],
+        chainName: "Cronos Testnet",
+        nativeCurrency: {
+          name: "tCRO",
+          symbol: "tCRO",
+          decimals: 18
+        },
+        blockExplorerUrls: ["https://cronos.crypto.org/explorer/testnet3"]
+      }]
+    });
+  } catch (e) { }
 
   const context = useWeb3React();
   const { connector, activate, error } = context;
