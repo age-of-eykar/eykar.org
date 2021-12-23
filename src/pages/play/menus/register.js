@@ -5,12 +5,13 @@ import { ethers } from "ethers";
 import { Spinner } from '../../../components/spinner'
 
 
-function create(name, contract, setCreatingState) {
+function create(name, contract, setCreatingState, setTxHash) {
     setCreatingState(1);
     (async () => {
-        await contract.register(name, {
+        const tx = await contract.register(name, {
             value: ethers.utils.parseEther("10.0")
         });
+        setTxHash(tx.hash);
         setCreatingState(2);
     })();
 }
@@ -18,6 +19,7 @@ function create(name, contract, setCreatingState) {
 function Register({ setGameState, contract }) {
     const [name, setName] = useState("");
     const [creatingState, setCreatingState] = useState(0);
+    const [txHash, setTxHash] = useState(null);
 
     let component;
     switch (creatingState) {
@@ -65,7 +67,7 @@ function Register({ setGameState, contract }) {
                     <Spinner className="game register minting spinner" color={'white'} />
                     Your first colony is being minted
                 </div>
-                <a className="game register constraint button" href="https://cronos.crypto.org/docs/getting-started/metamask.html#connecting-to-the-cronos-mainnet-beta" target="https://cronos.crypto.org/docs/getting-started/metamask.html#connecting-to-the-cronos-mainnet-beta">Check transaction</a>
+                <a className="game register constraint button" href={"https://cronos.crypto.org/explorer/testnet3/tx/" + txHash}>Check transaction</a>
 
                 <div className="game register text element" >
                 </div>
