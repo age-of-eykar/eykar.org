@@ -46,7 +46,7 @@ function Register({ setGameState, contract }) {
                     }}>My colonies</button>
                     <button className={"game register button" + ((name) ? "" : " disabled")} onClick={() => {
                         if (name)
-                            create(name, contract, setCreatingState);
+                            create(name, contract, setCreatingState, setTxHash);
                     }}>Create</button>
                 </div>
             </>
@@ -67,7 +67,7 @@ function Register({ setGameState, contract }) {
                     <Spinner className="game register minting spinner" color={'white'} />
                     Your first colony is being minted
                 </div>
-                <a className="game register constraint button" href={"https://cronos.crypto.org/explorer/testnet3/tx/" + txHash}>Check transaction</a>
+                <a className="game register constraint button" href={"https://cronos.crypto.org/explorer/testnet3/tx/" + txHash } target="_blank" rel="noreferrer">Check transaction</a>
 
                 <div className="game register text element" >
                 </div>

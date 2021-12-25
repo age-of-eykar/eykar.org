@@ -73,7 +73,7 @@ function Play() {
   useEffect(() => {
     if (colonies === undefined) return;
     if (colonies.length === 0) setGameState(1);
-    else if (gameState < 2) setGameState(2);
+    else if (gameState === 0) setGameState(2);
   }, [colonies]);
 
   useEffect(() => {
