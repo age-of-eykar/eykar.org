@@ -39,7 +39,10 @@ function Play() {
     })();
     const onBlock = () =>
       (async () => {
-        setColonies(await loadedContract.getColonies(account));
+        const newColonies = await loadedContract.getColonies(account);
+        if (colonies === undefined || newColonies.length !== colonies.length) {
+          setColonies(newColonies);
+        }
       })();
 
     library.on("block", onBlock);
@@ -63,8 +66,6 @@ function Play() {
             for (let k = 0; k < output.plots.length; k++)
               activePlots.set(szudzik(output.xArray[k], output.yArray[k]), output.plots[k]);
           }
-          console.log("new activePlots", activePlots);
-
         setActivePlots(activePlots);
       })();
     }
@@ -73,7 +74,7 @@ function Play() {
   useEffect(() => {
     if (colonies === undefined) return;
     if (colonies.length === 0) setGameState(1);
-    else if (gameState === 0) setGameState(2);
+    else if (gameState < 2) setGameState(2);
   }, [colonies]);
 
   useEffect(() => {
