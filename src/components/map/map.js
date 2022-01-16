@@ -5,7 +5,15 @@ import { getTileCenter } from "./grid/gridManager";
 import { drawMap } from "./grid/biomes";
 import { CListener, KListeners, WListener } from "../map/grid/listeners";
 
-function MapCanvas({ topLeft, setTopLeft, bottomRight, setBottomRight, coordinatesPerId, activePlots, voronoi, setPlotInfo, setPlot, contract, inPlay }) {
+import { getDimensions } from "../../components/map/grid/gridManager";
+import { szudzik } from "../../utils/deterministic.js"
+
+function MapCanvas({ setClickedPlotCallback }) {
+
+  const dimensions = getDimensions({ x: 0, y: 0 }, 48);
+  const [topLeft, setTopLeft] = useState(dimensions.topLeft);
+  const [bottomRight, setBottomRight] = useState(dimensions.bottomRight);
+  const coordinatesPerId = new Map();
   const canvasRef = useRef(null);
   const [xPrefix, setXPrefix] = useState(0);
   const [yPrefix, setYPrefix] = useState(0);
@@ -60,28 +68,39 @@ function MapCanvas({ topLeft, setTopLeft, bottomRight, setBottomRight, coordinat
         }
       },
     };
-    voronoi.setVoronoi = Delaunay.from(Iterator).voronoi([
+    const voronoi = Delaunay.from(Iterator).voronoi([
       0,
       0,
       canvas.width,
       canvas.height,
     ]);
-    drawMap(activePlots, coordinatesPerId, context, voronoi);
+    drawMap(new Map(), coordinatesPerId, context, voronoi);
+    (async () => {
+      const plots = await (await fetch("https://cache.eykar.org/colonies",
+        {
+          method: 'POST', body: JSON.stringify({
+            "xmin": topLeft.x, "ymin": topLeft.y,
+            "xmax": bottomRight.x, "ymax": bottomRight.y
+          })
+        })).json();
+      const newPlots = new Map();
+      for (const plotKey in plots) {
+        const plot = plots[plotKey];
+        newPlots.set(szudzik(plot.x, plot.y), plot.colony_id);
+      }
+      drawMap(newPlots, coordinatesPerId, context, voronoi);
+    })();
 
     const wlisterner = new WListener(bottomRight, topLeft, setZoomIn, canvas);
     const listenMouseWheel = wlisterner.handleMouseWheel.bind(wlisterner);
     canvas.addEventListener("mousewheel", listenMouseWheel);
 
-    let listenClick;
-    if (inPlay) {
-      const clisterner = new CListener(setPlotInfo, voronoi, coordinatesPerId, setPlot, contract);
-      listenClick = clisterner.handleMouseClick.bind(clisterner);
-      canvas.addEventListener("click", listenClick);
-    }
+    const cListener = new CListener(setClickedPlotCallback, voronoi, coordinatesPerId);
+    const listenClick = cListener.handleMouseClick.bind(cListener);
+    canvas.addEventListener("click", listenClick);
     return () => {
       canvas.removeEventListener("mousewheel", listenMouseWheel);
-      if (inPlay)
-        canvas.removeEventListener("click", listenClick);
+      canvas.removeEventListener("click", listenClick);
     };
   }, [
     bottomRight,
@@ -89,11 +108,8 @@ function MapCanvas({ topLeft, setTopLeft, bottomRight, setBottomRight, coordinat
     xPrefix,
     yPrefix,
     coordinatesPerId,
-    voronoi,
     xStep,
     yStep,
-    inPlay,
-    activePlots
   ]);
 
   useEffect(() => {

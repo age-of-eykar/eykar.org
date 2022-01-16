@@ -2,17 +2,17 @@ import { lcg, szudzik } from "../../../utils/deterministic.js"
 
 export function findCell(x, y, voronoi) {
   let cell = 0;
-  while (voronoi.getVoronoi !== null && !voronoi.getVoronoi.contains(cell, x, y))
+  while (voronoi !== undefined && !voronoi.contains(cell, x, y))
     cell++;
   return cell;
 }
 
 export function drawCell(context, cell, colorF, voronoi, colorS) {
-  if (voronoi.getVoronoi !== null) {
+  if (voronoi !== undefined) {
     context.beginPath();
     context.fillStyle = colorF;
     context.strokeStyle = colorS;
-    voronoi.getVoronoi.renderCell(cell, context);
+    voronoi.renderCell(cell, context);
     context.fill();
     context.stroke();
     context.closePath();

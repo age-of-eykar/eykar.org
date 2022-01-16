@@ -5,13 +5,13 @@ import town from "../../img/town.webp";
 import logo from "../../img/logo.svg";
 import "./plotBox.css";
 
-export default function PlotBox({ plotInfo, plot }) {
+export default function PlotBox({ clickedPlot, clickedPlotContractData }) {
   let source, structure;
-  if (plot === null) {
+  if (clickedPlotContractData === undefined) {
     source = logo;
     structure = "";
   } else {
-    switch (plot.structure) {
+    switch (clickedPlotContractData.structure) {
       case 0:
         source = undiscovered;
         structure = "Undiscovered";
@@ -41,11 +41,11 @@ export default function PlotBox({ plotInfo, plot }) {
       <div className="plotBox body">
         <h1 className="plotBox structure">{structure}</h1>
         <h2 className="plotBox subtitle">
-          x: <span className="plotBox coo">{plotInfo.coord.x}</span> y: <span className="plotBox coo">{plotInfo.coord.y}</span></h2>
+          x: <span className="plotBox coo">{clickedPlot.coord.x}</span> y: <span className="plotBox coo">{clickedPlot.coord.y}</span></h2>
         <p className="plotBox info">
-          Biome: <span className="plotBox result">{plotInfo.biome}</span><br />
-          Temperature: <span className="plotBox result">{Math.floor(plotInfo.temperature)}</span><br />
-          Elevation: <span className="plotBox result">{Math.floor(plotInfo.elevation)}</span>
+          Biome: <span className="plotBox result">{clickedPlot.biome}</span><br />
+          Temperature: <span className="plotBox result">{Math.floor(clickedPlot.temperature)}</span><br />
+          Elevation: <span className="plotBox result">{Math.floor(clickedPlot.elevation)}</span>
         </p>
       </div>
     </div>

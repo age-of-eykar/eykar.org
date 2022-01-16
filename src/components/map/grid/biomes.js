@@ -75,13 +75,12 @@ export function drawMap(activePlots, grid, context, voronoi) {
   let x = 0,
     y = 0;
   let colorF, colorS;
-  for (let i = 0; i < voronoi.getVoronoi._circumcenters.length; i++) {
+  for (let i = 0; i < voronoi._circumcenters.length; i++) {
     if (typeof grid.get(i) !== "undefined") [x, y] = grid.get(i);
     [colorF, colorS] = biomes(x, y);
-
-    const plot = activePlots.get(szudzik(x, y));
-    if (plot !== undefined) {
-      const tint = lcg(plot.owner.toNumber());
+    const colonyId = activePlots.get(szudzik(x, y));
+    if (colonyId !== undefined) {
+      const tint = lcg(colonyId);
       drawCell(context, i, "hsl(" + (tint % 360) + ",90%,61%)", voronoi, colorS);
     } else {
       drawCell(context, i, colorF, voronoi, colorS);

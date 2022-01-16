@@ -22,7 +22,6 @@ function Play() {
   const [colonies, setColonies] = useState(undefined);
   const [bottomRight, setBottomRight] = useState(dimensions.bottomRight);
   const [topLeft, setTopLeft] = useState(dimensions.topLeft);
-  const [plot, setPlot] = useState(null);
   const [activePlots, setActivePlots] = useState(new Map());
   const inPlay = true;
 
@@ -53,13 +52,11 @@ function Play() {
 
   useEffect(() => {
     if (gameState === 3) {
-      console.log("looking for new plots");
       (async () => {
         const startX = Math.trunc(topLeft.x / 8);
         const startY = Math.trunc(topLeft.y / 8);
         const endX = Math.trunc(bottomRight.x / 8) + 1;
         const endY = Math.trunc(bottomRight.y / 8) + 1;
-        console.log(startX, startY, endX, endY);
         for (let i = startX; i < endX; i++)
           for (let j = startY; j < endY; j++) {
             const output = await contract.getPlots(i, j);
@@ -95,13 +92,18 @@ function Play() {
       this.data = newValue;
     },
   };
-  const [coordinatesPerId, setCoordinatesPerId] = useState(new Map());
-  const [plotInfo, setPlotInfo] = useState({
-    coord: { x: 0, y: 0 },
-    biome: null,
-    elevation: null,
-    temperature: null,
-  });
+  const [clickedPlot, setClickedPlotCallback] = useState(undefined);
+  const [clickedPlotContractData, setClickedPlotContractData] = useState(undefined);
+
+  useEffect(() => {
+    (async () => {
+      if (contract !== undefined && clickedPlot !== undefined) {
+        const plot = await contract.getPlot(clickedPlot.coord.x, clickedPlot.coord.y);
+        console.log("plot: " + plot);
+        setClickedPlotContractData(plot);
+      }
+    })();
+  }, [contract, clickedPlot]);
 
   let component;
   switch (gameState) {
@@ -131,8 +133,10 @@ function Play() {
       break;
 
     case 3:
-      if (plot !== null)
-        component = <PlotBox plotInfo={plotInfo} plot={plot} />;
+      if (clickedPlot !== undefined)
+        component = <PlotBox
+          clickedPlot={clickedPlot}
+          clickedPlotContractData={clickedPlotContractData} />;
       break;
     default:
       break;
@@ -141,20 +145,7 @@ function Play() {
     <div className="game screen">
       <div className="game interactive">
         <PlayHeader gameState={gameState} setGameState={setGameState} />
-        <MapCanvas
-          key={key}
-          coordinatesPerId={coordinatesPerId}
-          voronoi={voronoi}
-          bottomRight={bottomRight}
-          setBottomRight={setBottomRight}
-          topLeft={topLeft}
-          setTopLeft={setTopLeft}
-          setPlotInfo={setPlotInfo}
-          setPlot={setPlot}
-          contract={contract}
-          inPlay={inPlay}
-          activePlots={activePlots}
-        />
+        <MapCanvas setClickedPlotCallback={setClickedPlotCallback} />
         {component}
       </div>
     </div>

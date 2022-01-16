@@ -112,12 +112,10 @@ export class KListeners {
 }
 
 export class CListener {
-  constructor(setPlotInfo, voronoi, coordinatesPerId, setPlot, contract) {
+  constructor(setClickedPlotCallback, voronoi, coordinatesPerId) {
     this.voronoi = voronoi;
-    this.setPlotInfo = setPlotInfo;
+    this.setClickedPlotCallback = setClickedPlotCallback;
     this.coordinatesPerId = coordinatesPerId;
-    this.setPlot = setPlot;
-    this.contract = contract;
   }
 
   handleMouseClick(event) {
@@ -126,15 +124,12 @@ export class CListener {
     let e, t, b;
     if (typeof x !== "undefined")
         [e, t, b] = biomeData(x, y);
-    this.setPlotInfo({
+    this.setClickedPlotCallback({
       coord: { x: x, y: y },
       elevation: e,
       temperature: t,
       biome: b,
     });
-    (async () => {
-      this.setPlot(await this.contract.getPlot(x, y));
-    })();
   }
 
 }
