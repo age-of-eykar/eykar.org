@@ -1,6 +1,5 @@
 import "./play.css";
 import { useEffect, useState } from "react";
-import debounce from "debounce";
 import { getDimensions } from "../../components/map/grid/gridManager";
 import PlayHeader from "../../components/header/playheader";
 import MapCanvas from "../../components/map/map";
@@ -14,7 +13,6 @@ import { szudzik } from "../../utils/deterministic.js"
 
 function Play() {
   const dimensions = getDimensions({ x: 0, y: 0 }, 48);
-  const [key, setKey] = useState(0);
   const { library, account } = useWeb3React();
   if (library === undefined) window.location.href = "/";
   const [contract, setContract] = useState(undefined);
@@ -23,7 +21,8 @@ function Play() {
   const [bottomRight, setBottomRight] = useState(dimensions.bottomRight);
   const [topLeft, setTopLeft] = useState(dimensions.topLeft);
   const [activePlots, setActivePlots] = useState(new Map());
-  const inPlay = true;
+  const [clickedPlot, setClickedPlotCallback] = useState(undefined);
+  const [clickedPlotContractData, setClickedPlotContractData] = useState(undefined);
 
   useEffect(() => {
     const { abi } = require("../../contracts/Eykar.json");
@@ -53,6 +52,7 @@ function Play() {
   useEffect(() => {
     if (gameState === 3) {
       (async () => {
+        // TODO See if we can simplify the function without a setBottomright and SetTopLeft variables
         const startX = Math.trunc(topLeft.x / 8);
         const startY = Math.trunc(topLeft.y / 8);
         const endX = Math.trunc(bottomRight.x / 8) + 1;
@@ -73,27 +73,6 @@ function Play() {
     if (colonies.length === 0) setGameState(1);
     else if (gameState < 2) setGameState(2);
   }, [colonies]);
-
-  useEffect(() => {
-    const handler = debounce(() => setKey((oldValue) => oldValue + 1), 20);
-    window.addEventListener("resize", handler);
-    return () => window.removeEventListener("resize", handler);
-  });
-
-  const voronoi = {
-    data: null,
-    get getVoronoi() {
-      return this.data;
-    },
-    /**
-     * @param {Delaunay} newValue
-     */
-    set setVoronoi(newValue) {
-      this.data = newValue;
-    },
-  };
-  const [clickedPlot, setClickedPlotCallback] = useState(undefined);
-  const [clickedPlotContractData, setClickedPlotContractData] = useState(undefined);
 
   useEffect(() => {
     (async () => {
@@ -122,6 +101,7 @@ function Play() {
 
     case 2:
       component = (
+        // TODO see if we can remove setTopLeft and setBottomRight args
         <Select
           setGameState={setGameState}
           setTopLeft={setTopLeft}
