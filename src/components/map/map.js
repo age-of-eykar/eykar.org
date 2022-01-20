@@ -1,183 +1,64 @@
-import { Delaunay } from "d3-delaunay";
+
 import "./map.css";
 import React, { useRef, useEffect, useState } from "react";
-import { getTileCenter } from "./grid/gridManager";
 import { drawMap } from "./grid/biomes";
 import { CListener, KListeners, WListener } from "../map/grid/listeners";
+import ChunksCache from "../../utils/cache";
+import { getDimensions } from "../../utils/gridManager";
 
-import { getDimensions } from "../../components/map/grid/gridManager";
-import { szudzik } from "../../utils/deterministic.js"
 
 function MapCanvas({ setClickedPlotCallback }) {
 
-  const dimensions = getDimensions({ x: 0, y: 0 }, 48);
-  const [topLeft, setTopLeft] = useState(dimensions.topLeft);
-  const [bottomRight, setBottomRight] = useState(dimensions.bottomRight);
-  const coordinatesPerId = new Map();
-  const canvasRef = useRef(null);
-  const [xPrefix, setXPrefix] = useState(0);
-  const [yPrefix, setYPrefix] = useState(0);
-  const xStep = useRef(1);
-  const yStep = useRef(1);
+  const initialDimensions = getDimensions({ x: 0, y: 0 }, 48);
+
+  const [topLeft, setTopLeft] = useState(initialDimensions.topLeft);
+  const [bottomRight, setBottomRight] = useState(initialDimensions.bottomRight);
   const [zoomIn, setZoomIn] = useState({ x: 0, y: 0, zoom: 0 });
 
+  const canvasRef = useRef(null);
+  const cache = new ChunksCache(1024);
+
+  const scale = window.devicePixelRatio;
+  const [windowSize, setWindowSize] = useState({
+    width: window.innerWidth * scale,
+    height: window.innerHeight * scale
+  });
+
+  const handleResize = () => setWindowSize({
+    width: window.innerWidth * scale,
+    height: window.innerHeight * scale
+  })
+
   useEffect(() => {
-    const scale = window.devicePixelRatio;
+    // canvas fixes
     const canvas = canvasRef.current;
+    canvas.width = windowSize.width;
+    canvas.height = windowSize.height;
     canvas.focus();
-    canvas.width = canvas.clientWidth * scale;
-    canvas.height = canvas.clientHeight * scale;
     const context = canvas.getContext("2d");
     context.scale(scale, scale);
+
+    // cache and draw
+    cache.run(topLeft, bottomRight, () => console.log("prout"));
     const mapWidth = bottomRight.x - topLeft.x;
     const mapHeight = bottomRight.y - topLeft.y;
-    xStep.current = context.canvas.width / (scale * (mapWidth + 1));
-    yStep.current = context.canvas.height / (scale * (mapHeight + 1));
+    context.fillRect(25, 25, 100, 100);
 
-    let Iterator = {
-      _i: -1,
-      _j: -1,
-      id: 0,
 
-      [Symbol.iterator]() {
-        return this;
-      },
-
-      next() {
-        let center = getTileCenter(
-          topLeft.x,
-          this._i,
-          topLeft.y,
-          this._j,
-          xStep.current,
-          yStep.current,
-          xPrefix,
-          yPrefix
-        );
-        coordinatesPerId.set(this.id++, [
-          this._i + Math.floor(topLeft.x),
-          this._j + Math.floor(topLeft.y),
-        ]);
-        if (this._j >= mapHeight + 1) {
-          this._i++;
-          this._j = -1;
-          return { done: false, value: [center.x, center.y] };
-        } else {
-          this._j++;
-          return { done: this._i > mapWidth + 2, value: [center.x, center.y] };
-        }
-      },
-    };
-    const voronoi = Delaunay.from(Iterator).voronoi([
-      0,
-      0,
-      canvas.width,
-      canvas.height,
-    ]);
-    drawMap(new Map(), coordinatesPerId, context, voronoi);
-    (async () => {
-      const plots = await (await fetch("https://cache.eykar.org/colonies",
-        {
-          method: 'POST', body: JSON.stringify({
-            "xmin": topLeft.x, "ymin": topLeft.y,
-            "xmax": bottomRight.x, "ymax": bottomRight.y
-          })
-        })).json();
-      const newPlots = new Map();
-      for (const plotKey in plots) {
-        const plot = plots[plotKey];
-        newPlots.set(szudzik(plot.x, plot.y), plot.colony_id);
-      }
-      drawMap(newPlots, coordinatesPerId, context, voronoi);
-    })();
-
-    const wlisterner = new WListener(bottomRight, topLeft, setZoomIn, canvas);
-    const listenMouseWheel = wlisterner.handleMouseWheel.bind(wlisterner);
-    canvas.addEventListener("mousewheel", listenMouseWheel);
-
-    const cListener = new CListener(setClickedPlotCallback, voronoi, coordinatesPerId);
-    const listenClick = cListener.handleMouseClick.bind(cListener);
-    canvas.addEventListener("click", listenClick);
-    return () => {
-      canvas.removeEventListener("mousewheel", listenMouseWheel);
-      canvas.removeEventListener("click", listenClick);
-    };
+    // screen resize
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize);
   }, [
+    windowSize,
     bottomRight,
-    topLeft,
-    xPrefix,
-    yPrefix,
-    coordinatesPerId,
-    xStep,
-    yStep,
+    topLeft
   ]);
 
-  useEffect(() => {
-    if (zoomIn.zoom !== 0) {
-      const mapWidth = bottomRight.x - topLeft.x;
-      const mapHeight = bottomRight.y - topLeft.y;
-      setZoomIn({ x: zoomIn.x, y: zoomIn.y, zoom: 0 });
-      if (zoomIn.zoom === 1) {
-        const newTopLeft = {
-          x: topLeft.x + 0.05 * zoomIn.x,
-          y: topLeft.y + 0.05 * zoomIn.y,
-        };
-        const newBottomRight = {
-          x: 0.95 * mapWidth + newTopLeft.x,
-          y: 0.95 * mapHeight + newTopLeft.y,
-        };
-        setXPrefix(newTopLeft.x - Math.trunc(newTopLeft.x));
-        setYPrefix(newTopLeft.y - Math.trunc(newTopLeft.y));
-        setTopLeft(newTopLeft);
-        setBottomRight(newBottomRight);
-      } else {
-        const newTopLeft = {
-          x: topLeft.x - 0.05 * zoomIn.x,
-          y: topLeft.y - 0.05 * zoomIn.y,
-        };
-        const newBottomRight = {
-          x: 1.05 * mapWidth + newTopLeft.x,
-          y: 1.05 * mapHeight + newTopLeft.y,
-        };
-        setTopLeft(newTopLeft);
-        setBottomRight(newBottomRight);
-      }
-    }
-  }, [
-    zoomIn.zoom,
-    zoomIn.x,
-    zoomIn.y,
-    bottomRight.x,
-    bottomRight.y,
-    topLeft.x,
-    topLeft.y,
-    setTopLeft,
-    setBottomRight,
-    setYPrefix,
-    setXPrefix,
-  ]);
-
-  const [repeatStreak, setRepeatStreak] = useState(0);
-
-  const kListeners = new KListeners(
-    xStep,
-    yStep,
-    setRepeatStreak,
-    repeatStreak,
-    xPrefix,
-    yPrefix,
-    setXPrefix,
-    setYPrefix,
-    bottomRight,
-    setBottomRight,
-    topLeft,
-    setTopLeft
-  );
   return (
     <canvas
       className="map"
       ref={canvasRef}
-      onKeyDown={kListeners.onKeyPressed.bind(kListeners)}
+      //onKeyDown={kListeners.onKeyPressed.bind(kListeners)}
       tabIndex={1}
     />
   );
