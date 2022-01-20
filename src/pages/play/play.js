@@ -1,4 +1,5 @@
 import "./play.css";
+import debounce from "debounce";
 import { useEffect, useState } from "react";
 import { getDimensions } from "../../components/map/grid/gridManager";
 import PlayHeader from "../../components/header/playheader";
@@ -12,6 +13,7 @@ import { useWeb3React } from "@web3-react/core";
 import { szudzik } from "../../utils/deterministic.js"
 
 function Play() {
+  const [key, setKey] = useState(0);
   const dimensions = getDimensions({ x: 0, y: 0 }, 48);
   const { library, account } = useWeb3React();
   if (library === undefined) window.location.href = "/";
@@ -73,6 +75,12 @@ function Play() {
     if (colonies.length === 0) setGameState(1);
     else if (gameState < 2) setGameState(2);
   }, [colonies]);
+
+  useEffect(() => {
+    const handler = debounce(() => setKey((oldValue) => oldValue + 1), 20);
+    window.addEventListener("resize", handler);
+    return () => window.removeEventListener("resize", handler);
+  });
 
   useEffect(() => {
     (async () => {
