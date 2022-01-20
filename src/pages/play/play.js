@@ -1,20 +1,16 @@
-import "./play.css";
+import { useState, useEffect } from "react";
+import { useWeb3React } from "@web3-react/core";
 import debounce from "debounce";
-<<<<<<< HEAD
-import { useEffect, useState } from "react";
-import { getDimensions } from "../../components/map/grid/gridManager";
-=======
-import { getDimensions } from "../../utils/gridManager";
->>>>>>> ca62cf9aac27126289796b122bee6a1a50e26666
+import { Contract } from "@ethersproject/contracts";
 import PlayHeader from "../../components/header/playheader";
 import MapCanvas from "../../components/map/map";
-import Select from "./menus/select";
 import { Spinner } from "../../components/spinner";
 import PlotBox from "../../components/plotBox/plotBox";
+import Select from "./menus/select";
 import Register from "./menus/register";
-import { Contract } from "@ethersproject/contracts";
-import { useWeb3React } from "@web3-react/core";
-import { szudzik } from "../../utils/deterministic.js"
+import { getDimensions } from "../../utils/gridManager";
+import { szudzik } from "../../utils/deterministic.js";
+import "./play.css";
 
 function Play() {
   const [key, setKey] = useState(0);
