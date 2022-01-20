@@ -1,7 +1,7 @@
 import "./play.css";
 import { useEffect, useState } from "react";
 import debounce from "debounce";
-import { getDimensions } from "../../components/map/grid/gridManager";
+import { getDimensions } from "../../utils/gridManager";
 import PlayHeader from "../../components/header/playheader";
 import MapCanvas from "../../components/map/map";
 import Select from "./menus/select";

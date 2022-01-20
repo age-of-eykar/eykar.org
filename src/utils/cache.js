@@ -1,4 +1,6 @@
 import { szudzik } from "./deterministic.js"
+import WorkerBuilder from "./worker-builder.js";
+import Worker from "./world.worker.js";
 
 export default class ChunksCache {
 
@@ -40,12 +42,43 @@ class Chunk {
     constructor(x, y) {
         this.x = x;
         this.y = y;
+        this.plots = new Map();
         this.ready = false;
         (async () => { this.prepare(); })();
     }
 
-    prepare() {
+    async prepare() {
+        let waitingCache = true;
+        const worker = new WorkerBuilder(Worker);
+        worker.onmessage = (message) => {
+            if (message) {
+                this.shape = message.data;
+                if (!waitingCache)
+                    this.setReady();
+            }
+        };
+        worker.postMessage(900);
+        const newPlots = await (await fetch("https://cache.eykar.org/colonies",
+            {
+                method: 'POST', body: JSON.stringify({
+                    "xmin": this.x, "ymin": this.y,
+                    "xmax": this.x + 16, "ymax": this.y + 16
+                })
+            })).json();
+        waitingCache = false;
+
+        for (const plotKey in newPlots) {
+            const plot = newPlots[plotKey];
+            this.plots.set(szudzik(plot.x, plot.y), plot.colony_id);
+        }
+
+        if (this.shape)
+            this.setReady();
+    }
+
+    setReady() {
         this.ready = true;
+        console.log(this);
     }
 
 }

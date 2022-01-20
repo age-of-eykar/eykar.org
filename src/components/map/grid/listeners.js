@@ -1,4 +1,4 @@
-import { findCell } from "./gridManager";
+import { findCell } from "../../../utils/gridManager";
 import { biomeData } from "./biomes";
 
 export class WListener {

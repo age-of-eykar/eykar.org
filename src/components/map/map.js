@@ -1,11 +1,10 @@
-import { Delaunay } from "d3-delaunay";
+
 import "./map.css";
 import React, { useRef, useEffect, useState } from "react";
-import { getTileCenter } from "./grid/gridManager";
 import { drawMap } from "./grid/biomes";
 import { CListener, KListeners, WListener } from "../map/grid/listeners";
 import ChunksCache from "../../utils/cache";
-import { getDimensions } from "../../components/map/grid/gridManager";
+import { getDimensions } from "../../utils/gridManager";
 
 
 function MapCanvas({ setClickedPlotCallback }) {

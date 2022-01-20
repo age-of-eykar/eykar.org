@@ -1,7 +1,7 @@
 import "./menus.css"
 
 import React from 'react';
-import { getDimensions } from "../../../components/map/grid/gridManager"
+import { getDimensions } from "../../../utils/gridManager";
 
 function setColony(setGameState, setTopLeft, setBottomRight, colony) {
     (async () => {

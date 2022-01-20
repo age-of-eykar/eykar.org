@@ -1,5 +1,5 @@
 import { perlin } from "../../../utils/perlinNoise";
-import { drawCell } from "./gridManager";
+import { drawCell } from "../../../utils/gridManager";
 import { lcg, szudzik } from "../../../utils/deterministic.js"
 
 function getElevation(x, y) {
