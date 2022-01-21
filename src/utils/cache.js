@@ -1,6 +1,5 @@
 import { szudzik } from "./deterministic.js"
-import WorkerBuilder from "./worker-builder.js";
-import Worker from "./world.worker.js";
+import worker from 'workerize-loader!./world.worker'; // eslint-disable-line import/no-webpack-loader-syntax
 
 export default class ChunksCache {
 
@@ -49,15 +48,18 @@ class Chunk {
 
     async prepare() {
         let waitingCache = true;
-        const worker = new WorkerBuilder(Worker);
-        worker.onmessage = (message) => {
-            if (message) {
+        const workerInstance = worker()
+        // Attach an event listener to receive calculations from your worker
+        workerInstance.addEventListener('message', (message) => {
+
+            if (message.data.delaunay) {
+                console.log('New Message: ', message.data)
                 this.shape = message.data;
                 if (!waitingCache)
                     this.setReady();
             }
-        };
-        worker.postMessage(900);
+        })
+        workerInstance.generateShape(this.x, this.y);
         const newPlots = await (await fetch("https://cache.eykar.org/colonies",
             {
                 method: 'POST', body: JSON.stringify({
@@ -78,7 +80,6 @@ class Chunk {
 
     setReady() {
         this.ready = true;
-        console.log(this);
     }
 
 }
