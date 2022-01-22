@@ -1,6 +1,5 @@
 import { szudzik } from "./deterministic.js"
 import worker from 'workerize-loader!./world.worker'; // eslint-disable-line import/no-webpack-loader-syntax
-import { Voronoi } from "d3-delaunay";
 
 export default class ChunksCache {
 
@@ -52,8 +51,7 @@ class Chunk {
         // Attach an event listener to receive calculations from your worker
         workerInstance.addEventListener('message', (message) => {
             if (message.data.delaunay) {
-                this.shape = Object.assign(message.data, Voronoi);
-                console.log("assigned: ", this.shape);
+                this.shape = message.data;
                 if (!waitingCache)
                     this.setReady();
             }
@@ -76,6 +74,24 @@ class Chunk {
         if (this.shape)
             this.setReady();
     }
+
+    render(context) {
+
+    }
+
+    _clip(i) {
+        // degenerate case (1 valid point: return the box)
+        if (i === 0 && this.delaunay.hull.length === 1) {
+          return [this.xmax, this.ymin, this.xmax, this.ymax, this.xmin, this.ymax, this.xmin, this.ymin];
+        }
+        const points = this._cell(i);
+        if (points === null) return null;
+        const {vectors: V} = this;
+        const v = i * 4;
+        return V[v] || V[v + 1]
+            ? this._clipInfinite(i, points, V[v], V[v + 1], V[v + 2], V[v + 3])
+            : this._clipFinite(i, points);
+      }
 
     setReady() {
         this.ready = true;
