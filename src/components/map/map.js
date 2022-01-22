@@ -4,8 +4,7 @@ import React, { useRef, useEffect, useState } from "react";
 import { drawMap } from "./grid/biomes";
 import { CListener, KListeners, WListener } from "../map/grid/listeners";
 import ChunksCache from "../../utils/cache";
-import { getDimensions } from "../../utils/gridManager";
-
+import { getDimensions, drawCell } from "../../utils/gridManager";
 
 function MapCanvas({ setClickedPlotCallback }) {
 
@@ -39,11 +38,12 @@ function MapCanvas({ setClickedPlotCallback }) {
     context.scale(scale, scale);
 
     // cache and draw
-    cache.run(topLeft, bottomRight, () => console.log("prout"));
+    cache.run(topLeft, bottomRight, (chunk) => {
+      console.log("outside worker: ", chunk.shape)
+    });
     const mapWidth = bottomRight.x - topLeft.x;
     const mapHeight = bottomRight.y - topLeft.y;
     context.fillRect(25, 25, 100, 100);
-
 
     // screen resize
     window.addEventListener('resize', handleResize)

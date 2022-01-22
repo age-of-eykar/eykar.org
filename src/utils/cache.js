@@ -1,5 +1,6 @@
 import { szudzik } from "./deterministic.js"
 import worker from 'workerize-loader!./world.worker'; // eslint-disable-line import/no-webpack-loader-syntax
+import { Voronoi } from "d3-delaunay";
 
 export default class ChunksCache {
 
@@ -10,20 +11,19 @@ export default class ChunksCache {
 
     run(topLeft, bottomRight, display) {
         const ready = [];
-        for (let x = Math.floor(topLeft.x / 16); x <= Math.ceil(bottomRight.x / 16); x++)
-            for (let y = Math.floor(topLeft.y / 16); y <= Math.ceil(bottomRight.y / 16); y++) {
-                const chunk = this.prepare(x, y);
+        for (let x = Math.floor(topLeft.x / 8); x <= Math.ceil(bottomRight.x / 8); x++)
+            for (let y = Math.floor(topLeft.y / 8); y <= Math.ceil(bottomRight.y / 8); y++) {
+                const chunk = this.prepare(x, y, display);
                 if (chunk)
                     ready.push(chunk);
             }
         ready.forEach(chunk => display(chunk));
-
     }
 
-    prepare(x, y) {
+    prepare(x, y, display) {
         let chunk = this.cached.get(szudzik(x, y));
         if (chunk === undefined)
-            chunk = new Chunk(x, y);
+            chunk = new Chunk(x, y, display);
         // should be added to the end of the map
         this.cached.set(szudzik(x, y), chunk);
 
@@ -37,10 +37,10 @@ export default class ChunksCache {
 }
 
 class Chunk {
-
-    constructor(x, y) {
+    constructor(x, y, display) {
         this.x = x;
         this.y = y;
+        this.display = display;
         this.plots = new Map();
         this.ready = false;
         (async () => { this.prepare(); })();
@@ -51,20 +51,19 @@ class Chunk {
         const workerInstance = worker()
         // Attach an event listener to receive calculations from your worker
         workerInstance.addEventListener('message', (message) => {
-
             if (message.data.delaunay) {
-                console.log('New Message: ', message.data)
-                this.shape = message.data;
+                this.shape = Object.assign(message.data, Voronoi);
+                console.log("assigned: ", this.shape);
                 if (!waitingCache)
                     this.setReady();
             }
         })
-        workerInstance.generateShape(this.x, this.y);
+        workerInstance.generateShape(this.x, this.y, 8);
         const newPlots = await (await fetch("https://cache.eykar.org/colonies",
             {
                 method: 'POST', body: JSON.stringify({
                     "xmin": this.x, "ymin": this.y,
-                    "xmax": this.x + 16, "ymax": this.y + 16
+                    "xmax": this.x + 17, "ymax": this.y + 17
                 })
             })).json();
         waitingCache = false;
@@ -80,6 +79,7 @@ class Chunk {
 
     setReady() {
         this.ready = true;
+        this.display(this);
     }
 
 }
