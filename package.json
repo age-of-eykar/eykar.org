@@ -10,8 +10,6 @@
     "@web3-react/injected-connector": "^6.0.7",
     "@web3-react/ledger-connector": "^6.1.9",
     "@web3-react/network-connector": "^6.1.9",
-    "d3-delaunay": "^6.0.2",
-    "d3-voronoi": "^1.1.4",
     "debounce": "^1.2.1",
     "ethers": "^5.5.1",
     "modular-voronoi": "^1.0.0",

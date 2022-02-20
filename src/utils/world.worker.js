@@ -1,38 +1,24 @@
-import { Delaunay } from "d3-delaunay";
+import { precalculate } from "modular-voronoi";
 import { szudzik, lcg } from "./deterministic.js"
 
 export const generateShape = (chunkX, chunkY, size) => {
 
-    const prefixX = -size + chunkX * (2 * size + 1);
-    const prefixY = -size + chunkY * (2 * size + 1);
+    const sideLength = (2 * size + 1); 
+    const prefixX = -size + chunkX * sideLength;
+    const prefixY = -size + chunkY * sideLength;
 
-    let Iterator = {
-        _i: -1,
-        _j: -1,
-        id: 0,
+    const points = new Array(sideLength*sideLength);
+    for (let i = 0; i < sideLength; i++) {
+        for (let j = 0; j < sideLength; j++) {
+            const x = prefixX + i;
+            const y = prefixY + j;
+            const output = lcg(szudzik(x, y), 2);
+            const positionedX = (i + (10 + (output % 81)) / 100)/sideLength;
+            const positionedY = (j +  (10 + (lcg(output, 2) % 81)) / 100)/sideLength;
+            points[i + j*sideLength] = [positionedX, positionedY];
+        }
+    }
 
-        [Symbol.iterator]() {
-            return this;
-        },
-
-        next() {
-            const coordinateX = prefixX + this._i;
-            const coordinateY = prefixY + this._j;
-            const output = lcg(szudzik(coordinateX, coordinateY), 2);
-            // get a deterministic shift between 0.1 and 0.9
-            const x = coordinateX + (10 + (output % 81)) / 100;
-            const y = coordinateY + (10 + (lcg(output, 2) % 81)) / 100;
-            if (this._j === 2 * size) {
-                this._i++;
-                this._j = -1;
-                return { done: false, value: [x, y] };
-            } else {
-                this._j++;
-                return { done: this._i >= 16, value: [x, y] };
-            }
-        },
-    };
-    const voronoi = Delaunay.from(Iterator).voronoi([0, 0, 1, 1]);
-    console.log("inside worker:", voronoi);
+    const voronoi = precalculate(points);
     postMessage(voronoi);
 }
