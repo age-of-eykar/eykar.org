@@ -6,6 +6,19 @@ import { CListener, KListeners, WListener } from "../map/grid/listeners";
 import ChunksCache from "../../utils/cache";
 import { getDimensions, drawCell } from "../../utils/gridManager";
 
+export function drawPolygon(points, context) {
+  context.fillStyle = "#" + Math.floor(Math.random() * 16777215).toString(16);
+  context.beginPath();
+  for (let i = 0; i < points.length; i++) {
+    const x = points[i][0];
+    const y = points[i][1];
+    context.lineTo(x, y);
+  }
+  context.lineTo(points[0][0], points[0][1]);
+  context.fill();
+  context.closePath();
+}
+
 function MapCanvas({ setClickedPlotCallback }) {
 
   const initialDimensions = getDimensions({ x: 0, y: 0 }, 48);
@@ -39,7 +52,19 @@ function MapCanvas({ setClickedPlotCallback }) {
 
     // cache and draw
     cache.run(topLeft, bottomRight, (chunk) => {
-      console.log("outside worker: ", chunk.shape)
+      const sideSize = Math.sqrt(chunk.shape.size)
+      context.scale(500, 500);
+      for (const [i, points] of chunk.shape) {
+        if (points.length <= 2
+          || i % sideSize === 0
+          || i % sideSize === sideSize - 1
+          || Math.floor(i / sideSize) === 0
+          || Math.floor(i / sideSize) === sideSize - 1)
+          continue;
+        drawPolygon(points, context);
+      }
+      context.translate(0.9, 0.1);
+      context.scale(1 / 500, 1 / 500);
     });
     const mapWidth = bottomRight.x - topLeft.x;
     const mapHeight = bottomRight.y - topLeft.y;
