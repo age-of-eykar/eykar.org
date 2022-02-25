@@ -63,7 +63,7 @@ function MapCanvas({ setClickedPlotCallback }) {
           continue;
         drawPolygon(points, context);
       }
-      context.translate(0.9, 0.1);
+      context.translate(17 / 18, 0);
       context.scale(1 / 500, 1 / 500);
     });
     const mapWidth = bottomRight.x - topLeft.x;
