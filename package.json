@@ -13,7 +13,7 @@
     "d3-delaunay": "^6.0.2",
     "debounce": "^1.2.1",
     "ethers": "^5.5.1",
-    "modular-voronoi": "^1.0.0",
+    "modular-voronoi": "^1.1.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-horizontal-scrolling-menu": "^2.1.1",

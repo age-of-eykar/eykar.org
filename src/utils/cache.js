@@ -3,6 +3,9 @@ import worker from 'workerize-loader!./world.worker'; // eslint-disable-line imp
 
 export default class ChunksCache {
 
+    static halfsize = 8;
+    static sideSize = 2 * ChunksCache.halfsize + 1;
+
     constructor(capacity) {
         this.capacity = capacity;
         this.cached = new Map();
@@ -10,8 +13,8 @@ export default class ChunksCache {
 
     run(topLeft, bottomRight, display) {
         const ready = [];
-        for (let x = Math.floor(topLeft.x / 8); x <= Math.ceil(bottomRight.x / 8); x++)
-            for (let y = Math.floor(topLeft.y / 8); y <= Math.ceil(bottomRight.y / 8); y++) {
+        for (let x = Math.floor(topLeft.x / ChunksCache.halfsize); x <= Math.ceil(bottomRight.x / ChunksCache.halfsize); x++)
+            for (let y = Math.floor(topLeft.y / ChunksCache.halfsize); y <= Math.ceil(bottomRight.y / ChunksCache.halfsize); y++) {
                 const chunk = this.prepare(x, y, display);
                 if (chunk)
                     ready.push(chunk);
@@ -56,12 +59,12 @@ class Chunk {
                     this.setReady();
             }
         })
-        workerInstance.generateShape(this.x, this.y, 8);
+        workerInstance.generateShape(this.x, this.y, ChunksCache.halfsize);
         const newPlots = await (await fetch("https://cache.eykar.org/colonies",
             {
                 method: 'POST', body: JSON.stringify({
                     "xmin": this.x, "ymin": this.y,
-                    "xmax": this.x + 17, "ymax": this.y + 17
+                    "xmax": this.x + ChunksCache.sideSize, "ymax": this.y + ChunksCache.sideSize
                 })
             })).json();
         waitingCache = false;

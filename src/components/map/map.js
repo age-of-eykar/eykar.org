@@ -55,11 +55,7 @@ function MapCanvas({ setClickedPlotCallback }) {
       const sideSize = Math.sqrt(chunk.shape.size)
       context.scale(500, 500);
       for (const [i, points] of chunk.shape) {
-        if (points.length <= 2
-          || i % sideSize === 0
-          || i % sideSize === sideSize - 1
-          || Math.floor(i / sideSize) === 0
-          || Math.floor(i / sideSize) === sideSize - 1)
+        if (points.length <= 2)
           continue;
         drawPolygon(points, context);
       }
