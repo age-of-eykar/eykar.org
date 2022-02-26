@@ -11,11 +11,15 @@ export default class ChunksCache {
         this.cached = new Map();
     }
 
-    run(topLeft, bottomRight, display) {
+    run(center, scale, display) {
         const ready = [];
-        for (let x = Math.floor(topLeft.x / ChunksCache.halfsize); x <= Math.ceil(bottomRight.x / ChunksCache.halfsize); x++)
-            for (let y = Math.floor(topLeft.y / ChunksCache.halfsize); y <= Math.ceil(bottomRight.y / ChunksCache.halfsize); y++) {
-                const chunk = this.prepare(x, y, display);
+        const origin = {
+            x: Math.floor((center.x - ChunksCache.sideSize / 2) / ChunksCache.sideSize),
+            y: Math.floor((center.y - ChunksCache.sideSize / 2) / ChunksCache.sideSize)
+        };
+        for (let i = Math.trunc(-scale.width / 2 * ChunksCache.sideSize); i <= scale.width / 2 * ChunksCache.sideSize; i++)
+            for (let j = Math.trunc(-scale.height / 2 * ChunksCache.sideSize); j <= scale.height / 2 * ChunksCache.sideSize; j++) {
+                const chunk = this.prepare(origin.x + i, origin.y + j, display);
                 if (chunk)
                     ready.push(chunk);
             }

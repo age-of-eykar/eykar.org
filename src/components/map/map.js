@@ -21,24 +21,22 @@ export function drawPolygon(points, context) {
 
 function MapCanvas({ setClickedPlotCallback }) {
 
-  const initialDimensions = getDimensions({ x: 0, y: 0 }, 48);
-
-  const [topLeft, setTopLeft] = useState(initialDimensions.topLeft);
-  const [bottomRight, setBottomRight] = useState(initialDimensions.bottomRight);
-  const [zoomIn, setZoomIn] = useState({ x: 0, y: 0, zoom: 0 });
+  // center of the map (normal coordinates)
+  const [ center, setCenter ] = useState({ x: 0.0, y: 0.0 });
+  // scale in cells displayed per width
+  const [scale, setScale] = useState({ width: 32.0, height: 32.0 });
 
   const canvasRef = useRef(null);
   const cache = new ChunksCache(1024);
-
-  const scale = window.devicePixelRatio;
+  const pixelRatio = window.devicePixelRatio;
   const [windowSize, setWindowSize] = useState({
-    width: window.innerWidth * scale,
-    height: window.innerHeight * scale
+    width: window.innerWidth * pixelRatio,
+    height: window.innerHeight * pixelRatio
   });
 
   const handleResize = () => setWindowSize({
-    width: window.innerWidth * scale,
-    height: window.innerHeight * scale
+    width: window.innerWidth * pixelRatio,
+    height: window.innerHeight * pixelRatio
   })
 
   useEffect(() => {
@@ -48,31 +46,27 @@ function MapCanvas({ setClickedPlotCallback }) {
     canvas.height = windowSize.height;
     canvas.focus();
     const context = canvas.getContext("2d");
-    context.scale(scale, scale);
-
+    context.scale(windowSize.width, windowSize.width*0.9);
+    
     // cache and draw
-    cache.run(topLeft, bottomRight, (chunk) => {
-      const sideSize = Math.sqrt(chunk.shape.size)
-      context.scale(500, 500);
-      for (const [i, points] of chunk.shape) {
-        if (points.length <= 2)
-          continue;
+    cache.run(center, scale, (chunk) => {
+      console.log("oups")
+      for (const [_, points] of chunk.shape) {
+        // todo : fix scale
+        // todo : display at the right position
+        // todo : ensure cache generates the right chunks
         drawPolygon(points, context);
+        
       }
-      context.translate(17 / 18, 0);
-      context.scale(1 / 500, 1 / 500);
     });
-    const mapWidth = bottomRight.x - topLeft.x;
-    const mapHeight = bottomRight.y - topLeft.y;
-    context.fillRect(25, 25, 100, 100);
+    context.clearRect(0, 0, canvas.width, canvas.height);
+
 
     // screen resize
     window.addEventListener('resize', handleResize)
     return () => window.removeEventListener('resize', handleResize);
   }, [
-    windowSize,
-    bottomRight,
-    topLeft
+    windowSize
   ]);
 
   return (
