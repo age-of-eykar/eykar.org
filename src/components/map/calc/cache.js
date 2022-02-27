@@ -1,13 +1,12 @@
 import { szudzik } from "../../../utils/deterministic.js"
 import worker from 'workerize-loader!./world.worker'; // eslint-disable-line import/no-webpack-loader-syntax
 
-export default class ChunksCache {
+export class ChunksCache {
 
     static halfsize = 8;
     static sideSize = 2 * ChunksCache.halfsize + 1;
 
     constructor(capacity) {
-        console.log("new instance")
         this.capacity = capacity;
         this.cached = new Map();
     }
@@ -20,8 +19,8 @@ export default class ChunksCache {
         };
         const a = scale.width / (2 * ChunksCache.sideSize) + 1;
         const b = scale.height / (2 * ChunksCache.sideSize) + 1;
-        for (let i = Math.trunc(-a); i < a+1; i++)
-            for (let j = Math.trunc(-b); j < b+1; j++) {
+        for (let i = Math.trunc(-a); i < a + 1; i++)
+            for (let j = Math.trunc(-b); j < b + 1; j++) {
                 const chunk = this.prepare(origin.x + i, origin.y + j, display);
                 if (chunk)
                     ready.push(chunk);
@@ -40,10 +39,8 @@ export default class ChunksCache {
         while (this.cached.size > this.capacity)
             this.cached.delete(this.cached.keys().next().value);
 
-        if (chunk.ready) {
-            console.log("prout")
+        if (chunk.ready)
             return chunk;
-        }
     }
 
 }
@@ -99,7 +96,9 @@ class Chunk {
 
     setReady() {
         this.ready = true;
-        this.display(this);
+        this.display(this); // todo: fix visual bugs
     }
 
 }
+
+export const cache = new ChunksCache(1024);

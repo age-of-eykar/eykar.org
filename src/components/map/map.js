@@ -3,7 +3,7 @@ import "./map.css";
 import React, { useRef, useEffect, useState } from "react";
 import debounce from "debounce";
 import { KeyListeners } from "./listeners";
-import ChunksCache from "./calc/cache";
+import { cache, ChunksCache } from "./calc/cache";
 
 export function drawPolygon(points, context, colors) {
   if (colors === undefined)
@@ -31,7 +31,7 @@ function MapCanvas({ setClickedPlotCallback }) {
   const keyListeners = new KeyListeners(center, setCenter);
 
   const canvasRef = useRef(null);
-  const cache = useRef(new ChunksCache(1024));
+
   const pixelRatio = window.devicePixelRatio;
   const [windowSize, setWindowSize] = useState({
     width: window.innerWidth * pixelRatio,
@@ -60,7 +60,7 @@ function MapCanvas({ setClickedPlotCallback }) {
     context.scale(1 / scale.width,
       1 / scale.height);
 
-    cache.current.run(center, scale, (chunk) => {
+    cache.run(center, scale, (chunk) => {
       const topLeft = chunk.getTopLeft();
       context.translate(topLeft.x - center.x, topLeft.y - center.y)
 
