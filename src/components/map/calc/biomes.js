@@ -1,4 +1,4 @@
-import { perlin } from "../../utils/perlinNoise";
+import { perlin } from "../../../utils/perlinNoise";
 
 function getElevation(x, y) {
   return perlin(x, y, 3, 0.5, 0.01, 0);

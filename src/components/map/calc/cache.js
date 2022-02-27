@@ -66,8 +66,9 @@ class Chunk {
         const workerInstance = worker()
         // Attach an event listener to receive calculations from your worker
         workerInstance.addEventListener('message', (message) => {
-            if (message.data.size !== undefined) {
-                this.data = message.data;
+            if (message.data.shape !== undefined) {
+                this.shape = message.data.shape;
+                this.colors = message.data.colors;
                 workerInstance.terminate();
                 if (!waitingCache)
                     this.setReady();
@@ -88,7 +89,7 @@ class Chunk {
             this.plots.set(szudzik(plot.x, plot.y), plot.colony_id);
         }
 
-        if (this.data)
+        if (this.shape)
             this.setReady();
     }
 

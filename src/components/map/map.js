@@ -5,8 +5,12 @@ import debounce from "debounce";
 import { KeyListeners } from "./listeners";
 import ChunksCache from "./calc/cache";
 
-export function drawPolygon(points, context) {
-  context.fillStyle = "#" + Math.floor(Math.random() * 16777215).toString(16);
+export function drawPolygon(points, context, colors) {
+
+  if (colors === undefined)
+    context.fillStyle = "#FFFFFF";
+  else
+    context.fillStyle = colors[0];
   context.beginPath();
   for (let i = 0; i < points.length; i++) {
     const x = points[i][0];
@@ -61,10 +65,11 @@ function MapCanvas({ setClickedPlotCallback }) {
       const topLeft = chunk.getTopLeft();
       context.translate(-center.x + topLeft.x, -center.y + topLeft.y)
       context.scale(ChunksCache.sideSize, ChunksCache.sideSize);
-      for (const [_, points] of chunk.data)
-        drawPolygon(points, context);
+      let i = chunk.shape.size;
+      for (const [_, points] of chunk.shape)
+        drawPolygon(points, context, chunk.colors[--i]);
       context.scale(1 / ChunksCache.sideSize, 1 / ChunksCache.sideSize);
-      context.translate(center.x-topLeft.x, center.y-topLeft.y)
+      context.translate(center.x - topLeft.x, center.y - topLeft.y)
     });
 
     // screen resize
