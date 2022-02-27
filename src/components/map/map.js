@@ -27,7 +27,7 @@ function MapCanvas({ setClickedPlotCallback }) {
   // scale in cells displayed per width
   const [scale, setScale] = useState({ width: 32.0, height: 32.0 });
 
-  const keyListeners = new KeyListeners(center, setCenter);
+  const keyListeners = new KeyListeners(center, setCenter, scale);
 
   const canvasRef = useRef(null);
 

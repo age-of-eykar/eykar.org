@@ -28,23 +28,22 @@ export class KeyListeners {
     }
 
     onKeyPressed(event) {
-        let i = 1;
 
         switch (event.key) {
             case "ArrowDown":
-                this.move(0, i);
+                this.move(0, this.scale.height / 50);
                 break;
 
             case "ArrowUp":
-                this.move(0, -i);
+                this.move(0, -this.scale.height / 50);
                 break;
 
             case "ArrowLeft":
-                this.move(-i, 0);
+                this.move(-this.scale.width / 50, 0);
                 break;
 
             case "ArrowRight":
-                this.move(i, 0);
+                this.move(this.scale.width / 50, 0);
                 break;
 
             default:
