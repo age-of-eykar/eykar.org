@@ -61,12 +61,12 @@ function MapCanvas({ setClickedPlotCallback }) {
 
     cache.run(center, scale, (chunk) => {
       const topLeft = chunk.getTopLeft();
-      context.translate(topLeft.x, topLeft.y)
+      context.translate(-center.x + topLeft.x, -center.y + topLeft.y)
       context.scale(ChunksCache.sideSize, ChunksCache.sideSize);
       for (const [_, points] of chunk.shape)
         drawPolygon(points, context);
       context.scale(1 / ChunksCache.sideSize, 1 / ChunksCache.sideSize);
-      context.translate(-topLeft.x, -topLeft.y)
+      context.translate(center.x-topLeft.x, center.y-topLeft.y)
     });
 
     // screen resize
