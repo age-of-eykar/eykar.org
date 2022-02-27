@@ -17,26 +17,6 @@ const connectorsByName = {
 
 function App() {
 
-  (async () => {
-    try {
-      await window.ethereum.request({
-        method: "wallet_addEthereumChain",
-        params: [{
-          chainId: "0x152",
-          rpcUrls: ["https://cronos-testnet-3.crypto.org:8545"],
-          chainName: "Cronos Testnet",
-          nativeCurrency: {
-            name: "tCRO",
-            symbol: "tCRO",
-            decimals: 18
-          },
-          blockExplorerUrls: ["https://cronos.crypto.org/explorer/testnet3"]
-        }]
-      });
-    } catch (e) { }
-
-  })();
-
   const context = useWeb3React();
   const { connector, activate, error } = context;
 
@@ -118,13 +98,13 @@ function App() {
             </p>
           </Link>
           :
-          <button className={"home button highlighted" + (connectMenuToggled ? " toggled" : "")} onClick={() => setConnectMenuToggled(!connectMenuToggled)} >
+          <button className={"home button highlighted toggled"} /*onClick={() => setConnectMenuToggled(!connectMenuToggled)}*/ >
             <div className="home button_div"></div>
             <svg className="home icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
             </svg>
             <p className="home button_text">
-              Connect to a wallet
+              Coming soon
             </p>
           </button>}
         <Link className="home button normal" to="/discover" >

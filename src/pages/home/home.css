@@ -32,6 +32,15 @@ nav.home {
   }
 }
 
+.home.button.highlighted.toggled {
+  cursor: not-allowed;
+}
+
+
+.home.button.highlighted.toggled:hover .button_div {
+  border: 0px solid #887b5b;
+}
+
 .home.button {
   font-family    : Verdana, sans-serif;
   letter-spacing : 0.05em;
@@ -81,10 +90,6 @@ nav.home {
 
 .home.button.highlighted.toggled {
   color : #c2b697;
-  border: 1px solid #887b5b;
-}
-
-.home.button.highlighted.toggled:hover .button_div {
   border: 1px solid #887b5b;
 }
 

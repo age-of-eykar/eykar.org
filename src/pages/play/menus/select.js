@@ -38,7 +38,7 @@ function Select({ setGameState, setTopLeft, setBottomRight, colonies }) {
                     () => setGameState(1)} >
                     <h2 className="game colony">💰 Buy a colony</h2>
                     <div className="game colony content">
-                        Create a new colony for 10 CRO
+                        Create a new colony for 4 finney
                     </div>
 
                 </button>

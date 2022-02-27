@@ -4,7 +4,7 @@
     margin-right    : 24px;
     width           : fit-content;
     height          : fit-content;
-    background-color: rgba(223, 219, 213, 0.2);
+    background-color: rgba(146, 143, 138, 0.2);
     cursor          : pointer;
     border-radius   : 45px;
     border          : 1px solid;
@@ -28,6 +28,6 @@
 }
 
 .powered.logo {
-    height: 28px;
-    margin: 2px 4px;
+    height: 24px;
+    margin: 4px 5px;
 }

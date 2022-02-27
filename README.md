@@ -15,5 +15,5 @@ Eykar is a slightly crazy project. It's about creating a completely decentralize
 - [x] Welcome page
 - [x] Coordinates conversion
 - [x] Showcase page
-- [ ] Explore
-- [ ] Web3
+- [x] Explore
+- [ ] ArgentX

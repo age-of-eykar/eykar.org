@@ -29,7 +29,7 @@ function Register({ setGameState, contract }) {
                 <h1 className="game register element" >Create a colony</h1>
 
                 <div className="game register text element" >
-                    You will get an additional colony consisting of a simple settler camp for 10 CRO.
+                    You will get an additional colony consisting of a simple settler camp for 4 finney.
                 </div>
                 <div className="game register group">
                     <input className="game register text" type="text" required value={name} onChange={event => {
@@ -67,7 +67,7 @@ function Register({ setGameState, contract }) {
                     <Spinner className="game register minting spinner" color={'white'} />
                     Your first colony is being minted
                 </div>
-                <a className="game register constraint button" href={"https://cronos.crypto.org/explorer/testnet3/tx/" + txHash } target="_blank" rel="noreferrer">Check transaction</a>
+                <a className="game register constraint button" href={"https://goerli.voyager.online/tx/" + txHash } target="_blank" rel="noreferrer">Check transaction</a>
 
                 <div className="game register text element" >
                 </div>
