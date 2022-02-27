@@ -22,7 +22,7 @@ export function drawPolygon(points, context) {
 function MapCanvas({ setClickedPlotCallback }) {
 
   // center of the map (normal coordinates)
-  const [ center, setCenter ] = useState({ x: 0.0, y: 0.0 });
+  const [center, setCenter] = useState({ x: 0.0, y: 0.0 });
   // scale in cells displayed per width
   const [scale, setScale] = useState({ width: 32.0, height: 32.0 });
 
@@ -46,20 +46,25 @@ function MapCanvas({ setClickedPlotCallback }) {
     canvas.height = windowSize.height;
     canvas.focus();
     const context = canvas.getContext("2d");
-    context.scale(windowSize.width, windowSize.width*0.9);
-    
+    context.scale(windowSize.width, windowSize.height);
+    const screenRatio = windowSize.width / windowSize.height;
+    context.translate(1 / 2, 1 / 2);
     // cache and draw
+    context.scale(ChunksCache.sideSize / scale.width,
+      screenRatio * ChunksCache.sideSize / scale.height);
+
     cache.run(center, scale, (chunk) => {
-      console.log("oups")
+      const topLeft = chunk.getTopLeft();
+      console.log(topLeft)
+      context.translate(topLeft.x/scale.width, topLeft.y/scale.height)
       for (const [_, points] of chunk.shape) {
-        // todo : fix scale
         // todo : display at the right position
-        // todo : ensure cache generates the right chunks
         drawPolygon(points, context);
-        
       }
+      context.translate(scale.width/topLeft.x, scale.height/topLeft.y)
+
     });
-    context.clearRect(0, 0, canvas.width, canvas.height);
+
 
 
     // screen resize

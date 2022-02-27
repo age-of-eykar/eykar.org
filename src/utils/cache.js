@@ -14,11 +14,13 @@ export default class ChunksCache {
     run(center, scale, display) {
         const ready = [];
         const origin = {
-            x: Math.floor((center.x - ChunksCache.sideSize / 2) / ChunksCache.sideSize),
-            y: Math.floor((center.y - ChunksCache.sideSize / 2) / ChunksCache.sideSize)
+            x: Math.trunc((center.x - ChunksCache.sideSize / 2) / ChunksCache.sideSize),
+            y: Math.trunc((center.y - ChunksCache.sideSize / 2) / ChunksCache.sideSize)
         };
-        for (let i = Math.trunc(-scale.width / 2 * ChunksCache.sideSize); i <= scale.width / 2 * ChunksCache.sideSize; i++)
-            for (let j = Math.trunc(-scale.height / 2 * ChunksCache.sideSize); j <= scale.height / 2 * ChunksCache.sideSize; j++) {
+        const a = scale.width / (2 * ChunksCache.sideSize) + 1;
+        const b = scale.height / (2 * ChunksCache.sideSize) + 1;
+        for (let i = Math.trunc(-a); i <= a; i++)
+            for (let j = Math.trunc(-b); j <= b; j++) {
                 const chunk = this.prepare(origin.x + i, origin.y + j, display);
                 if (chunk)
                     ready.push(chunk);
@@ -50,6 +52,13 @@ class Chunk {
         this.plots = new Map();
         this.ready = false;
         (async () => { this.prepare(); })();
+    }
+
+    getTopLeft() {
+       return {
+           x : this.x * ChunksCache.sideSize - ChunksCache.sideSize / 2,
+           y : this.y * ChunksCache.sideSize - ChunksCache.sideSize / 2
+       }
     }
 
     async prepare() {
