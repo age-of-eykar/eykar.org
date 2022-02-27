@@ -6,10 +6,6 @@ import { KeyListeners } from "./listeners";
 import { cache, ChunksCache } from "./calc/cache";
 
 export function drawPolygon(points, context, colors) {
-  if (colors === undefined)
-    context.fillStyle = "#FFFFFF";
-  else
-    context.fillStyle = colors[0];
   context.beginPath();
   for (let i = 0; i < points.length; i++) {
     const x = points[i][0];
@@ -17,7 +13,10 @@ export function drawPolygon(points, context, colors) {
     context.lineTo(x, y);
   }
   context.lineTo(points[0][0], points[0][1]);
+  context.fillStyle = colors[0];
   context.fill();
+  context.strokeStyle = colors[1];
+  context.stroke();
   context.closePath();
 }
 
@@ -66,6 +65,7 @@ function MapCanvas({ setClickedPlotCallback }) {
 
       context.scale(ChunksCache.sideSize, ChunksCache.sideSize);
       let i = 0;
+      context.lineWidth = 1 / (50 * ChunksCache.sideSize);
       for (const points of chunk.shape)
         drawPolygon(points, context, chunk.colors[i++]);
       context.fillText("(" + chunk.x + ", " + chunk.y + ")", 0.4, 0.5);
