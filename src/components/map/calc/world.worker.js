@@ -1,5 +1,5 @@
 import { precalculate } from "modular-voronoi";
-import { szudzik, lcg } from "../../utils/deterministic.js"
+import { szudzik, lcg } from "../../../utils/deterministic.js"
 
 export const generateShape = (chunkX, chunkY, size) => {
 

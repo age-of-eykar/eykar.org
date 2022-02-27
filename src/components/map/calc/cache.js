@@ -1,4 +1,4 @@
-import { szudzik } from "../../utils/deterministic.js"
+import { szudzik } from "../../../utils/deterministic.js"
 import worker from 'workerize-loader!./world.worker'; // eslint-disable-line import/no-webpack-loader-syntax
 
 export default class ChunksCache {

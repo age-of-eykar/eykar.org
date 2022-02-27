@@ -3,7 +3,7 @@ import "./map.css";
 import React, { useRef, useEffect, useState } from "react";
 import debounce from "debounce";
 import { KeyListeners } from "./listeners";
-import ChunksCache from "./cache";
+import ChunksCache from "./calc/cache";
 
 export function drawPolygon(points, context) {
   context.fillStyle = "#" + Math.floor(Math.random() * 16777215).toString(16);
