@@ -7,6 +7,7 @@ export default class ChunksCache {
     static sideSize = 2 * ChunksCache.halfsize + 1;
 
     constructor(capacity) {
+        console.log("new instance")
         this.capacity = capacity;
         this.cached = new Map();
     }
@@ -19,8 +20,8 @@ export default class ChunksCache {
         };
         const a = scale.width / (2 * ChunksCache.sideSize) + 1;
         const b = scale.height / (2 * ChunksCache.sideSize) + 1;
-        for (let i = Math.trunc(-a); i <= a; i++)
-            for (let j = Math.trunc(-b); j <= b; j++) {
+        for (let i = Math.trunc(-a); i < a+1; i++)
+            for (let j = Math.trunc(-b); j < b+1; j++) {
                 const chunk = this.prepare(origin.x + i, origin.y + j, display);
                 if (chunk)
                     ready.push(chunk);
@@ -29,6 +30,7 @@ export default class ChunksCache {
     }
 
     prepare(x, y, display) {
+
         let chunk = this.cached.get(szudzik(x, y));
         if (chunk === undefined)
             chunk = new Chunk(x, y, display);
@@ -38,8 +40,10 @@ export default class ChunksCache {
         while (this.cached.size > this.capacity)
             this.cached.delete(this.cached.keys().next().value);
 
-        if (chunk.ready)
+        if (chunk.ready) {
+            console.log("prout")
             return chunk;
+        }
     }
 
 }

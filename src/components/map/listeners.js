@@ -17,19 +17,19 @@ export class KeyListeners {
 
         switch (event.key) {
             case "ArrowDown":
-                this.move(0, -i);
-                break;
-
-            case "ArrowUp":
                 this.move(0, i);
                 break;
 
+            case "ArrowUp":
+                this.move(0, -i);
+                break;
+
             case "ArrowLeft":
-                this.move(i, 0);
+                this.move(-i, 0);
                 break;
 
             case "ArrowRight":
-                this.move(-i, 0);
+                this.move(i, 0);
                 break;
 
             default:

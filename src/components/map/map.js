@@ -6,7 +6,6 @@ import { KeyListeners } from "./listeners";
 import ChunksCache from "./calc/cache";
 
 export function drawPolygon(points, context, colors) {
-
   if (colors === undefined)
     context.fillStyle = "#FFFFFF";
   else
@@ -32,7 +31,7 @@ function MapCanvas({ setClickedPlotCallback }) {
   const keyListeners = new KeyListeners(center, setCenter);
 
   const canvasRef = useRef(null);
-  const cache = new ChunksCache(1024);
+  const cache = useRef(new ChunksCache(1024));
   const pixelRatio = window.devicePixelRatio;
   const [windowSize, setWindowSize] = useState({
     width: window.innerWidth * pixelRatio,
@@ -61,13 +60,15 @@ function MapCanvas({ setClickedPlotCallback }) {
     context.scale(1 / scale.width,
       1 / scale.height);
 
-    cache.run(center, scale, (chunk) => {
+    cache.current.run(center, scale, (chunk) => {
       const topLeft = chunk.getTopLeft();
-      context.translate(-center.x + topLeft.x, -center.y + topLeft.y)
+      context.translate(topLeft.x - center.x, topLeft.y - center.y)
+
       context.scale(ChunksCache.sideSize, ChunksCache.sideSize);
-      let i = chunk.shape.size;
-      for (const [_, points] of chunk.shape)
-        drawPolygon(points, context, chunk.colors[--i]);
+      let i = 0;
+      for (const points of chunk.shape)
+        drawPolygon(points, context, chunk.colors[i++]);
+      context.fillText("(" + chunk.x + ", " + chunk.y + ")", 0.4, 0.5);
       context.scale(1 / ChunksCache.sideSize, 1 / ChunksCache.sideSize);
       context.translate(center.x - topLeft.x, center.y - topLeft.y)
     });
