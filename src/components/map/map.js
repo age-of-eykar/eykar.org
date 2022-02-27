@@ -47,25 +47,25 @@ function MapCanvas({ setClickedPlotCallback }) {
     canvas.focus();
     const context = canvas.getContext("2d");
     context.scale(windowSize.width, windowSize.height);
-    const screenRatio = windowSize.width / windowSize.height;
+    // move to the center of the screen
     context.translate(1 / 2, 1 / 2);
-    // cache and draw
-    context.scale(ChunksCache.sideSize / scale.width,
-      screenRatio * ChunksCache.sideSize / scale.height);
+    // make y axis proportional to x axis
+    const screenRatio = windowSize.width / windowSize.height;
+    context.scale(1, screenRatio);
+    // make x axis of size
+    context.scale(1 / scale.width,
+      1 / scale.height);
 
     cache.run(center, scale, (chunk) => {
       const topLeft = chunk.getTopLeft();
       console.log(topLeft)
-      context.translate(topLeft.x/scale.width, topLeft.y/scale.height)
-      for (const [_, points] of chunk.shape) {
-        // todo : display at the right position
+      context.translate(topLeft.x, topLeft.y)
+      context.scale(ChunksCache.sideSize, ChunksCache.sideSize);
+      for (const [_, points] of chunk.shape)
         drawPolygon(points, context);
-      }
-      context.translate(scale.width/topLeft.x, scale.height/topLeft.y)
-
+      context.scale(1 / ChunksCache.sideSize, 1 / ChunksCache.sideSize);
+      context.translate(-topLeft.x, -topLeft.y)
     });
-
-
 
     // screen resize
     window.addEventListener('resize', handleResize)
