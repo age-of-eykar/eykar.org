@@ -17,8 +17,8 @@ export class ChunksCache {
             x: Math.trunc((center.x - ChunksCache.sideSize / 2) / ChunksCache.sideSize),
             y: Math.trunc((center.y - ChunksCache.sideSize / 2) / ChunksCache.sideSize)
         };
-        const a = scale.width / (2 * ChunksCache.sideSize) + 5;
-        const b = scale.height / (2 * ChunksCache.sideSize) + 5;
+        const a = scale.width / (2 * ChunksCache.sideSize) + 2;
+        const b = scale.height / (2 * ChunksCache.sideSize) + 2;
         for (let i = Math.trunc(-a); i < a + 1; i++)
             for (let j = Math.trunc(-b); j < b + 1; j++) {
                 const chunk = this.prepare(origin.x + i, origin.y + j, display);
@@ -76,6 +76,7 @@ class Chunk {
             }
         })
         workerInstance.generateShape(this.x, this.y, ChunksCache.halfsize);
+        /*
         const newPlots = await (await fetch("https://cache.eykar.org/colonies",
             {
                 method: 'POST', body: JSON.stringify({
@@ -83,6 +84,8 @@ class Chunk {
                     "xmax": this.x + ChunksCache.sideSize, "ymax": this.y + ChunksCache.sideSize
                 })
             })).json();
+            */
+        const newPlots = [];
         waitingCache = false;
 
         for (const plotKey in newPlots) {
@@ -96,7 +99,7 @@ class Chunk {
 
     setReady() {
         this.ready = true;
-        //this.display(this); // todo: fix visual bugs
+        this.display(this); // todo: fix visual bugs
     }
 
 }
