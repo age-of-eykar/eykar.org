@@ -1,167 +1,97 @@
-import { Delaunay } from "d3-delaunay";
+
 import "./map.css";
 import React, { useRef, useEffect, useState } from "react";
-import { getTileCenter } from "./grid/gridManager";
-import { drawMap } from "./grid/biomes";
-import { CListener, KListeners, WListener } from "../map/grid/listeners";
+import debounce from "debounce";
+import { WheelListener, KeyListeners } from "./listeners";
+import { cache, ChunksCache } from "./calc/cache";
 
-function MapCanvas({ topLeft, setTopLeft, bottomRight, setBottomRight, coordinatesPerId, activePlots, voronoi, setPlotInfo, setPlot, contract, inPlay }) {
+export function drawPolygon(points, context, colors) {
+  context.beginPath();
+  for (let i = 0; i < points.length; i++) {
+    const x = points[i][0];
+    const y = points[i][1];
+    context.lineTo(x, y);
+  }
+  context.lineTo(points[0][0], points[0][1]);
+  context.fillStyle = colors[0];
+  context.fill();
+  context.strokeStyle = colors[1];
+  context.stroke();
+  context.closePath();
+}
+
+function MapCanvas({ setClickedPlotCallback }) {
+
+  // center of the map (normal coordinates)
+  const [center, setCenter] = useState({ x: 0.0, y: 0.0 });
+  // scale in cells displayed per width
+  const [scale, setScale] = useState({ width: 32.0, height: 32.0 });
+
+  const keyListeners = new KeyListeners(center, setCenter);
+
   const canvasRef = useRef(null);
-  const [xPrefix, setXPrefix] = useState(0);
-  const [yPrefix, setYPrefix] = useState(0);
-  const xStep = useRef(1);
-  const yStep = useRef(1);
-  const [zoomIn, setZoomIn] = useState({ x: 0, y: 0, zoom: 0 });
+
+  const pixelRatio = window.devicePixelRatio;
+  const [windowSize, setWindowSize] = useState({
+    width: window.innerWidth * pixelRatio,
+    height: window.innerHeight * pixelRatio
+  });
+
+  const handleResize = () => setWindowSize({
+    width: window.innerWidth * pixelRatio,
+    height: window.innerHeight * pixelRatio
+  })
 
   useEffect(() => {
-    const scale = window.devicePixelRatio;
+    // canvas fixes
     const canvas = canvasRef.current;
+    canvas.width = windowSize.width;
+    canvas.height = windowSize.height;
     canvas.focus();
-    canvas.width = canvas.clientWidth * scale;
-    canvas.height = canvas.clientHeight * scale;
     const context = canvas.getContext("2d");
-    context.scale(scale, scale);
-    const mapWidth = bottomRight.x - topLeft.x;
-    const mapHeight = bottomRight.y - topLeft.y;
-    xStep.current = context.canvas.width / (scale * (mapWidth + 1));
-    yStep.current = context.canvas.height / (scale * (mapHeight + 1));
+    context.scale(windowSize.width, windowSize.height);
+    // move to the center of the screen
+    context.translate(1 / 2, 1 / 2);
+    // make y axis proportional to x axis
+    const screenRatio = windowSize.width / windowSize.height;
+    context.scale(1, screenRatio);
+    // make x axis of size
+    context.scale(1 / scale.width,
+      1 / scale.height);
 
-    let Iterator = {
-      _i: -1,
-      _j: -1,
-      id: 0,
+    cache.run(center, scale, (chunk) => {
+      const topLeft = chunk.getTopLeft();
+      context.translate(topLeft.x - center.x, topLeft.y - center.y)
 
-      [Symbol.iterator]() {
-        return this;
-      },
+      context.scale(ChunksCache.sideSize, ChunksCache.sideSize);
+      let i = 0;
+      context.lineWidth = 1 / (50 * ChunksCache.sideSize);
+      for (const points of chunk.shape)
+        drawPolygon(points, context, chunk.colors[i++]);
+      context.scale(1 / ChunksCache.sideSize, 1 / ChunksCache.sideSize);
+      context.translate(center.x - topLeft.x, center.y - topLeft.y)
+    });
 
-      next() {
-        let center = getTileCenter(
-          topLeft.x,
-          this._i,
-          topLeft.y,
-          this._j,
-          xStep.current,
-          yStep.current,
-          xPrefix,
-          yPrefix
-        );
-        coordinatesPerId.set(this.id++, [
-          this._i + Math.floor(topLeft.x),
-          this._j + Math.floor(topLeft.y),
-        ]);
-        if (this._j >= mapHeight + 1) {
-          this._i++;
-          this._j = -1;
-          return { done: false, value: [center.x, center.y] };
-        } else {
-          this._j++;
-          return { done: this._i > mapWidth + 2, value: [center.x, center.y] };
-        }
-      },
-    };
-    voronoi.setVoronoi = Delaunay.from(Iterator).voronoi([
-      0,
-      0,
-      canvas.width,
-      canvas.height,
-    ]);
-    drawMap(activePlots, coordinatesPerId, context, voronoi);
-
-    const wlisterner = new WListener(bottomRight, topLeft, setZoomIn, canvas);
-    const listenMouseWheel = wlisterner.handleMouseWheel.bind(wlisterner);
+    const wheelListener = new WheelListener(scale, setScale);
+    const listenMouseWheel = wheelListener.handleMouseWheel.bind(wheelListener);
     canvas.addEventListener("mousewheel", listenMouseWheel);
 
-    let listenClick;
-    if (inPlay) {
-      const clisterner = new CListener(setPlotInfo, voronoi, coordinatesPerId, setPlot, contract);
-      listenClick = clisterner.handleMouseClick.bind(clisterner);
-      canvas.addEventListener("click", listenClick);
-    }
+    // screen resize
+    const handler = debounce(() => handleResize(), 20);
+    window.addEventListener("resize", handler);
     return () => {
-      canvas.removeEventListener("mousewheel", listenMouseWheel);
-      if (inPlay)
-        canvas.removeEventListener("click", listenClick);
+      window.removeEventListener("resize", handler);
+      canvas.removeEventListener("mousewheel", listenMouseWheel)
     };
   }, [
-    bottomRight,
-    topLeft,
-    xPrefix,
-    yPrefix,
-    coordinatesPerId,
-    voronoi,
-    xStep,
-    yStep,
-    inPlay,
-    activePlots
+    windowSize, center, scale
   ]);
 
-  useEffect(() => {
-    if (zoomIn.zoom !== 0) {
-      const mapWidth = bottomRight.x - topLeft.x;
-      const mapHeight = bottomRight.y - topLeft.y;
-      setZoomIn({ x: zoomIn.x, y: zoomIn.y, zoom: 0 });
-      if (zoomIn.zoom === 1) {
-        const newTopLeft = {
-          x: topLeft.x + 0.05 * zoomIn.x,
-          y: topLeft.y + 0.05 * zoomIn.y,
-        };
-        const newBottomRight = {
-          x: 0.95 * mapWidth + newTopLeft.x,
-          y: 0.95 * mapHeight + newTopLeft.y,
-        };
-        setXPrefix(newTopLeft.x - Math.trunc(newTopLeft.x));
-        setYPrefix(newTopLeft.y - Math.trunc(newTopLeft.y));
-        setTopLeft(newTopLeft);
-        setBottomRight(newBottomRight);
-      } else {
-        const newTopLeft = {
-          x: topLeft.x - 0.05 * zoomIn.x,
-          y: topLeft.y - 0.05 * zoomIn.y,
-        };
-        const newBottomRight = {
-          x: 1.05 * mapWidth + newTopLeft.x,
-          y: 1.05 * mapHeight + newTopLeft.y,
-        };
-        setTopLeft(newTopLeft);
-        setBottomRight(newBottomRight);
-      }
-    }
-  }, [
-    zoomIn.zoom,
-    zoomIn.x,
-    zoomIn.y,
-    bottomRight.x,
-    bottomRight.y,
-    topLeft.x,
-    topLeft.y,
-    setTopLeft,
-    setBottomRight,
-    setYPrefix,
-    setXPrefix,
-  ]);
-
-  const [repeatStreak, setRepeatStreak] = useState(0);
-
-  const kListeners = new KListeners(
-    xStep,
-    yStep,
-    setRepeatStreak,
-    repeatStreak,
-    xPrefix,
-    yPrefix,
-    setXPrefix,
-    setYPrefix,
-    bottomRight,
-    setBottomRight,
-    topLeft,
-    setTopLeft
-  );
   return (
     <canvas
       className="map"
       ref={canvasRef}
-      onKeyDown={kListeners.onKeyPressed.bind(kListeners)}
+      onKeyDown={keyListeners.onKeyPressed.bind(keyListeners)}
       tabIndex={1}
     />
   );

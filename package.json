@@ -11,9 +11,9 @@
     "@web3-react/ledger-connector": "^6.1.9",
     "@web3-react/network-connector": "^6.1.9",
     "d3-delaunay": "^6.0.2",
-    "d3-voronoi": "^1.1.4",
     "debounce": "^1.2.1",
     "ethers": "^5.5.1",
+    "modular-voronoi": "^1.1.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-horizontal-scrolling-menu": "^2.1.1",
@@ -44,5 +44,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "workerize-loader": "^1.3.0"
   }
 }
