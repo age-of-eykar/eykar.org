@@ -2,7 +2,7 @@
 import "./map.css";
 import React, { useRef, useEffect, useState } from "react";
 import debounce from "debounce";
-import { KeyListeners } from "./listeners";
+import { WheelListener, KeyListeners } from "./listeners";
 import { cache, ChunksCache } from "./calc/cache";
 
 export function drawPolygon(points, context, colors) {
@@ -68,15 +68,21 @@ function MapCanvas({ setClickedPlotCallback }) {
       context.lineWidth = 1 / (50 * ChunksCache.sideSize);
       for (const points of chunk.shape)
         drawPolygon(points, context, chunk.colors[i++]);
-      context.fillText("(" + chunk.x + ", " + chunk.y + ")", 0.4, 0.5);
       context.scale(1 / ChunksCache.sideSize, 1 / ChunksCache.sideSize);
       context.translate(center.x - topLeft.x, center.y - topLeft.y)
     });
 
+    const wheelListener = new WheelListener(scale, setScale);
+    const listenMouseWheel = wheelListener.handleMouseWheel.bind(wheelListener);
+    canvas.addEventListener("mousewheel", listenMouseWheel);
+
     // screen resize
     const handler = debounce(() => handleResize(), 20);
     window.addEventListener("resize", handler);
-    return () => window.removeEventListener("resize", handler);
+    return () => {
+      window.removeEventListener("resize", handler);
+      canvas.removeEventListener("mousewheel", listenMouseWheel)
+    };
   }, [
     windowSize, center, scale
   ]);

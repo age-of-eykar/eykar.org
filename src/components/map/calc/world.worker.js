@@ -22,11 +22,11 @@ export const generateShape = (chunkX, chunkY, size) => {
         }
     }
     for (let i = 0; i < sideLength; i++)
-    for (let j = 0; j < sideLength; j++) {
-        const x = prefixX + i - 1;
-        const y = prefixY + j - 1;
-        colors[i + j * sideLength] = getBiomeColors(x, y);
-    }
+        for (let j = 0; j < sideLength; j++) {
+            const x = prefixX + i - 1;
+            const y = prefixY + j - 1;
+            colors[i + j * sideLength] = getBiomeColors(x, 2 * y);
+        }
 
     const voronoi = precalculate(points, 2 * size + 3, 2 * size + 3);
     postMessage({ shape: voronoi, colors: colors });
