@@ -55,10 +55,10 @@ class Chunk {
     }
 
     getTopLeft() {
-       return {
-           x : this.x * ChunksCache.sideSize - ChunksCache.sideSize / 2,
-           y : this.y * ChunksCache.sideSize - ChunksCache.sideSize / 2
-       }
+        return {
+            x: this.x * ChunksCache.sideSize - ChunksCache.sideSize / 2,
+            y: this.y * ChunksCache.sideSize - ChunksCache.sideSize / 2
+        }
     }
 
     async prepare() {
@@ -68,6 +68,7 @@ class Chunk {
         workerInstance.addEventListener('message', (message) => {
             if (message.data.size !== undefined) {
                 this.shape = message.data;
+                workerInstance.terminate();
                 if (!waitingCache)
                     this.setReady();
             }
