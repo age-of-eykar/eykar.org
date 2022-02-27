@@ -1,4 +1,4 @@
-import { szudzik } from "./deterministic.js"
+import { szudzik } from "../../utils/deterministic.js"
 import worker from 'workerize-loader!./world.worker'; // eslint-disable-line import/no-webpack-loader-syntax
 
 export default class ChunksCache {
@@ -67,7 +67,7 @@ class Chunk {
         // Attach an event listener to receive calculations from your worker
         workerInstance.addEventListener('message', (message) => {
             if (message.data.size !== undefined) {
-                this.shape = message.data;
+                this.data = message.data;
                 workerInstance.terminate();
                 if (!waitingCache)
                     this.setReady();
@@ -88,7 +88,7 @@ class Chunk {
             this.plots.set(szudzik(plot.x, plot.y), plot.colony_id);
         }
 
-        if (this.shape)
+        if (this.data)
             this.setReady();
     }
 

@@ -2,10 +2,8 @@
 import "./map.css";
 import React, { useRef, useEffect, useState } from "react";
 import debounce from "debounce";
-import { drawMap } from "./grid/biomes";
 import { KeyListeners } from "./listeners";
-import ChunksCache from "../../utils/cache";
-import { getDimensions, drawCell } from "../../utils/gridManager";
+import ChunksCache from "./cache";
 
 export function drawPolygon(points, context) {
   context.fillStyle = "#" + Math.floor(Math.random() * 16777215).toString(16);
@@ -63,7 +61,7 @@ function MapCanvas({ setClickedPlotCallback }) {
       const topLeft = chunk.getTopLeft();
       context.translate(-center.x + topLeft.x, -center.y + topLeft.y)
       context.scale(ChunksCache.sideSize, ChunksCache.sideSize);
-      for (const [_, points] of chunk.shape)
+      for (const [_, points] of chunk.data)
         drawPolygon(points, context);
       context.scale(1 / ChunksCache.sideSize, 1 / ChunksCache.sideSize);
       context.translate(center.x-topLeft.x, center.y-topLeft.y)

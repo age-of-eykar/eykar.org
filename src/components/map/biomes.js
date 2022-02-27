@@ -1,6 +1,4 @@
-import { perlin } from "../../../utils/perlinNoise";
-import { drawCell } from "../../../utils/gridManager";
-import { lcg, szudzik } from "../../../utils/deterministic.js"
+import { perlin } from "../../utils/perlinNoise";
 
 function getElevation(x, y) {
   return perlin(x, y, 3, 0.5, 0.01, 0);
@@ -15,7 +13,7 @@ const desertIce = "#bdf5e9";
 const desertSand = "#edc9af";
 const plainContinental = "#bacb38";
 
-function biomes(x, y) {
+export function getBiomeColors(x, y) {
   const elevation = getElevation(x, y);
   const temperature = getTemperature(x, y);
   const colorS = "#1e272e20";
@@ -67,23 +65,6 @@ function biomes(x, y) {
       const b5 = 20 * (0.75 + elevation * 3.1);
       const grad5 = "rgb(" + r5 + "," + g5 + "," + b5 + ")";
       return [grad5, colorS];
-    }
-  }
-}
-
-export function drawMap(activePlots, grid, context, voronoi) {
-  let x = 0,
-    y = 0;
-  let colorF, colorS;
-  for (let i = 0; i < voronoi._circumcenters.length; i++) {
-    if (typeof grid.get(i) !== "undefined") [x, y] = grid.get(i);
-    [colorF, colorS] = biomes(x, y);
-    const colonyId = activePlots.get(szudzik(x, y));
-    if (colonyId !== undefined) {
-      const tint = lcg(colonyId);
-      drawCell(context, i, "hsl(" + (tint % 360) + ",90%,61%)", voronoi, colorS);
-    } else {
-      drawCell(context, i, colorF, voronoi, colorS);
     }
   }
 }
