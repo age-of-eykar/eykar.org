@@ -22,25 +22,41 @@ export function drawPolygon(points, context, colors, fast) {
   context.closePath();
 }
 
-const useAnimationFrame = callback => {
-  // Use useRef for mutable variables that we want to persist
-  // without triggering a re-render on their change
-  const requestRef = React.useRef();
-  const previousTimeRef = React.useRef();
-
-  const animate = time => {
-    if (previousTimeRef.current != undefined) {
-      const deltaTime = time - previousTimeRef.current;
-      callback(deltaTime)
-    }
-    previousTimeRef.current = time;
-    requestRef.current = requestAnimationFrame(animate);
-  }
-
-  React.useEffect(() => {
-    requestRef.current = requestAnimationFrame(animate);
-    return () => cancelAnimationFrame(requestRef.current);
-  }, []); // Make sure the effect runs only once
+const redraw = (canvas, cache, center, scale, windowSize) => {
+  // canvas fixes
+  canvas.width = windowSize.width;
+  canvas.height = windowSize.height;
+  canvas.focus();
+  const context = canvas.getContext("2d");
+  context.scale(windowSize.width, windowSize.height);
+  // move to the center of the screen
+  context.translate(1 / 2, 1 / 2);
+  // make y axis proportional to x axis
+  const screenRatio = windowSize.width / windowSize.height;
+  context.scale(1, screenRatio);
+  // make x axis of size
+  context.scale(1 / scale.width,
+    1 / scale.height);
+  cache.forEachChunk(center, scale, (chunk) => {
+    const topLeft = chunk.getTopLeft();
+    context.translate(topLeft.x - center.x, topLeft.y - center.y)
+    context.scale(ChunksCache.sideSize, ChunksCache.sideSize);
+    let i = 0;
+    context.lineWidth = 1 / (50 * ChunksCache.sideSize);
+    // fast display (no polygons)
+    if (scale.width > 128) {
+      const sideSize = 1 / ChunksCache.sideSize;
+      for (let j = 0; j < ChunksCache.sideSize; j++)
+        for (let i = 0; i < ChunksCache.sideSize; i++) {
+          context.fillStyle = chunk.colors[i + j * ChunksCache.sideSize][0];
+          context.fillRect(i / ChunksCache.sideSize - 0.05 * sideSize, j / ChunksCache.sideSize - 0.05 * sideSize,
+            sideSize + 0.1 * sideSize, sideSize + 0.1 * sideSize);
+        }
+    } else for (const points of chunk.shape)
+      drawPolygon(points, context, chunk.colors[i++], scale.width > 48);
+    context.scale(1 / ChunksCache.sideSize, 1 / ChunksCache.sideSize);
+    context.translate(center.x - topLeft.x, center.y - topLeft.y)
+  });
 }
 
 function MapCanvas({ setClickedPlotCallback }) {
@@ -67,10 +83,9 @@ function MapCanvas({ setClickedPlotCallback }) {
 
   useEffect(() => {
     cache.refresh(center, scale);
-    console.log("center in effect:", center)
-    const canvas = canvasRef.current;
     const wheelListener = new WheelListener(scale, setScale);
     const listenMouseWheel = wheelListener.handleMouseWheel.bind(wheelListener);
+    const canvas = canvasRef.current;
     canvas.addEventListener("mousewheel", listenMouseWheel);
 
     // screen resize
@@ -84,44 +99,21 @@ function MapCanvas({ setClickedPlotCallback }) {
     windowSize, center, scale
   ]);
 
-  useAnimationFrame(deltaTime => {
-    console.log("center in animation:", center)
-    // canvas fixes
-    const canvas = canvasRef.current;
-    canvas.width = windowSize.width;
-    canvas.height = windowSize.height;
-    canvas.focus();
-    const context = canvas.getContext("2d");
-    context.scale(windowSize.width, windowSize.height);
-    // move to the center of the screen
-    context.translate(1 / 2, 1 / 2);
-    // make y axis proportional to x axis
-    const screenRatio = windowSize.width / windowSize.height;
-    context.scale(1, screenRatio);
-    // make x axis of size
-    context.scale(1 / scale.width,
-      1 / scale.height);
-    cache.forEachChunk(center, scale, (chunk) => {
-      const topLeft = chunk.getTopLeft();
-      context.translate(topLeft.x - center.x, topLeft.y - center.y)
-      context.scale(ChunksCache.sideSize, ChunksCache.sideSize);
-      let i = 0;
-      context.lineWidth = 1 / (50 * ChunksCache.sideSize);
-      // fast display (no polygons)
-      if (scale.width > 128) {
-        const sideSize = 1 / ChunksCache.sideSize;
-        for (let j = 0; j < ChunksCache.sideSize; j++)
-          for (let i = 0; i < ChunksCache.sideSize; i++) {
-            context.fillStyle = chunk.colors[i + j * ChunksCache.sideSize][0];
-            context.fillRect(i / ChunksCache.sideSize - 0.05 * sideSize, j / ChunksCache.sideSize - 0.05 * sideSize,
-              sideSize + 0.1 * sideSize, sideSize + 0.1 * sideSize);
-          }
-      } else for (const points of chunk.shape)
-        drawPolygon(points, context, chunk.colors[i++], scale.width > 48);
-      context.scale(1 / ChunksCache.sideSize, 1 / ChunksCache.sideSize);
-      context.translate(center.x - topLeft.x, center.y - topLeft.y)
-    });
-  })
+  useEffect(() => {
+    const id = setTimeout(
+      () => {
+        redraw(canvasRef.current, cache, center, scale, windowSize)
+      },
+      250);
+    return () => clearInterval(id);
+  }, [
+  ]);
+
+  useEffect(() => {
+    redraw(canvasRef.current, cache, center, scale, windowSize)
+  }, [
+    windowSize, center, scale
+  ]);
 
   return (
     <canvas
