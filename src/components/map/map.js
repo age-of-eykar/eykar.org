@@ -87,13 +87,15 @@ function MapCanvas({ setClickedPlotCallback }) {
     const listenMouseWheel = wheelListener.handleMouseWheel.bind(wheelListener);
     const canvas = canvasRef.current;
     canvas.addEventListener("mousewheel", listenMouseWheel);
+    canvas.addEventListener("onwheel", listenMouseWheel);
 
     // screen resize
     const handler = debounce(() => handleResize(), 20);
     window.addEventListener("resize", handler);
     return () => {
       window.removeEventListener("resize", handler);
-      canvas.removeEventListener("mousewheel", listenMouseWheel)
+      canvas.removeEventListener("mousewheel", listenMouseWheel);
+      canvas.removeEventListener("onwheel", listenMouseWheel);
     };
   }, [
     windowSize, center, scale
