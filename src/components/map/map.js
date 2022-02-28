@@ -99,18 +99,22 @@ function MapCanvas({ setClickedPlotCallback }) {
     windowSize, center, scale
   ]);
 
-  useEffect(() => {
-    const id = setTimeout(
-      () => {
-        redraw(canvasRef.current, cache, center, scale, windowSize)
-      },
-      250);
-    return () => clearInterval(id);
-  }, [
-  ]);
+  const interacted = useRef(false);
 
   useEffect(() => {
     redraw(canvasRef.current, cache, center, scale, windowSize)
+    interacted.current = true;
+  }, [
+    windowSize, center, scale
+  ]);
+
+  useEffect(() => {
+    const id = setInterval(
+      () => {
+        redraw(canvasRef.current, cache, center, scale, windowSize)
+      },
+      1000 / 8);
+    return () => clearInterval(id);
   }, [
     windowSize, center, scale
   ]);
