@@ -22,6 +22,27 @@ export function drawPolygon(points, context, colors, fast) {
   context.closePath();
 }
 
+const useAnimationFrame = callback => {
+  // Use useRef for mutable variables that we want to persist
+  // without triggering a re-render on their change
+  const requestRef = React.useRef();
+  const previousTimeRef = React.useRef();
+
+  const animate = time => {
+    if (previousTimeRef.current != undefined) {
+      const deltaTime = time - previousTimeRef.current;
+      callback(deltaTime)
+    }
+    previousTimeRef.current = time;
+    requestRef.current = requestAnimationFrame(animate);
+  }
+
+  React.useEffect(() => {
+    requestRef.current = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(requestRef.current);
+  }, []); // Make sure the effect runs only once
+}
+
 function MapCanvas({ setClickedPlotCallback }) {
 
   // center of the map (normal coordinates)
@@ -45,6 +66,26 @@ function MapCanvas({ setClickedPlotCallback }) {
   })
 
   useEffect(() => {
+    cache.refresh(center, scale);
+    console.log("center in effect:", center)
+    const canvas = canvasRef.current;
+    const wheelListener = new WheelListener(scale, setScale);
+    const listenMouseWheel = wheelListener.handleMouseWheel.bind(wheelListener);
+    canvas.addEventListener("mousewheel", listenMouseWheel);
+
+    // screen resize
+    const handler = debounce(() => handleResize(), 20);
+    window.addEventListener("resize", handler);
+    return () => {
+      window.removeEventListener("resize", handler);
+      canvas.removeEventListener("mousewheel", listenMouseWheel)
+    };
+  }, [
+    windowSize, center, scale
+  ]);
+
+  useAnimationFrame(deltaTime => {
+    console.log("center in animation:", center)
     // canvas fixes
     const canvas = canvasRef.current;
     canvas.width = windowSize.width;
@@ -60,8 +101,7 @@ function MapCanvas({ setClickedPlotCallback }) {
     // make x axis of size
     context.scale(1 / scale.width,
       1 / scale.height);
-
-    cache.run(center, scale, (chunk) => {
+    cache.forEachChunk(center, scale, (chunk) => {
       const topLeft = chunk.getTopLeft();
       context.translate(topLeft.x - center.x, topLeft.y - center.y)
       context.scale(ChunksCache.sideSize, ChunksCache.sideSize);
@@ -81,21 +121,7 @@ function MapCanvas({ setClickedPlotCallback }) {
       context.scale(1 / ChunksCache.sideSize, 1 / ChunksCache.sideSize);
       context.translate(center.x - topLeft.x, center.y - topLeft.y)
     });
-
-    const wheelListener = new WheelListener(scale, setScale);
-    const listenMouseWheel = wheelListener.handleMouseWheel.bind(wheelListener);
-    canvas.addEventListener("mousewheel", listenMouseWheel);
-
-    // screen resize
-    const handler = debounce(() => handleResize(), 20);
-    window.addEventListener("resize", handler);
-    return () => {
-      window.removeEventListener("resize", handler);
-      canvas.removeEventListener("mousewheel", listenMouseWheel)
-    };
-  }, [
-    windowSize, center, scale
-  ]);
+  })
 
   return (
     <canvas

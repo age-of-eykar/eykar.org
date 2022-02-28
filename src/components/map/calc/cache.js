@@ -11,28 +11,40 @@ export class ChunksCache {
         this.cached = new Map();
     }
 
-    run(center, scale, display) {
+    forEachChunk(center, scale, display) {
         const ready = [];
+        const origin = {
+            x: Math.trunc((center.x - ChunksCache.sideSize / 2) / ChunksCache.sideSize),
+            y: Math.trunc((center.y - ChunksCache.sideSize / 2) / ChunksCache.sideSize)
+        };
+        const a = scale.width / (2 * ChunksCache.sideSize) + 1;
+        const b = scale.height / (2 * ChunksCache.sideSize) + 1;
+        for (let i = Math.trunc(-a); i < a; i++)
+            for (let j = Math.trunc(-b); j < b; j++) {
+                const chunk = this.cached.get(szudzik(origin.x + i, origin.y + j));
+                if (chunk.ready)
+                    ready.push(chunk);
+            }
+        ready.forEach(chunk => display(chunk));
+    }
+
+    refresh(center, scale) {
         const origin = {
             x: Math.trunc((center.x - ChunksCache.sideSize / 2) / ChunksCache.sideSize),
             y: Math.trunc((center.y - ChunksCache.sideSize / 2) / ChunksCache.sideSize)
         };
         const a = scale.width / (2 * ChunksCache.sideSize) + 2;
         const b = scale.height / (2 * ChunksCache.sideSize) + 2;
-        for (let i = Math.trunc(-a); i < a + 1; i++)
-            for (let j = Math.trunc(-b); j < b + 1; j++) {
-                const chunk = this.prepare(origin.x + i, origin.y + j, display);
-                if (chunk)
-                    ready.push(chunk);
-            }
-        ready.forEach(chunk => display(chunk));
+        for (let i = Math.trunc(-a); i < a; i++)
+            for (let j = Math.trunc(-b); j < b; j++)
+                this.prepare(origin.x + i, origin.y + j);
     }
 
-    prepare(x, y, display) {
+    prepare(x, y) {
 
         let chunk = this.cached.get(szudzik(x, y));
         if (chunk === undefined)
-            chunk = new Chunk(x, y, display);
+            chunk = new Chunk(x, y);
         // should be added to the end of the map
         this.cached.set(szudzik(x, y), chunk);
 
@@ -46,10 +58,9 @@ export class ChunksCache {
 }
 
 class Chunk {
-    constructor(x, y, display) {
+    constructor(x, y) {
         this.x = x;
         this.y = y;
-        this.display = display;
         this.plots = new Map();
         this.ready = false;
         (async () => { this.prepare(); })();
@@ -99,7 +110,6 @@ class Chunk {
 
     setReady() {
         this.ready = true;
-        this.display(this); // todo: fix visual bugs
     }
 
 }
