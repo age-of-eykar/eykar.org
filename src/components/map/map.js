@@ -5,7 +5,7 @@ import debounce from "debounce";
 import { WheelListener, KeyListeners } from "./listeners";
 import { cache, ChunksCache } from "./calc/cache";
 
-export function drawPolygon(points, context, colors) {
+export function drawPolygon(points, context, colors, fast) {
   context.beginPath();
   for (let i = 0; i < points.length; i++) {
     const x = points[i][0];
@@ -15,8 +15,10 @@ export function drawPolygon(points, context, colors) {
   context.lineTo(points[0][0], points[0][1]);
   context.fillStyle = colors[0];
   context.fill();
-  context.strokeStyle = colors[1];
-  context.stroke();
+  if (!fast) {
+    context.strokeStyle = colors[1];
+    context.stroke();
+  }
   context.closePath();
 }
 
@@ -62,12 +64,20 @@ function MapCanvas({ setClickedPlotCallback }) {
     cache.run(center, scale, (chunk) => {
       const topLeft = chunk.getTopLeft();
       context.translate(topLeft.x - center.x, topLeft.y - center.y)
-
       context.scale(ChunksCache.sideSize, ChunksCache.sideSize);
       let i = 0;
       context.lineWidth = 1 / (50 * ChunksCache.sideSize);
-      for (const points of chunk.shape)
-        drawPolygon(points, context, chunk.colors[i++]);
+      // fast display (no polygons)
+      if (scale.width > 128) {
+        const sideSize = 1 / ChunksCache.sideSize;
+        for (let j = 0; j < ChunksCache.sideSize; j++)
+          for (let i = 0; i < ChunksCache.sideSize; i++) {
+            context.fillStyle = chunk.colors[i + j * ChunksCache.sideSize][0];
+            context.fillRect(i / ChunksCache.sideSize - 0.05 * sideSize, j / ChunksCache.sideSize - 0.05 * sideSize,
+              sideSize + 0.1 * sideSize, sideSize + 0.1 * sideSize);
+          }
+      } else for (const points of chunk.shape)
+        drawPolygon(points, context, chunk.colors[i++], scale.width > 48);
       context.scale(1 / ChunksCache.sideSize, 1 / ChunksCache.sideSize);
       context.translate(center.x - topLeft.x, center.y - topLeft.y)
     });
