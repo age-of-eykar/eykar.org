@@ -2,37 +2,10 @@ import "./home.css"
 import { Link } from "react-router-dom";
 import logo from "../../img/logo.svg";
 import React from 'react'
-import { useWeb3React } from '@web3-react/core'
-import { useEagerConnect, useInactiveListener } from '../../utils/web3hooks'
-
-import { injected, network, ledger } from '../../utils/connectors'
 import { Spinner } from '../../components/spinner'
 import Powered from '../../components/powered/powered'
 
-const connectorsByName = {
-  'Metamask': injected,
-  'Network': network,
-  'Ledger': ledger
-}
-
 function App() {
-
-  const context = useWeb3React();
-  const { connector, activate, error } = context;
-
-  // handle logic to recognize the connector currently being activated
-  const [activatingConnector, setActivatingConnector] = React.useState();
-  React.useEffect(() => {
-    if (activatingConnector && activatingConnector === connector) {
-      setActivatingConnector(undefined)
-    }
-  }, [activatingConnector, connector])
-
-  // handle logic to eagerly connect to the injected ethereum provider, if it exists and has granted access already
-  const triedEager = useEagerConnect()
-
-  // handle logic to connect in reaction to certain events on the injected ethereum provider, if it exists
-  useInactiveListener(!triedEager || !!activatingConnector)
 
   const [connectMenuToggled, setConnectMenuToggled] = React.useState(false);
   const [connected, setConnected] = React.useState(false);
@@ -52,35 +25,6 @@ function App() {
               <p className="home warning_text">Using MetaMask with Cronos</p>
               <svg className="home warning_icon v2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
             </a>
-
-            {Object.keys(connectorsByName).map(name => {
-
-              const currentConnector = connectorsByName[name]
-              const activating = currentConnector === activatingConnector
-              if (currentConnector === connector) {
-                setConnectMenuToggled(false);
-                setConnected(true);
-              }
-              const disabled = !triedEager || !!activatingConnector || connected || !!error
-
-              return (
-                <button
-                  className="home selectmenu_button"
-                  style={{ borderColor: activating ? 'orange' : '#3f3f3f', cursor: disabled ? 'unset' : 'pointer' }}
-                  disabled={disabled}
-                  key={name}
-                  onClick={() => {
-                    setActivatingConnector(currentConnector)
-                    activate(connectorsByName[name])
-                  }}
-                >
-                  <div className="home loading" >
-                    {activating && <Spinner color={'white'} style={{ height: '22px', marginLeft: '-2rem' }} />}
-                  </div>
-                  {name}
-                </button>
-              )
-            })}
           </div>
           : null
       }

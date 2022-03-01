@@ -1,7 +1,6 @@
 import "./menus.css"
 
 import React, { useState } from 'react';
-import { ethers } from "ethers";
 import { Spinner } from '../../../components/spinner'
 
 
@@ -9,7 +8,7 @@ function create(name, contract, setCreatingState, setTxHash) {
     setCreatingState(1);
     (async () => {
         const tx = await contract.register(name, {
-            value: ethers.utils.parseEther("10.0")
+            value: 1,
         });
         setTxHash(tx.hash);
         setCreatingState(2);
@@ -67,7 +66,7 @@ function Register({ setGameState, contract }) {
                     <Spinner className="game register minting spinner" color={'white'} />
                     Your first colony is being minted
                 </div>
-                <a className="game register constraint button" href={"https://goerli.voyager.online/tx/" + txHash } target="_blank" rel="noreferrer">Check transaction</a>
+                <a className="game register constraint button" href={"https://goerli.voyager.online/tx/" + txHash} target="_blank" rel="noreferrer">Check transaction</a>
 
                 <div className="game register text element" >
                 </div>

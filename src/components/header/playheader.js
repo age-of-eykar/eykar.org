@@ -1,10 +1,9 @@
 import "./header.css"
 
 import { Link } from "react-router-dom";
-import { useWeb3React } from '@web3-react/core'
 
 function Account({ gameState, setGameState }) {
-    const { account } = useWeb3React();
+    const { account } = "th0rgal.eth";
     if (account)
         return (gameState !== 3) ?
 
