@@ -76,11 +76,6 @@ function MapCanvas({ setClickedPlotCallback }) {
     height: window.innerHeight * pixelRatio
   });
 
-  const handleResize = () => setWindowSize({
-    width: window.innerWidth * pixelRatio,
-    height: window.innerHeight * pixelRatio
-  })
-
   useEffect(() => {
     cache.refresh(center, scale);
     const wheelListener = new WheelListener(scale, setScale);
@@ -90,7 +85,10 @@ function MapCanvas({ setClickedPlotCallback }) {
     canvas.addEventListener("onwheel", listenMouseWheel);
 
     // screen resize
-    const handler = debounce(() => handleResize(), 20);
+    const handler = debounce(() => setWindowSize({
+      width: window.innerWidth * pixelRatio,
+      height: window.innerHeight * pixelRatio
+    }), 20);
     window.addEventListener("resize", handler);
     return () => {
       window.removeEventListener("resize", handler);
@@ -98,7 +96,7 @@ function MapCanvas({ setClickedPlotCallback }) {
       canvas.removeEventListener("onwheel", listenMouseWheel);
     };
   }, [
-    windowSize, center, scale
+    windowSize, center, scale, pixelRatio
   ]);
 
   const interacted = useRef(false);

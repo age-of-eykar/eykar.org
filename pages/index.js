@@ -27,11 +27,11 @@ export default function Home() {
           : null
       }
       <nav className={styles.nav}>
-        <img className={styles.logo} src="./logo.svg" alt="Eykar Logo" />
+        <img className={styles.logo} src="/logo.svg" alt="Eykar Logo" />
         {connected ?
-          <Link href="/play" >
+          <Link href="/play" passHref >
             <div className={
-            [styles.button, styles.play].join(" ")}>
+              [styles.button, styles.play].join(" ")}>
               <div className={styles.button_div}></div>
               <svg className={styles.playicon} fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
@@ -52,7 +52,7 @@ export default function Home() {
               Coming soon
             </p>
           </button>}
-        <Link href="/discover" >
+        <Link href="/discover" passHref >
           <div className={[styles.button, styles.normal].join(" ")}>
             <div className={styles.button_div}></div>
             <svg className={styles.icon} fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -63,7 +63,7 @@ export default function Home() {
             </p>
           </div>
         </Link>
-        <Link href="/explore">
+        <Link href="/explore" passHref >
           <div className={[styles.button, styles.normal].join(" ")} >
             <div className={styles.button_div}></div>
             <svg className={styles.icon} fill="none" viewBox="0 0 24 24" stroke="currentColor">
