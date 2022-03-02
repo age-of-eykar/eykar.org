@@ -1,5 +1,4 @@
 import styles from '../styles/components/Powered.module.css'
-import Image from 'next/image'
 
 function Powered() {
     return (

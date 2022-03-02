@@ -4,11 +4,9 @@ import { szudzik, lcg } from "../../../utils/deterministic.js"
 
 
 self.onmessage = ({ data: { chunkX, chunkY, size } }) => {
-
     const sideLength = (2 * size + 1);
     const prefixX = -size + chunkX * sideLength;
     const prefixY = -size + chunkY * sideLength;
-    console.log("sideLength", sideLength);
     const points = new Array(Math.pow((sideLength + 2), 2));
     const colors = new Array(Math.pow(sideLength, 2));
     for (let i = 0; i <= sideLength + 1; i++) {
