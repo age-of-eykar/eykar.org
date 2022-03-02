@@ -119,7 +119,7 @@ function MapCanvas({ setClickedPlotCallback }) {
       () => {
         redraw(canvasRef.current, cache, center, scale, windowSize)
       },
-      1000 / 8);
+      1000 / 16);
     return () => clearInterval(id);
   }, [
     windowSize, center, scale
