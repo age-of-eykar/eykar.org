@@ -60,8 +60,6 @@ const redraw = (canvas, cache, center, scale, windowSize) => {
 }
 
 function MapCanvas({ setClickedPlotCallback }) {
-  if (typeof window === 'undefined') // can only be rendered client-side
-    return null;
 
   // center of the map (normal coordinates)
   const [center, setCenter] = useState({ x: 0.0, y: 0.0 });
@@ -72,8 +70,8 @@ function MapCanvas({ setClickedPlotCallback }) {
 
   const canvasRef = useRef(null);
 
-  const pixelRatio = window.devicePixelRatio;
-  const [windowSize, setWindowSize] = useState({
+  const pixelRatio = (typeof window === 'undefined') ? 1 : window.devicePixelRatio;
+  const [windowSize, setWindowSize] = useState((typeof window === 'undefined') ? null : {
     width: window.innerWidth * pixelRatio,
     height: window.innerHeight * pixelRatio
   });
