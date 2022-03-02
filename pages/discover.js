@@ -1,6 +1,5 @@
 import styles from '../styles/Discover.module.css'
 import Header from "../components/header";
-import Image from 'next/image'
 
 function Discover() {
 
@@ -42,7 +41,7 @@ function Discover() {
                                         Come and follow the news, propose your ideas or simply discuss
                                         with the project participants on our official discord: <a href="https://discord.gg/zkWV6zVbvX">discord.eykar.org</a></p>
                                 </div>
-                                <Image className={styles.mask1} src="/illustrations/warrior1.webp" alt="A warrior" />
+                                <img className={styles.mask1} src="/illustrations/warrior1.webp" alt="A warrior" />
                             </div>
                             <div className={styles.card}>
                                 <div>
@@ -52,7 +51,7 @@ function Discover() {
                                         The project is fully open source, feel free to check out our <a href="https://github.com/age-of-eykar">github</a>.
                                     </p>
                                 </div>
-                                <Image className={styles.mask2} src="/illustrations/warrior2.webp" alt="A warrior" />
+                                <img className={styles.mask2} src="/illustrations/warrior2.webp" alt="A warrior" />
                             </div>
                         </div>
                     </div>
