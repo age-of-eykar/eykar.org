@@ -5,8 +5,6 @@ import debounce from "debounce";
 import { WheelListener, KeyListeners } from "./listeners";
 import { cache, ChunksCache } from "./calc/cache";
 
-let futureDrawTime = 0;
-
 export function drawPolygon(points, context, colors, fast) {
   context.beginPath();
   for (let i = 0; i < points.length; i++) {
@@ -22,10 +20,12 @@ export function drawPolygon(points, context, colors, fast) {
     context.stroke();
   }
   context.closePath();
-}
 
+}
+let averageDelay = 1000 / 60;
+let lastDrawTime = 0;
 const redraw = (canvas, cache, center, scale, windowSize) => {
-  if (Date.now() < futureDrawTime)
+  if (Date.now() < lastDrawTime + averageDelay)
     return;
   const startTime = Date.now();
   // canvas fixes
@@ -62,7 +62,7 @@ const redraw = (canvas, cache, center, scale, windowSize) => {
     context.scale(1 / ChunksCache.sideSize, 1 / ChunksCache.sideSize);
     context.translate(center.x - topLeft.x, center.y - topLeft.y)
   });
-  futureDrawTime = 2 * Date.now() - startTime;
+  averageDelay = (averageDelay / 2 + Date.now() - startTime / 2);
 }
 
 function MapCanvas({ setClickedPlotCallback }) {
