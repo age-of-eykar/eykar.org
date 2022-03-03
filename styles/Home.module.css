@@ -32,15 +32,6 @@
   }
 }
 
-.button.highlighted.toggled {
-  cursor: not-allowed;
-}
-
-
-.button.highlighted.toggled:hover .button_div {
-  border: 0px solid #887b5b;
-}
-
 .button {
   font-family    : Verdana, sans-serif;
   letter-spacing : 0.05em;
@@ -86,11 +77,6 @@
 
 .button.highlighted:hover .button_div {
   border: solid 1px #ffe1a9;
-}
-
-.button.highlighted.toggled {
-  color : #c2b697;
-  border: 1px solid #887b5b;
 }
 
 .button.play {
@@ -173,107 +159,6 @@
 
 .button:hover .button_div {
   border: solid 1px #dddddd;
-}
-
-
-.selectmenu {
-  position       : absolute;
-  align-self     : center;
-  left           : 50%;
-  transform      : translateX(-50%);
-  background     : #191b1f;
-  backdrop-filter: blur(10px);
-  border-radius  : 20px;
-  z-index        : 1;
-  padding        : 25px;
-  width          : 100%;
-  max-width      : 450px;
-  top            : 50px;
-}
-
-.selectmenu_close {
-  position        : absolute;
-  top             : 15px;
-  right           : 15px;
-  width           : 30px;
-  stroke          : white;
-  cursor          : pointer;
-  transition      : 0.3s;
-  background-color: transparent;
-  border          : none;
-}
-
-.selectmenu_close:hover {
-  stroke: rgb(124, 124, 124);
-}
-
-.selectmenu_title {
-  color        : white;
-  font-family  : Verdana, sans-serif;
-  font-size    : 18px;
-  font-weight  : bold;
-  margin-bottom: 95px;
-}
-
-.selectmenu_button {
-  position        : 'relative';
-  background-color: #202227;
-  border          : 1px solid #3f3f3f;
-  display         : block;
-  margin-top      : 25px;
-  margin-bottom   : 7px;
-  padding         : 5px 50px 5px 50px;
-  border-radius   : 15px;
-  width           : calc(100% - 15px);
-  margin-left     : 7.5px;
-  height          : 50px;
-  color           : white;
-  font-family     : Verdana, sans-serif;
-  font-size       : 14px;
-  font-weight     : bold;
-  transition      : 0.2s;
-}
-
-.selectmenu_button:hover {
-  width      : calc(100% - 8px);
-  margin-left: 4px;
-}
-
-.warning {
-  text-decoration : none;
-  color           : white;
-  background-color: #9e7231;
-  position        : absolute;
-  top             : 72px;
-  width           : calc(100% - 65px);
-  border-radius   : 15px;
-  height          : 40px;
-  padding-left    : 50px;
-  margin-left     : 7.5px;
-}
-
-.warning_text {
-  position   : absolute;
-  top        : 9px;
-  font-family: Verdana, sans-serif;
-  font-size  : 15px;
-}
-
-.warning_icon {
-  width   : 20px;
-  position: absolute;
-}
-
-.warning_icon_v1 {
-  width   : 26px;
-  position: absolute;
-  left    : 10px;
-  top     : 6px;
-}
-
-.warning_icon_v2 {
-  right: 10px;
-  top  : 8px;
 }
 
 .loading {

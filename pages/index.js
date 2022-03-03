@@ -1,57 +1,41 @@
 import styles from '../styles/Home.module.css'
 import React from 'react'
 import Powered from '../components/powered'
+import WalletMenu from '../components/walletmenu'
 import Link from 'next/link'
+import { useStarknet } from '@starknet-react/core'
+import { useRouter } from 'next/router'
 
 export default function Home() {
-
+  const { account, hasStarknet, connectBrowserWallet } = useStarknet()
   const [connectMenuToggled, setConnectMenuToggled] = React.useState(false);
-  const [connected, setConnected] = React.useState(false);
+  const router = useRouter()
 
   return (
     <div className="default_background">
       <Powered />
-      {
-        connectMenuToggled && !connected ?
-          <div className={styles.selectmenu}>
-            <button className={styles.selectmenu_close} onClick={() => { setConnectMenuToggled(false) }} >
-              <svg alt="close icon" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-            </button>
-            <p className={styles.selectmenu_title}>Connect to a wallet</p>
-            <a className={styles.warning} href="https://cronos.crypto.org/docs/getting-started/metamask.html#connecting-to-the-cronos-mainnet-beta" target="_blank" rel="noreferrer" >
-              <svg className={styles.warning_icon_v1} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-              <p className={styles.warning_text}>Using MetaMask with Cronos</p>
-              <svg className={styles.warning_icon_v2} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-            </a>
-          </div>
-          : null
-      }
+      {connectMenuToggled && !account ? <WalletMenu setOpened={setConnectMenuToggled} /> : null}
       <nav className={styles.nav}>
         <img className={styles.logo} src="/logo.svg" alt="Eykar Logo" />
-        {connected ?
-          <Link href="/play" passHref >
-            <div className={
-              [styles.button, styles.play].join(" ")}>
-              <div className={styles.button_div}></div>
-              <svg className={styles.playicon} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-              </svg>
-              <p className={styles.play_button_text}>
 
-                Play
-              </p>
-            </div>
-          </Link>
-          :
-          <button className={[styles.button, styles.highlighted, styles.toggled].join(" ")} /*onClick={() => setConnectMenuToggled(!connectMenuToggled)}*/ >
-            <div className={styles.button_div}></div>
-            <svg className={styles.icon} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-            </svg>
-            <p className={styles.button_text}>
-              Coming soon
-            </p>
-          </button>}
+        <button className={
+          [styles.button, styles.play].join(" ")} onClick={() => {
+            if (hasStarknet) { 
+              connectBrowserWallet()
+              router.push('/game');
+            } else {
+              setConnectMenuToggled(true)
+            }
+          }} passHref >
+          <div className={styles.button_div}></div>
+          <svg className={styles.playicon} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          <p className={styles.play_button_text}>
+            Play
+          </p>
+        </button>
+
         <Link href="/discover" passHref >
           <div className={[styles.button, styles.normal].join(" ")}>
             <div className={styles.button_div}></div>
