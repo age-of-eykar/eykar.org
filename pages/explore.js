@@ -1,7 +1,7 @@
 import Header from "../components/header";
 import MapCanvas from "../components/map/canvas";
 
-function Explore() {
+export default function Explore() {
   return (
     <>
       <Header />
@@ -9,4 +9,3 @@ function Explore() {
     </>
   );
 }
-export default Explore;
