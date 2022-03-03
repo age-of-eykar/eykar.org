@@ -18,10 +18,10 @@ function drawPolygon(points, context, colors, fast) {
 
 }
 
-let averageDelay = 1000 / 60;
+let averageDelay = 1000 / 25;
 let lastDrawTime = 0;
 export const redraw = (canvas, cache, center, scale, windowSize) => {
-    if (Date.now() < lastDrawTime + averageDelay)
+    if (Date.now() < lastDrawTime + averageDelay*1.15)
         return;
     const startTime = Date.now();
     // canvas fixes
@@ -58,5 +58,5 @@ export const redraw = (canvas, cache, center, scale, windowSize) => {
         context.scale(1 / ChunksCache.sideSize, 1 / ChunksCache.sideSize);
         context.translate(center.x - topLeft.x, center.y - topLeft.y)
     });
-    averageDelay = (averageDelay / 2 + Date.now() - startTime / 2);
+    averageDelay = (averageDelay / 2 + (Date.now() - startTime) / 2);
 }

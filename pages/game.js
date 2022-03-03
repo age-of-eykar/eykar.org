@@ -6,7 +6,7 @@ import { useRouter } from 'next/router'
 import { useEffect } from "react";
 
 export default function Game() {
-    const { account, hasStarknet, connectBrowserWallet, library, error } = useStarknet()
+    const { account, connectBrowserWallet } = useStarknet()
     const router = useRouter()
     useEffect(() => {
         if (!account) {
