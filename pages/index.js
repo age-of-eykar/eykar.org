@@ -14,7 +14,7 @@ export default function Home() {
   return (
     <div className="default_background">
       <Powered />
-      {connectMenuToggled && !account ? <WalletMenu setOpened={setConnectMenuToggled} /> : null}
+      {connectMenuToggled && !account ? <WalletMenu close={() => setConnectMenuToggled(false)} /> : null}
       <nav className={styles.nav}>
         <img className={styles.logo} src="/logo.svg" alt="Eykar Logo" />
 

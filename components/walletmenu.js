@@ -1,11 +1,12 @@
 import styles from '../styles/components/WalletMenu.module.css'
 
-function WalletMenu(props) {
+function WalletMenu({ close }) {
     return (
         <div className={styles.menu}>
-            <button className={styles.menu_close} onClick={() => { props.setOpened(false) }} >
+            {close ? <button className={styles.menu_close} onClick={() => { close() }} >
                 <svg alt="close icon" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
             </button>
+                : null}
             <p className={styles.menu_title}>You need a Starknet wallet</p>
             <p className={styles.menu_text}>
                 Eykar is a decentralized game built on StarkNet.

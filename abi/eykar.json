@@ -1,0 +1,205 @@
+[
+    {
+        "members": [
+            {
+                "name": "name",
+                "offset": 0,
+                "type": "felt"
+            },
+            {
+                "name": "owner",
+                "offset": 1,
+                "type": "felt"
+            },
+            {
+                "name": "x",
+                "offset": 2,
+                "type": "felt"
+            },
+            {
+                "name": "y",
+                "offset": 3,
+                "type": "felt"
+            },
+            {
+                "name": "plots_amount",
+                "offset": 4,
+                "type": "felt"
+            },
+            {
+                "name": "people",
+                "offset": 5,
+                "type": "felt"
+            },
+            {
+                "name": "food",
+                "offset": 6,
+                "type": "felt"
+            },
+            {
+                "name": "wood",
+                "offset": 7,
+                "type": "felt"
+            },
+            {
+                "name": "ores",
+                "offset": 8,
+                "type": "felt"
+            },
+            {
+                "name": "redirection",
+                "offset": 9,
+                "type": "felt"
+            }
+        ],
+        "name": "Colony",
+        "size": 10,
+        "type": "struct"
+    },
+    {
+        "members": [
+            {
+                "name": "owner",
+                "offset": 0,
+                "type": "felt"
+            },
+            {
+                "name": "dateOfOwnership",
+                "offset": 1,
+                "type": "felt"
+            },
+            {
+                "name": "structure",
+                "offset": 2,
+                "type": "felt"
+            }
+        ],
+        "name": "Plot",
+        "size": 3,
+        "type": "struct"
+    },
+    {
+        "inputs": [
+            {
+                "name": "xmin",
+                "type": "felt"
+            },
+            {
+                "name": "ymin",
+                "type": "felt"
+            },
+            {
+                "name": "xmax",
+                "type": "felt"
+            },
+            {
+                "name": "ymax",
+                "type": "felt"
+            }
+        ],
+        "name": "get_distance",
+        "outputs": [
+            {
+                "name": "distance",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "n",
+                "type": "felt"
+            },
+            {
+                "name": "spacing",
+                "type": "felt"
+            }
+        ],
+        "name": "spiral",
+        "outputs": [
+            {
+                "name": "x",
+                "type": "felt"
+            },
+            {
+                "name": "y",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "id",
+                "type": "felt"
+            }
+        ],
+        "name": "get_colony",
+        "outputs": [
+            {
+                "name": "colony",
+                "type": "Colony"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "x",
+                "type": "felt"
+            },
+            {
+                "name": "y",
+                "type": "felt"
+            }
+        ],
+        "name": "get_plot",
+        "outputs": [
+            {
+                "name": "plot",
+                "type": "Plot"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "player",
+                "type": "felt"
+            }
+        ],
+        "name": "get_player_colonies",
+        "outputs": [
+            {
+                "name": "colonies_len",
+                "type": "felt"
+            },
+            {
+                "name": "colonies",
+                "type": "felt*"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "name",
+                "type": "felt"
+            }
+        ],
+        "name": "mint_plot_with_new_colony",
+        "outputs": [],
+        "type": "function"
+    }
+]
