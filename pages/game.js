@@ -22,7 +22,6 @@ export default function Game() {
         }
         if (!contract || loading)
             return;
-        console.log("aloha")
         if (data) {
             if (parseInt(data.colonies_len, 16) > 0) {
                 router.push('/mycolonies')

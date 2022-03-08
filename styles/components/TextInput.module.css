@@ -1,0 +1,136 @@
+/* form starting stylings ------------------------------- */
+.group {
+    position   : relative;
+    margin     : 35px 0 35px;
+    font-family: Verdana, sans-serif;
+}
+
+.input {
+    font-size       : 18px;
+    padding         : 10px 10px 10px 5px;
+    display         : block;
+    width           : 80%;
+    border          : none;
+    background-color: transparent;
+    margin          : auto;
+    border-bottom   : 1px solid #f4e9cbc0;
+    color           : #F4E9CB;
+}
+
+.input:focus {
+    outline: none;
+}
+
+/* active state */
+.input:focus~.label,
+.input:valid~.label {
+    top      : -15px;
+    font-size: 14px;
+    color    : #F4E9CB;
+}
+
+/* LABEL ======================================= */
+.label {
+    margin-left       : 10%;
+    color             : #F4E9CB;
+    font-size         : 18px;
+    font-weight       : normal;
+    position          : absolute;
+    pointer-events    : none;
+    left              : 5px;
+    top               : 5px;
+    transition        : 0.2s ease all;
+    -moz-transition   : 0.2s ease all;
+    -webkit-transition: 0.2s ease all;
+}
+
+
+
+/* BOTTOM BARS ================================= */
+.bar {
+    margin  : auto;
+    position: relative;
+    display : block;
+    width   : 80%;
+}
+
+.bar:before,
+.bar:after {
+    content           : '';
+    height            : 2px;
+    width             : 0;
+    bottom            : 1px;
+    position          : absolute;
+    background        : #F4E9CB;
+    transition        : 0.2s ease all;
+    -moz-transition   : 0.2s ease all;
+    -webkit-transition: 0.2s ease all;
+}
+
+.bar:before {
+    left: 50%;
+}
+
+.bar:after {
+    right: 50%;
+}
+
+/* active state */
+.input:focus~.bar:before,
+.input:focus~.bar:after {
+    width: 50%;
+}
+
+/* HIGHLIGHTER ================================== */
+.highlight {
+    position      : absolute;
+    height        : 60%;
+    width         : 25%;
+    top           : 25%;
+    left          : 10%;
+    pointer-events: none;
+    opacity       : 0.3;
+}
+
+/* active state */
+.input:focus~.highlight {
+    -webkit-animation: inputHighlighter 0.3s ease;
+    -moz-animation   : inputHighlighter 0.3s ease;
+    animation        : inputHighlighter 0.3s ease;
+}
+
+
+
+/* ANIMATIONS ================ */
+@-webkit-keyframes inputHighlighter {
+    from {
+        background: #F4E9CB;
+    }
+
+    to {
+        width     : 0;
+        background: transparent;
+    }
+}
+
+@-moz-keyframes inputHighlighter {
+    from {
+        background: #F4E9CB;
+    }
+
+    to {
+        width     : 0;
+        background: transparent;
+    }
+}
+
+@keyframes inputHighlighter {
+    from {
+        background: #F4E9CB;
+    }
+
+    to {
+        width     : 0;
+        background: transparent;
+    }
+}

@@ -38,7 +38,7 @@ export const redraw = (canvas, cache, center, scale, windowSize) => {
     // make x axis of size
     context.scale(1 / scale.width,
         1 / scale.height);
-    cache.forEachChunk(center, scale, (chunk) => {
+    const output = cache.forEachChunk(center, scale, (chunk) => {
         const topLeft = chunk.getTopLeft();
         context.translate(topLeft.x - center.x, topLeft.y - center.y)
         context.scale(ChunksCache.sideSize, ChunksCache.sideSize);
@@ -59,4 +59,5 @@ export const redraw = (canvas, cache, center, scale, windowSize) => {
         context.translate(center.x - topLeft.x, center.y - topLeft.y)
     });
     averageDelay = (averageDelay / 2 + (Date.now() - startTime) / 2);
+    return output;
 }

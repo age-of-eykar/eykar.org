@@ -18,13 +18,17 @@ export class ChunksCache {
         };
         const a = scale.width / (2 * ChunksCache.sideSize) + 1;
         const b = scale.height / (2 * ChunksCache.sideSize) + 1;
+        let finished = true;
         for (let i = Math.trunc(-a); i < a + 1; i++)
             for (let j = Math.trunc(-b); j < b + 1; j++) {
                 const chunk = this.cached.get(szudzik(origin.x + i, origin.y + j));
                 if (chunk.ready)
                     ready.push(chunk);
+                else if (finished)
+                    finished = false;
             }
         ready.forEach(chunk => display(chunk));
+        return finished;
     }
 
     refresh(center, scale) {

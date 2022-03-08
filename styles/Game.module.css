@@ -1,9 +1,12 @@
 .overlay {
-    height           : 100%;
-    display          : flex;
-    flex-direction   : column;
-    justify-content  : center;
-    background       : radial-gradient(circle at top, rgba(19, 4, 0, 0.836) 0%, rgba(19, 4, 0, 0.007) 100%);
+    height         : 100%;
+    display        : flex;
+    flex-direction : column;
+    justify-content: center;
+    background     : radial-gradient(circle at top, rgba(19, 4, 0, 0.836) 0%, rgba(19, 4, 0, 0.007) 100%);
+}
+
+.fadeIn {
     animation        : fadeIn 1s;
     -webkit-animation: fadeIn 1s;
     -moz-animation   : fadeIn 1s;
@@ -88,4 +91,88 @@
     100% {
         opacity: 1;
     }
+}
+
+.box {
+    position       : absolute;
+    align-self     : center;
+    left           : 50%;
+    top            : 50%;
+    transform      : translate(-50%, -50%);
+    background     : #191b1f;
+    backdrop-filter: blur(10px);
+    border-radius  : 20px;
+    z-index        : 1;
+    padding        : 36px 36px 0px 36px;
+    width          : 100%;
+    max-width      : 600px;
+}
+
+.title {
+    color        : white;
+    font-family  : Verdana, sans-serif;
+    font-size    : 21px;
+    font-weight  : bold;
+    margin-bottom: 12px;
+}
+
+.text {
+    color        : white;
+    font-family  : Verdana, sans-serif;
+    font-size    : 15px;
+    margin-bottom: 22px;
+}
+
+.box_footer {
+    display      : flex;
+    margin-bottom: 32px;
+}
+
+.footer_element {
+    display        : flex;
+    text-decoration: none;
+    flex-direction : row;
+    justify-content: center;
+    align-items    : center;
+    border-radius  : 45px;
+    width          : fit-content;
+}
+
+
+.button {
+    color           : #ffe1a9;
+    background-color: #232020b7;
+    border          : 2px solid #d6ad45;
+    margin          : auto 0px auto auto;
+    cursor          : pointer;
+}
+
+.button_icon {
+    height: 24px;
+    margin: 4px 5px;
+}
+
+.button_text {
+    font-family : Verdana, sans-serif;
+    margin-right: 7px;
+}
+
+.box_icon {
+    background-color: green;
+}
+
+.alert {
+    color           : #ffafa9;
+    background-color: #232020b7;
+    border          : 2px solid #d64545;
+}
+
+.alert_icon {
+    height: 24px;
+    margin: 4px 5px;
+}
+
+.alert_text {
+    font-family : Verdana, sans-serif;
+    margin-right: 7px;
 }
