@@ -20,6 +20,7 @@
   },
   "devDependencies": {
     "eslint": "8.10.0",
-    "eslint-config-next": "12.1.0"
+    "eslint-config-next": "12.1.0",
+    "webpack-glsl-loader": "^1.0.1"
   }
 }
