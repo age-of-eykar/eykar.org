@@ -46,11 +46,9 @@ function MapCanvas({ setClickedPlotCallback }) {
     windowSize, center, scale, pixelRatio
   ]);
 
-  const interacted = useRef(false);
 
   useEffect(() => {
     redraw(canvasRef.current, cache, center, scale, windowSize)
-    interacted.current = true;
   }, [
     windowSize, center, scale
   ]);
