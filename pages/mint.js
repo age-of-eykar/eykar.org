@@ -1,13 +1,16 @@
 import styles from '../styles/Game.module.css'
 import { useState, useEffect } from "react";
-import { useStarknet } from '@starknet-react/core'
+import { useStarknet, useStarknetInvoke } from '@starknet-react/core'
 import MapCanvas from "../components/map/canvas";
 import WalletMenu from '../components/walletmenu'
 import TextInput from '../components/input'
+import { useEykarContract } from '../hooks/eykar'
 
 export default function Mint() {
-    const { account, hasStarknet, connectBrowserWallet, library, error } = useStarknet()
+    const { account, hasStarknet, connectBrowserWallet } = useStarknet()
     const [name, setName] = useState("")
+    const { contract } = useEykarContract()
+    const { invoke } = useStarknetInvoke({ contract: contract, method: 'mint_plot_with_new_colony' })
 
     useEffect(() => {
         if (hasStarknet && !account)
@@ -35,10 +38,12 @@ export default function Mint() {
                                     <p className={styles.button_text}>4</p>
                                 </div>
 
-                                {name ? <div className={[styles.footer_element, styles.button].join(" ")}>
-                                    <svg className={styles.button_icon} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                {name ? <button className={[styles.footer_element, styles.button].join(" ")} onClick={() => {
+                                    invoke({ args: { name: "0x" + new Buffer.from(name).toString('hex') } })
+                                }}>
+                                    <svg className={styles.button_icon} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                                     <p className={styles.button_text}>Establish a settler camp</p>
-                                </div>
+                                </button>
                                     : null}
 
                             </div>

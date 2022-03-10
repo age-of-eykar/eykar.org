@@ -7,7 +7,7 @@ import { useDisplayName } from '../hooks/starknet'
 import Link from 'next/link'
 
 export default function Tutorial() {
-    const { account, hasStarknet, connectBrowserWallet, library, error } = useStarknet()
+    const { account, hasStarknet, connectBrowserWallet } = useStarknet()
     const displayName = useDisplayName(account)
 
     useEffect(() => {
