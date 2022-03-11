@@ -1,40 +1,11 @@
 import { ChunksCache } from "./calc/cache";
-// import { fragment } from '../../shaders/fragment.glsl'
-// import { vertex } from '../../shaders/vertex.glsl'
+import fragmentShader from '../../shaders/fragment.glsl'
+import vertexShader from '../../shaders/vertex.glsl'
 
-var vertexShaderSource = [
-`attribute vec2 aVertexPosition;`,
-
-`uniform vec2 uScalingFactor;`,
-`uniform vec2 uRotationVector;`,
-
-`void main() {`,
-`  vec2 rotatedPosition = vec2(aVertexPosition.x * uRotationVector.y +`,
-`    aVertexPosition.y * uRotationVector.x, aVertexPosition.y * uRotationVector.y -`,
-`    aVertexPosition.x * uRotationVector.x);`,
-``,
-`  gl_Position = vec4(rotatedPosition * uScalingFactor, 0.0, 1.0);`,
-`}`,
-].join("\n");
-
-var fragmentShaderSource = [
-`  #ifdef GL_ES`,
-`precision highp float;`,
-`  #endif`,
-``,
-`uniform vec4 uGlobalColor;`,
-``,
-`void main() {`,
-`  gl_FragColor = uGlobalColor;`,
-`}`,
-].join("\n");
-
-function compileShader(gl, id, type) {
-    console.log(id)
-    let code = id == "vertex-shader" ? vertexShaderSource : fragmentShaderSource;
+function compileShader(gl, src, type) {
     let shader = gl.createShader(type);
 
-    gl.shaderSource(shader, code);
+    gl.shaderSource(shader, src);
     gl.compileShader(shader);
 
     if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
@@ -48,7 +19,7 @@ function buildShaderProgram(gl, shaderInfo) {
     let program = gl.createProgram();
 
     shaderInfo.forEach(function (desc) {
-        let shader = compileShader(gl, desc.id, desc.type);
+        let shader = compileShader(gl, desc.src, desc.type);
 
         if (shader) {
             gl.attachShader(program, shader);
@@ -66,7 +37,6 @@ function buildShaderProgram(gl, shaderInfo) {
 }
 
 function animateScene(gl, glCanvas, currentAngle, currentRotation, shaderProgram, currentScale, vertexBuffer, vertexNumComponents, vertexCount) {
-    console.log("animateScene", gl)
     gl.viewport(0, 0, glCanvas.width, glCanvas.height);
     gl.clearColor(0.8, 0.9, 1.0, 1.0);
     gl.clear(gl.COLOR_BUFFER_BIT);
@@ -86,7 +56,7 @@ function animateScene(gl, glCanvas, currentAngle, currentRotation, shaderProgram
 
     gl.uniform2fv(uScalingFactor, currentScale);
     gl.uniform2fv(uRotationVector, currentRotation);
-    gl.uniform4fv(uGlobalColor, [0.1, 0.7, 0.2, 1.0]);
+    gl.uniform4fv(uGlobalColor, [0.1, 0.7, 0.8, 1.0]);
 
     gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
 
@@ -101,18 +71,13 @@ function animateScene(gl, glCanvas, currentAngle, currentRotation, shaderProgram
 
     let previousTime = performance.now();
     window.requestAnimationFrame(function (currentTime) {
-        let deltaAngle = ((currentTime - previousTime) / 1000.0)
-            * Math.cos(Math.random() * 1000.0) * 300.0;
-
-        currentAngle = (currentAngle + deltaAngle) % 360;
-
+        let deltaAngle = 0.1;
         previousTime = currentTime;
-        animateScene(gl, glCanvas, currentAngle, currentRotation, shaderProgram, currentScale, vertexBuffer, vertexNumComponents, vertexCount);
+        animateScene(gl, glCanvas, (currentAngle + deltaAngle) % 360, currentRotation, shaderProgram, currentScale, vertexBuffer, vertexNumComponents, vertexCount);
     });
 }
 
-export const redraw = (canvas, cache, center, scale, windowSize) => {
-
+export const startDrawing = (canvas, windowSize, cache, center, scale) => {
 
     // canvas fixes
     canvas.width = windowSize.width;
@@ -123,11 +88,11 @@ export const redraw = (canvas, cache, center, scale, windowSize) => {
     const shaderSet = [
         {
             type: gl.VERTEX_SHADER,
-            id: "vertex-shader"
+            src: vertexShader
         },
         {
             type: gl.FRAGMENT_SHADER,
-            id: "fragment-shader"
+            src: fragmentShader
         }
     ];
 
@@ -150,7 +115,6 @@ export const redraw = (canvas, cache, center, scale, windowSize) => {
     const vertexCount = vertexArray.length / vertexNumComponents;
 
     const currentAngle = 0.0;
-    console.log("HERE", gl)
     animateScene(gl, canvas, currentAngle, currentRotation, shaderProgram, currentScale, vertexBuffer, vertexNumComponents, vertexCount);
 
     return true;

@@ -4,30 +4,37 @@ import React, { useRef, useEffect, useState } from "react";
 import debounce from "debounce";
 import { WheelListener, KeyListeners } from "./listeners";
 import { cache } from "./calc/cache";
-import { redraw } from "./draw";
+import { startDrawing } from "./draw";
 
 function MapCanvas({ setClickedPlotCallback }) {
 
   // center of the map (normal coordinates)
-  const [center, setCenter] = useState({ x: 0.0, y: 0.0 });
+  const center = useRef({ x: 0.0, y: 0.0 });
   // scale in cells displayed per width
-  const [scale, setScale] = useState({ width: 32.0, height: 32.0 });
-
-  const keyListeners = new KeyListeners(center, setCenter, scale);
+  const scale = useRef({ width: 32.0, height: 32.0 });
 
   const canvasRef = useRef(null);
-
   const pixelRatio = (typeof window === 'undefined') ? 1 : window.devicePixelRatio;
   const [windowSize, setWindowSize] = useState((typeof window === 'undefined') ? null : {
     width: window.innerWidth * pixelRatio,
     height: window.innerHeight * pixelRatio
   });
 
+  // handle listeners creation
   useEffect(() => {
-    cache.refresh(center, scale);
-    const wheelListener = new WheelListener(scale, setScale);
-    const listenMouseWheel = wheelListener.handleMouseWheel.bind(wheelListener);
     const canvas = canvasRef.current;
+    const keyListeners = new KeyListeners(center, (newCenter) => {
+      center.current = newCenter;
+      cache.refresh(newCenter, scale.current);
+    }, scale);
+    const listenKey = keyListeners.onKeyPressed.bind(keyListeners);
+    canvas.addEventListener("keydown", listenKey);
+
+    const wheelListener = new WheelListener(scale, (newScale) => {
+      scale.current = newScale;
+      cache.refresh(center.current, newScale);
+    });
+    const listenMouseWheel = wheelListener.handleMouseWheel.bind(wheelListener);
     canvas.addEventListener("mousewheel", listenMouseWheel);
     canvas.addEventListener("onwheel", listenMouseWheel);
 
@@ -39,38 +46,21 @@ function MapCanvas({ setClickedPlotCallback }) {
     window.addEventListener("resize", handler);
     return () => {
       window.removeEventListener("resize", handler);
+      window.removeEventListener("keydown", listenKey);
       canvas.removeEventListener("mousewheel", listenMouseWheel);
       canvas.removeEventListener("onwheel", listenMouseWheel);
     };
-  }, [
-    windowSize, center, scale, pixelRatio
-  ]);
+  }, [pixelRatio]);
 
-
+  // handle canvas drawing
   useEffect(() => {
-    redraw(canvasRef.current, cache, center, scale, windowSize)
-  }, [
-    windowSize, center, scale
-  ]);
-
-  useEffect(() => {
-    const id = setInterval(
-      () => {
-        if (redraw(canvasRef.current, cache, center, scale, windowSize))
-          clearInterval(id);
-      },
-      1000 / 16);
-    return () => clearInterval(id);
-
-  }, [
-    windowSize, center, scale
-  ]);
+    startDrawing(canvasRef.current, windowSize, cache, center, scale)
+  }, [windowSize]);
 
   return (
     <canvas
       className={styles.map}
       ref={canvasRef}
-      onKeyDown={keyListeners.onKeyPressed.bind(keyListeners)}
       tabIndex={1}
     />
   );
