@@ -8,7 +8,7 @@ export class ChunksCache {
     constructor(capacity) {
         this.capacity = capacity;
         this.cached = new Map();
-        this.refreshed = false;
+        this.refreshed = true;
     }
 
     forEachChunk(center, scale, display) {
@@ -32,6 +32,44 @@ export class ChunksCache {
         return finished;
     }
 
+    exportData(center, scale) {
+        this.refreshed = true;
+        const allReady = [];
+        const origin = {
+            x: Math.trunc((center.x - ChunksCache.sideSize / 2) / ChunksCache.sideSize),
+            y: Math.trunc((center.y - ChunksCache.sideSize / 2) / ChunksCache.sideSize)
+        };
+        const a = scale.width / (2 * ChunksCache.sideSize) + 1;
+        const b = scale.height / (2 * ChunksCache.sideSize) + 1;
+        let finished = true;
+        let pointsSize = 0;
+        const stops = [];
+        let lastStop = 0;
+        const colors = [];
+        for (let i = Math.trunc(-a); i < a + 1; i++)
+            for (let j = Math.trunc(-b); j < b + 1; j++) {
+                const chunk = this.cached.get(szudzik(origin.x + i, origin.y + j));
+                if (chunk && chunk.ready) {
+                    allReady.push(chunk);
+                    pointsSize += chunk.points.length;
+                    stops.push(...chunk.stops.map(v => v + lastStop));
+                    lastStop = stops[stops.length - 1];
+                    colors.push(...chunk.colors);
+                }
+                else if (finished)
+                    finished = false;
+            }
+
+        const points = new Float32Array(pointsSize);
+        let pointsPrefix = 0;
+        for (const ready of allReady) {
+            points.set(ready.points, pointsPrefix);
+            pointsPrefix += ready.points.length;
+        }
+
+        return { points, stops, colors };
+    }
+
     refresh(center, scale) {
         const origin = {
             x: Math.trunc((center.x - ChunksCache.sideSize / 2) / ChunksCache.sideSize),
@@ -47,7 +85,7 @@ export class ChunksCache {
     prepare(x, y) {
         let chunk = this.cached.get(szudzik(x, y));
         if (chunk === undefined)
-            chunk = new Chunk(x, y, () => this.refreshed = true);
+            chunk = new Chunk(x, y, () => this.refreshed = false);
         // should be added to the end of the map
         this.cached.set(szudzik(x, y), chunk);
 

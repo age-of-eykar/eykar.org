@@ -25,6 +25,7 @@ self.onmessage = ({ data: { chunkX, chunkY, size } }) => {
         for (let j = 0; j < sideLength; j++) {
             const x = prefixX + i - 1;
             const y = prefixY + j - 1;
+            [0.1, 0.7, 0.8, 1.0]
             colors[i + j * sideLength] = getBiomeColors(x, 2 * y);
         }
 
