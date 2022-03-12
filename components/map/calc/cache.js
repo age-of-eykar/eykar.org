@@ -61,12 +61,12 @@ export class ChunksCache {
 }
 
 class Chunk {
-    constructor(x, y, callback) {
+    constructor(x, y, refresh) {
         this.x = x;
         this.y = y;
         this.plots = new Map();
         this.ready = false;
-        this.callback = callback;
+        this.refresh = refresh;
         (async () => { this.prepare(); })();
     }
 
@@ -86,8 +86,9 @@ class Chunk {
             chunkY: this.y,
             size: ChunksCache.halfsize
         });
-        worker.onmessage = ({ data: { shape, colors } }) => {
-            this.shape = shape;
+        worker.onmessage = ({ data: { points, stops, colors } }) => {
+            this.points = points;
+            this.stops = stops;
             this.colors = colors;
             worker.terminate();
             if (!waitingCache)
@@ -111,14 +112,13 @@ class Chunk {
             this.plots.set(szudzik(plot.x, plot.y), plot.colony_id);
         }
 
-        if (this.shape)
+        if (this.points)
             this.setReady();
     }
 
     setReady() {
         this.ready = true;
-        this.callback();
-        this.callback = undefined;
+        this.refresh();
     }
 
 }
