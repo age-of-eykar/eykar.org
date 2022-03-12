@@ -3,36 +3,28 @@ import fragmentShader from '../../shaders/fragment.glsl'
 import vertexShader from '../../shaders/vertex.glsl'
 import { buildShaderProgram } from "./shadertools";
 
-function animateScene(gl, glCanvas, shaderProgram, currentScale, vertexBuffer, vertexNumComponents, vertexCount) {
+function animateScene(gl, glCanvas, shaderProgram, currentScale, vertexBuffer, size) {
     gl.viewport(0, 0, glCanvas.width, glCanvas.height);
     gl.clearColor(0.8, 0.9, 1.0, 1.0);
     gl.clear(gl.COLOR_BUFFER_BIT);
 
     gl.useProgram(shaderProgram);
 
-    const uScalingFactor =
-        gl.getUniformLocation(shaderProgram, "uScalingFactor");
-    const uGlobalColor =
-        gl.getUniformLocation(shaderProgram, "uGlobalColor");
+    const scale = gl.getUniformLocation(shaderProgram, "scale");
+    gl.uniform2fv(scale, currentScale);
 
-    gl.uniform2fv(uScalingFactor, currentScale);
-    gl.uniform4fv(uGlobalColor, [0.1, 0.7, 0.8, 1.0]);
+    const fillColor = gl.getUniformLocation(shaderProgram, "fillColor");
+    gl.uniform4fv(fillColor, [0.1, 0.7, 0.8, 1.0]);
 
-    gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
-
-    const aVertexPosition =
-        gl.getAttribLocation(shaderProgram, "aVertexPosition");
-
-    gl.enableVertexAttribArray(aVertexPosition);
-    gl.vertexAttribPointer(aVertexPosition, vertexNumComponents,
+    const position = gl.getAttribLocation(shaderProgram, "position");
+    gl.enableVertexAttribArray(position);
+    gl.vertexAttribPointer(position, 2,
         gl.FLOAT, false, 0, 0);
 
-    gl.drawArrays(gl.TRIANGLES, 0, vertexCount);
-
-    let previousTime = performance.now();
+    gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+    gl.drawArrays(gl.TRIANGLES, 0, size);
     window.requestAnimationFrame(function (currentTime) {
-        previousTime = currentTime;
-        animateScene(gl, glCanvas, shaderProgram, currentScale, vertexBuffer, vertexNumComponents, vertexCount);
+        animateScene(gl, glCanvas, shaderProgram, currentScale, vertexBuffer, size);
     });
 }
 
@@ -69,9 +61,5 @@ export const startDrawing = (canvas, windowSize, cache, center, scale) => {
     gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, vertexArray, gl.STATIC_DRAW);
 
-    const vertexNumComponents = 2;
-    const vertexCount = vertexArray.length / vertexNumComponents;
-    animateScene(gl, canvas, shaderProgram, currentScale, vertexBuffer, vertexNumComponents, vertexCount);
-
-    return true;
+    animateScene(gl, canvas, shaderProgram, currentScale, vertexBuffer, vertexArray.length / 2);
 }
