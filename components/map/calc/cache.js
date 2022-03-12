@@ -8,6 +8,7 @@ export class ChunksCache {
     constructor(capacity) {
         this.capacity = capacity;
         this.cached = new Map();
+        this.refreshed = false;
     }
 
     forEachChunk(center, scale, display) {
@@ -44,10 +45,9 @@ export class ChunksCache {
     }
 
     prepare(x, y) {
-
         let chunk = this.cached.get(szudzik(x, y));
         if (chunk === undefined)
-            chunk = new Chunk(x, y);
+            chunk = new Chunk(x, y, () => this.refreshed = true);
         // should be added to the end of the map
         this.cached.set(szudzik(x, y), chunk);
 
@@ -61,11 +61,12 @@ export class ChunksCache {
 }
 
 class Chunk {
-    constructor(x, y) {
+    constructor(x, y, callback) {
         this.x = x;
         this.y = y;
         this.plots = new Map();
         this.ready = false;
+        this.callback = callback;
         (async () => { this.prepare(); })();
     }
 
@@ -116,6 +117,8 @@ class Chunk {
 
     setReady() {
         this.ready = true;
+        this.callback();
+        this.callback = undefined;
     }
 
 }
