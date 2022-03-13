@@ -54,6 +54,7 @@ function MapCanvas({ setClickedPlotCallback }) {
 
   // handle canvas drawing
   useEffect(() => {
+    cache.refresh(center.current, scale.current);
     startDrawing(canvasRef.current, windowSize, cache, center, scale)
   }, [windowSize]);
 
