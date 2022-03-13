@@ -6,11 +6,7 @@ import { buildShaderProgram } from "./shadertools";
 
 // gl, cache, center, scale, stops, colors, glCanvas, shaderProgram
 function animateScene(gl, cache, center, scale, canvas, shaderProgram) {
-
     gl.viewport(0, 0, canvas.width, canvas.height);
-    gl.clearColor(0.8, 0.9, 1.0, 1.0);
-    gl.clear(gl.COLOR_BUFFER_BIT);
-
     gl.useProgram(shaderProgram);
     const shaderScale = gl.getUniformLocation(shaderProgram, "scale");
     gl.uniform2fv(shaderScale, [2 * ChunksCache.sideSize / scale.current.width,

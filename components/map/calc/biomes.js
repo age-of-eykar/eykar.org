@@ -15,8 +15,37 @@ const desertIce = [189 / 255, 245 / 255, 233 / 255, 1.0];
 const desertSand = [237 / 255, 201 / 255, 175 / 255, 1.0];
 const plainContinental = [186 / 255, 203 / 255, 56 / 255, 1.0];
 
+function gradient(firstColor, secondColor, ratio) {
+  const neg = 1 - ratio;
+  return [firstColor[0] * ratio + secondColor[0] * neg,
+  firstColor[1] * ratio + secondColor[1] * neg,
+  firstColor[2] * ratio + secondColor[2] * neg
+  ];
+}
+
 export function getBiomeColors(x, y) {
-  return [Math.random(), Math.random(), Math.random()];
+
+  const elevation = getElevation(x, y);
+  const temperature = getTemperature(x, y);
+
+  const sandColor = [0.9, 0.89, 0.73];
+  let expectedColor;
+
+  // ocean
+  if (elevation < 0.05) {
+    if (elevation > 0)
+      expectedColor = gradient(sandColor, [0.14, 0.51, 0.51], elevation / 0.05);
+    else
+      expectedColor = gradient([0.14, 0.51, 0.51], [0.13, 0.37, 0.40], elevation);
+  } else // ground
+    expectedColor = gradient([0.01, 0.27, 0.01], sandColor, elevation / 2);
+
+  if (temperature < -0.5)
+    return gradient([0.9, 0.94, 0.96], [0.73, 0.76, 0.78], (-0.25 - temperature) / 0.25);
+  if (elevation < 0 && temperature < -0.48)
+    return gradient([0.83, 0.86, 0.88], expectedColor, (-0.45 - temperature) / 0.1);
+
+  return expectedColor;
 }
 
 // returns [elevation, temperature, biome]
