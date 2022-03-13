@@ -55,8 +55,12 @@ export class KeyListeners {
         else
             x = 0;
 
-        const size = Math.sqrt(this.scale.current.width * this.scale.current.width / 2);
-        return { x: x * size, y: y * size };
+        const norm = 5 * Math.log(this.scale.current.width);
+        const size = Math.sqrt(norm * norm / 2);
+        if (x !== 0 && y !== 0)
+            return { x: x * size, y: y * size };
+        else
+            return { x: x * norm, y: y * norm };
     }
 
     refresh(expectedCenter) {
