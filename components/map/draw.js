@@ -36,7 +36,7 @@ function animateScene(gl, cache, center, scale, stops, colors, canvas, shaderPro
         gl.vertexAttribPointer(position, 2,
             gl.FLOAT, false, 0, 0);
 
-        gl.drawArrays(gl.TRIANGLES, lastStop, stop-lastStop);
+        gl.drawArrays(gl.TRIANGLES, lastStop / 2, (stop - lastStop) / 2);
         lastStop = stop;
     }
     window.requestAnimationFrame(function (currentTime) {
