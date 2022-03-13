@@ -9,7 +9,6 @@ export class ChunksCache {
         this.capacity = capacity;
         this.webgl = webgl;
         this.cached = new Map();
-        this.refreshed = true;
     }
 
     forEachChunk(center, scale, display) {
@@ -50,10 +49,9 @@ export class ChunksCache {
         if (chunk === undefined)
             chunk = new Chunk(x, y, this.webgl.createBuffer(), this.webgl.createBuffer(), (chunk) => {
                 this.webgl.bindBuffer(this.webgl.ARRAY_BUFFER, chunk.vertexBuffer);
-                this.webgl.bufferData(this.webgl.ARRAY_BUFFER, chunk.vertexes, this.webgl.DYNAMIC_DRAW);
+                this.webgl.bufferData(this.webgl.ARRAY_BUFFER, chunk.vertexes, this.webgl.STATIC_DRAW);
                 this.webgl.bindBuffer(this.webgl.ARRAY_BUFFER, chunk.colorBuffer);
-                this.webgl.bufferData(this.webgl.ARRAY_BUFFER, chunk.colors, this.webgl.DYNAMIC_DRAW);
-                this.refreshed = false
+                this.webgl.bufferData(this.webgl.ARRAY_BUFFER, chunk.colors, this.webgl.STATIC_DRAW);
             });
         // should be added to the end of the map
         this.cached.set(szudzik(x, y), chunk);
