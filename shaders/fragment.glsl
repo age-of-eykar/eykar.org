@@ -1,9 +1,9 @@
-  #ifdef GL_ES
+#version 300 es
 precision highp float;
-  #endif
 
-uniform vec4 fillColor;
+in vec3 color;
+out vec4 fragColor;
 
 void main() {
-    gl_FragColor = fillColor;
+    fragColor = vec4(color, 1.0);
 }

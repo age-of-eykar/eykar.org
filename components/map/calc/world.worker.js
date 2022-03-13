@@ -33,7 +33,18 @@ self.onmessage = ({ data: { chunkX, chunkY, size } }) => {
     const shiftedPoints = voronoi.points.map((x, i) => (i % 2 == 0)
         ? chunkX + x - 0.5
         : chunkY + x - 0.5);
+    const pointColors = new Float32Array(3 * shiftedPoints.length / 2);
+    let lastStop = 0;
+    for (let i = 0; i < voronoi.stops.length; i++) {
+        for (let j = lastStop; j < voronoi.stops[i]; j++) {
+            pointColors[3 * j] = colors[i][0];
+            pointColors[3 * j + 1] = colors[i][1];
+            pointColors[3 * j + 2] = colors[i][2];
+        }
+        lastStop = voronoi.stops[i];
+    }
+
     self.postMessage({
-        points: shiftedPoints, stops: voronoi.stops, colors: colors
-    });
+        points: shiftedPoints, stops: voronoi.stops, colors: pointColors
+    }, null, [shiftedPoints, pointColors]);
 };

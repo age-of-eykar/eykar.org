@@ -42,7 +42,7 @@ export class ChunksCache {
             pointsPrefix += ready.points.length;
         }
 
-        return { points, stops, colors };
+        return { points, stops, colors: new Float32Array(colors) };
     }
 
     refresh(center, scale) {

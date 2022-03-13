@@ -5,13 +5,18 @@ import { buildShaderProgram } from "./shadertools";
 
 
 // gl, cache, center, scale, stops, colors, glCanvas, shaderProgram
-function animateScene(gl, cache, center, scale, stops, colors, canvas, shaderProgram) {
+function animateScene(gl, cache, center, scale, stops, canvas, shaderProgram,
+    vertexBuffer, colorBuffer) {
 
     if (!cache.refreshed) {
         const data = cache.exportData(center.current, scale.current);
-        gl.bufferData(gl.ARRAY_BUFFER, data.points, gl.DYNAMIC_DRAW);
         stops = data.stops;
-        colors = data.colors;
+
+        gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+        gl.bufferData(gl.ARRAY_BUFFER, data.points, gl.DYNAMIC_DRAW);
+
+        gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
+        gl.bufferData(gl.ARRAY_BUFFER, data.colors, gl.DYNAMIC_DRAW)
     }
 
     gl.viewport(0, 0, canvas.width, canvas.height);
@@ -20,27 +25,28 @@ function animateScene(gl, cache, center, scale, stops, colors, canvas, shaderPro
 
     gl.useProgram(shaderProgram);
 
-    let lastStop = 0;
-    for (const i = 0; i < stops.length; i++) {
-        const stop = stops[i];
-        const color = colors[i];
 
-        const scale2 = gl.getUniformLocation(shaderProgram, "scale");
-        gl.uniform2fv(scale2, [1.0, canvas.width / canvas.height]);
+    const scale2 = gl.getUniformLocation(shaderProgram, "scale");
+    gl.uniform2fv(scale2, [1.0, canvas.width / canvas.height]);
 
-        const fillColor = gl.getUniformLocation(shaderProgram, "fillColor");
-        gl.uniform4fv(fillColor, [Math.random(), Math.random(), Math.random(), 1.0]);
+    gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
+    const fillColor = gl.getAttribLocation(shaderProgram, "fillColor");
+    gl.enableVertexAttribArray(fillColor);
+    gl.vertexAttribPointer(fillColor, 3,
+        gl.FLOAT, false, 0, 0);
 
-        const position = gl.getAttribLocation(shaderProgram, "position");
-        gl.enableVertexAttribArray(position);
-        gl.vertexAttribPointer(position, 2,
-            gl.FLOAT, false, 0, 0);
+    gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+    const position = gl.getAttribLocation(shaderProgram, "position");
+    gl.enableVertexAttribArray(position);
+    gl.vertexAttribPointer(position, 2,
+        gl.FLOAT, false, 0, 0);
 
-        gl.drawArrays(gl.TRIANGLES, lastStop / 2, (stop - lastStop) / 2);
-        lastStop = stop;
-    }
+    if (stops.length !== 0)
+        gl.drawArrays(gl.TRIANGLES, 0, stops[stops.length - 1]);
+
     window.requestAnimationFrame(function (currentTime) {
-        animateScene(gl, cache, center, scale, stops, colors, canvas, shaderProgram);
+        animateScene(gl, cache, center, scale, stops, canvas, shaderProgram,
+            vertexBuffer, colorBuffer);
     });
 }
 
@@ -65,12 +71,16 @@ export const startDrawing = (canvas, windowSize, cache, center, scale) => {
 
     const shaderProgram = buildShaderProgram(gl, shaderSet);
     const aspectRatio = canvas.width / canvas.height;
+    const data = cache.exportData(center.current, scale.current);
 
     const vertexBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
-
-    const data = cache.exportData(center.current, scale.current);
     gl.bufferData(gl.ARRAY_BUFFER, data.points, gl.DYNAMIC_DRAW);
 
-    animateScene(gl, cache, center, scale, data.stops, data.colors, canvas, shaderProgram);
+    const colorBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, data.colors, gl.DYNAMIC_DRAW);
+
+    animateScene(gl, cache, center, scale, data.stops, canvas, shaderProgram,
+        vertexBuffer, colorBuffer);
 }

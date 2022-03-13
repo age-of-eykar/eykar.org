@@ -16,9 +16,7 @@ const desertSand = [237 / 255, 201 / 255, 175 / 255, 1.0];
 const plainContinental = [186 / 255, 203 / 255, 56 / 255, 1.0];
 
 export function getBiomeColors(x, y) {
-  const elevation = getElevation(x, y);
-  const temperature = getTemperature(x, y);
-    return [ (1+elevation)/2, (1+elevation)/2, (1+elevation)/2, 1.0 ];
+  return [Math.random(), Math.random(), Math.random()];
 }
 
 // returns [elevation, temperature, biome]
