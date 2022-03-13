@@ -9,12 +9,6 @@ function getTemperature(x, y) {
 }
 
 
-
-// Color table:
-const desertIce = [189 / 255, 245 / 255, 233 / 255, 1.0];
-const desertSand = [237 / 255, 201 / 255, 175 / 255, 1.0];
-const plainContinental = [186 / 255, 203 / 255, 56 / 255, 1.0];
-
 function gradient(firstColor, secondColor, ratio) {
   const neg = 1 - ratio;
   return [firstColor[0] * ratio + secondColor[0] * neg,
@@ -40,10 +34,20 @@ export function getBiomeColors(x, y) {
   } else // ground
     expectedColor = gradient([0.01, 0.27, 0.01], sandColor, elevation / 2);
 
+  // ice
   if (temperature < -0.5)
     return gradient([0.9, 0.94, 0.96], [0.73, 0.76, 0.78], (-0.25 - temperature) / 0.25);
+  // icebergs
   if (elevation < 0 && temperature < -0.48)
     return gradient([0.83, 0.86, 0.88], expectedColor, (-0.45 - temperature) / 0.1);
+
+  // desert
+  if (elevation > 0 && temperature > 0.5)
+    return gradient(sandColor, expectedColor, (temperature - 0.5) / 0.5);
+
+  // mountains
+  if (elevation > 0.5)
+    return gradient([0.9, 0.9, 0.9], expectedColor, (elevation - 0.5) / 2);
 
   return expectedColor;
 }
