@@ -30,11 +30,11 @@ export class KeyListeners {
     onKeyPressed(event) {
         switch (event.key) {
             case "ArrowDown":
-                this.move(0, this.scale.current.height / 50);
+                this.move(0, -this.scale.current.height / 50);
                 break;
 
             case "ArrowUp":
-                this.move(0, -this.scale.current.height / 50);
+                this.move(0, this.scale.current.height / 50);
                 break;
 
             case "ArrowLeft":

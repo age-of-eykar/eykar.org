@@ -15,6 +15,9 @@ function animateScene(gl, cache, center, scale, canvas, shaderProgram) {
     const shaderScale = gl.getUniformLocation(shaderProgram, "scale");
     gl.uniform2fv(shaderScale, [2 * ChunksCache.sideSize / scale.current.width,
     2 * (canvas.width / canvas.height) * ChunksCache.sideSize / scale.current.height]);
+    const locationShift = gl.getUniformLocation(shaderProgram, "shift");
+    gl.uniform2fv(locationShift, [center.current.x / ChunksCache.sideSize,
+    center.current.y / ChunksCache.sideSize]);
 
     cache.forEachChunk(center.current, scale.current, (chunk) => {
         gl.bindBuffer(gl.ARRAY_BUFFER, chunk.colorBuffer);
