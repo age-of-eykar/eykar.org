@@ -7,8 +7,8 @@ export class WheelListener {
     handleMouseWheel(event) {
         const change = event.deltaY / 1000;
         this.setScale({
-            width: Math.min(Math.max(this.scale.current.width + change * this.scale.current.width, 1), 250),
-            height: Math.min(Math.max(this.scale.current.height + change * this.scale.current.height, 1), 250)
+            width: Math.min(Math.max(this.scale.current.width + change * this.scale.current.width, 1), 256),
+            height: Math.min(Math.max(this.scale.current.height + change * this.scale.current.height, 1), 256)
         })
         event.preventDefault();
     }

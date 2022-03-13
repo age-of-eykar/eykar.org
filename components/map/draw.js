@@ -25,10 +25,9 @@ function animateScene(gl, cache, center, scale, stops, canvas, shaderProgram,
 
     gl.useProgram(shaderProgram);
 
-
-    const scale2 = gl.getUniformLocation(shaderProgram, "scale");
-    gl.uniform2fv(scale2, [1.0, canvas.width / canvas.height]);
-
+    const shaderScale = gl.getUniformLocation(shaderProgram, "scale");
+    gl.uniform2fv(shaderScale, [2 * ChunksCache.sideSize / scale.current.width,
+    2 * (canvas.width / canvas.height) * ChunksCache.sideSize / scale.current.height]);
     gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
     const fillColor = gl.getAttribLocation(shaderProgram, "fillColor");
     gl.enableVertexAttribArray(fillColor);
