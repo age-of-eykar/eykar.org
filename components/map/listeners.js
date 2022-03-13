@@ -25,6 +25,11 @@ export class KeyListeners {
         this.center = center;
         this.scale = scale;
         this.lastUpdate = performance.now();
+
+        this.down = false;
+        this.up = false;
+        this.left = false;
+        this.right = false;
     }
 
     refresh(expectedCenter) {
@@ -41,18 +46,22 @@ export class KeyListeners {
         switch (event.key) {
             case "ArrowDown":
                 this.speed.current.y = -this.scale.current.height / 2;
+                this.down = true;
                 break;
 
             case "ArrowUp":
                 this.speed.current.y = this.scale.current.height / 2;
+                this.up = true;
                 break;
 
             case "ArrowLeft":
                 this.speed.current.x = -this.scale.current.height / 2;
+                this.left = true;
                 break;
 
             case "ArrowRight":
                 this.speed.current.x = this.scale.current.height / 2;
+                this.right = true;
                 break;
 
             default:
@@ -70,18 +79,30 @@ export class KeyListeners {
         switch (event.key) {
             case "ArrowDown":
                 this.speed.current.y = 0;
+                this.down = false;
+                if (this.up)
+                    this.speed.current.y = -this.scale.current.height / 2;
                 break;
 
             case "ArrowUp":
                 this.speed.current.y = 0;
+                this.up = false;
+                if (this.down)
+                    this.speed.current.y = this.scale.current.height / 2;
                 break;
 
             case "ArrowLeft":
                 this.speed.current.x = 0;
+                this.left = false;
+                if (this.right)
+                    this.speed.current.x = this.scale.current.height / 2;
                 break;
 
             case "ArrowRight":
                 this.speed.current.x = 0;
+                this.right = false;
+                if (this.left)
+                    this.speed.current.x = -this.scale.current.height / 2;
                 break;
 
             default:
