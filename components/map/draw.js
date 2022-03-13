@@ -5,7 +5,8 @@ import { buildShaderProgram } from "./shadertools";
 
 
 // gl, cache, center, scale, stops, colors, glCanvas, shaderProgram
-function animateScene(gl, cache, center, scale, canvas, shaderProgram) {
+function animateScene(gl, cache, center, scale, speed, canvas, shaderProgram) {
+    let previousTime = performance.now();
     gl.viewport(0, 0, canvas.width, canvas.height);
     gl.useProgram(shaderProgram);
     const shaderScale = gl.getUniformLocation(shaderProgram, "scale");
@@ -33,11 +34,14 @@ function animateScene(gl, cache, center, scale, canvas, shaderProgram) {
     })
 
     window.requestAnimationFrame(function (currentTime) {
-        animateScene(gl, cache, center, scale, canvas, shaderProgram);
+        const deltaTime = currentTime-previousTime;
+        center.current.x += speed.current.x * deltaTime/1000;
+        center.current.y += speed.current.y * deltaTime/1000;
+        animateScene(gl, cache, center, scale, speed, canvas, shaderProgram);
     });
 }
 
-export const startDrawing = (canvas, windowSize, center, scale) => {
+export const startDrawing = (canvas, windowSize, center, scale, speed) => {
 
     // canvas fixes
     canvas.width = windowSize.width;
@@ -57,6 +61,6 @@ export const startDrawing = (canvas, windowSize, center, scale) => {
     ];
 
     const shaderProgram = buildShaderProgram(gl, shaderSet);
-    animateScene(gl, cache, center, scale, canvas, shaderProgram);
+    animateScene(gl, cache, center, scale, speed, canvas, shaderProgram);
     return cache;
 }

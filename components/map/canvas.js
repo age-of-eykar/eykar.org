@@ -10,6 +10,8 @@ function MapCanvas({ setClickedPlotCallback }) {
   const center = useRef({ x: 0.0, y: 0.0 });
   // scale in cells displayed per width
   const scale = useRef({ width: 32.0, height: 32.0 });
+  // speed
+  const speed = useRef({ x: 0.0, y: 0.0 });
 
   const canvasRef = useRef(null);
   const pixelRatio = (typeof window === 'undefined') ? 1 : window.devicePixelRatio;
@@ -20,17 +22,16 @@ function MapCanvas({ setClickedPlotCallback }) {
 
   useEffect(() => {
     // handle canvas drawing
-    const cache = startDrawing(canvasRef.current, windowSize, center, scale)
+    const cache = startDrawing(canvasRef.current, windowSize, center, scale, speed)
     cache.refresh(center.current, scale.current);
 
     // handle listeners creation
     const canvas = canvasRef.current;
-    const keyListeners = new KeyListeners(center, (newCenter) => {
-      center.current = newCenter;
-      cache.refresh(newCenter, scale.current);
-    }, scale);
-    const listenKey = keyListeners.onKeyPressed.bind(keyListeners);
-    canvas.addEventListener("keydown", listenKey);
+    const keyListeners = new KeyListeners(cache, speed, center, scale);
+    const listenKeyDown = keyListeners.onKeyDown.bind(keyListeners);
+    const listenKeyUp = keyListeners.onKeyUp.bind(keyListeners);
+    canvas.addEventListener("keydown", listenKeyDown);
+    canvas.addEventListener("keyup", listenKeyUp);
 
     const wheelListener = new WheelListener(scale, (newScale) => {
       scale.current = newScale;
@@ -45,10 +46,12 @@ function MapCanvas({ setClickedPlotCallback }) {
       width: window.innerWidth * pixelRatio,
       height: window.innerHeight * pixelRatio
     }), 20);
+
     window.addEventListener("resize", handler);
     return () => {
       window.removeEventListener("resize", handler);
-      window.removeEventListener("keydown", listenKey);
+      window.removeEventListener("keydown", listenKeyDown);
+      window.removeEventListener("keyup", listenKeyUp);
       canvas.removeEventListener("mousewheel", listenMouseWheel);
       canvas.removeEventListener("onwheel", listenMouseWheel);
     };
