@@ -1,9 +1,7 @@
-
 import styles from '../../styles/Map.module.css'
 import React, { useRef, useEffect, useState } from "react";
 import debounce from "debounce";
 import { WheelListener, KeyListeners } from "./listeners";
-import { cache } from "./calc/cache";
 import { startDrawing } from "./draw";
 
 function MapCanvas({ setClickedPlotCallback }) {
@@ -20,8 +18,12 @@ function MapCanvas({ setClickedPlotCallback }) {
     height: window.innerHeight * pixelRatio
   });
 
-  // handle listeners creation
   useEffect(() => {
+    // handle canvas drawing
+    const cache = startDrawing(canvasRef.current, windowSize, center, scale)
+    cache.refresh(center.current, scale.current);
+
+    // handle listeners creation
     const canvas = canvasRef.current;
     const keyListeners = new KeyListeners(center, (newCenter) => {
       center.current = newCenter;
@@ -50,13 +52,7 @@ function MapCanvas({ setClickedPlotCallback }) {
       canvas.removeEventListener("mousewheel", listenMouseWheel);
       canvas.removeEventListener("onwheel", listenMouseWheel);
     };
-  }, [pixelRatio]);
-
-  // handle canvas drawing
-  useEffect(() => {
-    cache.refresh(center.current, scale.current);
-    startDrawing(canvasRef.current, windowSize, cache, center, scale)
-  }, [windowSize]);
+  }, [windowSize, pixelRatio]);
 
   return (
     <canvas

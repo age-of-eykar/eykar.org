@@ -5,44 +5,32 @@ export class ChunksCache {
     static halfsize = 8;
     static sideSize = 2 * ChunksCache.halfsize + 1;
 
-    constructor(capacity) {
+    constructor(capacity, webgl) {
         this.capacity = capacity;
+        this.webgl = webgl;
         this.cached = new Map();
         this.refreshed = true;
     }
 
-    exportData(center, scale) {
-        this.refreshed = true;
-        const allReady = [];
+    forEachChunk(center, scale, display) {
+        const ready = [];
         const origin = {
             x: Math.trunc((center.x - ChunksCache.sideSize / 2) / ChunksCache.sideSize),
             y: Math.trunc((center.y - ChunksCache.sideSize / 2) / ChunksCache.sideSize)
         };
         const a = scale.width / (2 * ChunksCache.sideSize) + 1;
         const b = scale.height / (2 * ChunksCache.sideSize) + 1;
-        let pointsSize = 0;
-        const stops = [];
-        let lastStop = 0;
-        const colors = [];
+        let finished = true;
         for (let i = Math.trunc(-a); i < a + 1; i++)
             for (let j = Math.trunc(-b); j < b + 1; j++) {
                 const chunk = this.cached.get(szudzik(origin.x + i, origin.y + j));
-                if (chunk && chunk.ready) {
-                    allReady.push(chunk);
-                    pointsSize += chunk.points.length;
-                    stops.push(...chunk.stops.map(v => v + lastStop));
-                    lastStop = stops[stops.length - 1];
-                    colors.push(...chunk.colors);
-                }
+                if (chunk && chunk.ready)
+                    ready.push(chunk);
+                else if (finished)
+                    finished = false;
             }
-        const points = new Float32Array(pointsSize);
-        let pointsPrefix = 0;
-        for (const ready of allReady) {
-            points.set(ready.points, pointsPrefix);
-            pointsPrefix += ready.points.length;
-        }
-
-        return { points, stops, colors: new Float32Array(colors) };
+        ready.forEach(chunk => display(chunk));
+        return finished;
     }
 
     refresh(center, scale) {
@@ -60,7 +48,13 @@ export class ChunksCache {
     prepare(x, y) {
         let chunk = this.cached.get(szudzik(x, y));
         if (chunk === undefined)
-            chunk = new Chunk(x, y, () => this.refreshed = false);
+            chunk = new Chunk(x, y, this.webgl.createBuffer(), this.webgl.createBuffer(), (chunk) => {
+                this.webgl.bindBuffer(this.webgl.ARRAY_BUFFER, chunk.vertexBuffer);
+                this.webgl.bufferData(this.webgl.ARRAY_BUFFER, chunk.vertexes, this.webgl.DYNAMIC_DRAW);
+                this.webgl.bindBuffer(this.webgl.ARRAY_BUFFER, chunk.colorBuffer);
+                this.webgl.bufferData(this.webgl.ARRAY_BUFFER, chunk.colors, this.webgl.DYNAMIC_DRAW);
+                this.refreshed = false
+            });
         // should be added to the end of the map
         this.cached.set(szudzik(x, y), chunk);
 
@@ -74,9 +68,11 @@ export class ChunksCache {
 }
 
 class Chunk {
-    constructor(x, y, refresh) {
+    constructor(x, y, vertexBuffer, colorBuffer, refresh) {
         this.x = x;
         this.y = y;
+        this.vertexBuffer = vertexBuffer;
+        this.colorBuffer = colorBuffer;
         this.plots = new Map();
         this.ready = false;
         this.refresh = refresh;
@@ -99,9 +95,8 @@ class Chunk {
             chunkY: this.y,
             size: ChunksCache.halfsize
         });
-        worker.onmessage = ({ data: { points, stops, colors } }) => {
-            this.points = points;
-            this.stops = stops;
+        worker.onmessage = ({ data: { vertexes, colors } }) => {
+            this.vertexes = vertexes;
             this.colors = colors;
             worker.terminate();
             if (!waitingCache)
@@ -131,9 +126,7 @@ class Chunk {
 
     setReady() {
         this.ready = true;
-        this.refresh();
+        this.refresh(this);
     }
 
 }
-
-export const cache = new ChunksCache(1024);
