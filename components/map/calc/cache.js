@@ -5,9 +5,11 @@ export class ChunksCache {
     static halfsize = 8;
     static sideSize = 2 * ChunksCache.halfsize + 1;
 
-    constructor(capacity) {
+    constructor(capacity, webgl) {
         this.capacity = capacity;
+        this.webgl = webgl;
         this.cached = new Map();
+        this.refreshed = true;
     }
 
     forEachChunk(center, scale, display) {
@@ -22,7 +24,7 @@ export class ChunksCache {
         for (let i = Math.trunc(-a); i < a + 1; i++)
             for (let j = Math.trunc(-b); j < b + 1; j++) {
                 const chunk = this.cached.get(szudzik(origin.x + i, origin.y + j));
-                if (chunk.ready)
+                if (chunk && chunk.ready)
                     ready.push(chunk);
                 else if (finished)
                     finished = false;
@@ -44,10 +46,15 @@ export class ChunksCache {
     }
 
     prepare(x, y) {
-
         let chunk = this.cached.get(szudzik(x, y));
         if (chunk === undefined)
-            chunk = new Chunk(x, y);
+            chunk = new Chunk(x, y, this.webgl.createBuffer(), this.webgl.createBuffer(), (chunk) => {
+                this.webgl.bindBuffer(this.webgl.ARRAY_BUFFER, chunk.vertexBuffer);
+                this.webgl.bufferData(this.webgl.ARRAY_BUFFER, chunk.vertexes, this.webgl.DYNAMIC_DRAW);
+                this.webgl.bindBuffer(this.webgl.ARRAY_BUFFER, chunk.colorBuffer);
+                this.webgl.bufferData(this.webgl.ARRAY_BUFFER, chunk.colors, this.webgl.DYNAMIC_DRAW);
+                this.refreshed = false
+            });
         // should be added to the end of the map
         this.cached.set(szudzik(x, y), chunk);
 
@@ -61,11 +68,14 @@ export class ChunksCache {
 }
 
 class Chunk {
-    constructor(x, y) {
+    constructor(x, y, vertexBuffer, colorBuffer, refresh) {
         this.x = x;
         this.y = y;
+        this.vertexBuffer = vertexBuffer;
+        this.colorBuffer = colorBuffer;
         this.plots = new Map();
         this.ready = false;
+        this.refresh = refresh;
         (async () => { this.prepare(); })();
     }
 
@@ -85,8 +95,8 @@ class Chunk {
             chunkY: this.y,
             size: ChunksCache.halfsize
         });
-        worker.onmessage = ({ data: { shape, colors } }) => {
-            this.shape = shape;
+        worker.onmessage = ({ data: { vertexes, colors } }) => {
+            this.vertexes = vertexes;
             this.colors = colors;
             worker.terminate();
             if (!waitingCache)
@@ -110,14 +120,13 @@ class Chunk {
             this.plots.set(szudzik(plot.x, plot.y), plot.colony_id);
         }
 
-        if (this.shape)
+        if (this.points)
             this.setReady();
     }
 
     setReady() {
         this.ready = true;
+        this.refresh(this);
     }
 
 }
-
-export const cache = new ChunksCache(1024);

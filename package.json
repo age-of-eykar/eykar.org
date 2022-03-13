@@ -12,7 +12,7 @@
     "@argent/get-starknet": "^2.1.1",
     "@starknet-react/core": "^0.4.6",
     "debounce": "^1.2.1",
-    "modular-voronoi": "^1.2.0",
+    "modular-voronoi": "^1.5.0",
     "next": "12.1.0",
     "react": "17.0.2",
     "react-dom": "17.0.2",

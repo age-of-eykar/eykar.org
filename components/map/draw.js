@@ -1,63 +1,62 @@
 import { ChunksCache } from "./calc/cache";
+import fragmentShader from '../../shaders/fragment.glsl'
+import vertexShader from '../../shaders/vertex.glsl'
+import { buildShaderProgram } from "./shadertools";
 
-function drawPolygon(points, context, colors, fast) {
-    context.beginPath();
-    for (let i = 0; i < points.length; i++) {
-        const x = points[i][0];
-        const y = points[i][1];
-        context.lineTo(x, y);
-    }
-    context.lineTo(points[0][0], points[0][1]);
-    context.fillStyle = colors[0];
-    context.fill();
-    if (!fast) {
-        context.strokeStyle = colors[1];
-        context.stroke();
-    }
-    context.closePath();
 
+// gl, cache, center, scale, stops, colors, glCanvas, shaderProgram
+function animateScene(gl, cache, center, scale, canvas, shaderProgram) {
+    gl.viewport(0, 0, canvas.width, canvas.height);
+    gl.useProgram(shaderProgram);
+    const shaderScale = gl.getUniformLocation(shaderProgram, "scale");
+    gl.uniform2fv(shaderScale, [2 * ChunksCache.sideSize / scale.current.width,
+    2 * (canvas.width / canvas.height) * ChunksCache.sideSize / scale.current.height]);
+    const locationShift = gl.getUniformLocation(shaderProgram, "shift");
+    gl.uniform2fv(locationShift, [center.current.x / ChunksCache.sideSize,
+    center.current.y / ChunksCache.sideSize]);
+
+    cache.forEachChunk(center.current, scale.current, (chunk) => {
+        gl.bindBuffer(gl.ARRAY_BUFFER, chunk.colorBuffer);
+        const fillColor = gl.getAttribLocation(shaderProgram, "fillColor");
+        gl.enableVertexAttribArray(fillColor);
+        gl.vertexAttribPointer(fillColor, 3,
+            gl.FLOAT, false, 0, 0);
+
+        gl.bindBuffer(gl.ARRAY_BUFFER, chunk.vertexBuffer);
+        const position = gl.getAttribLocation(shaderProgram, "position");
+        gl.enableVertexAttribArray(position);
+        gl.vertexAttribPointer(position, 2,
+            gl.FLOAT, false, 0, 0);
+
+        if (chunk.vertexes)
+            gl.drawArrays(gl.TRIANGLES, 0, chunk.vertexes.length / 2);
+    })
+
+    window.requestAnimationFrame(function (currentTime) {
+        animateScene(gl, cache, center, scale, canvas, shaderProgram);
+    });
 }
 
-let averageDelay = 1000 / 25;
-let lastDrawTime = 0;
-export const redraw = (canvas, cache, center, scale, windowSize) => {
-    if (Date.now() < lastDrawTime + averageDelay*1.15)
-        return;
-    const startTime = Date.now();
+export const startDrawing = (canvas, windowSize, center, scale) => {
+
     // canvas fixes
     canvas.width = windowSize.width;
     canvas.height = windowSize.height;
     canvas.focus();
-    const context = canvas.getContext("2d");
-    context.scale(windowSize.width, windowSize.height);
-    // move to the center of the screen
-    context.translate(1 / 2, 1 / 2);
-    // make y axis proportional to x axis
-    const screenRatio = windowSize.width / windowSize.height;
-    context.scale(1, screenRatio);
-    // make x axis of size
-    context.scale(1 / scale.width,
-        1 / scale.height);
-    const output = cache.forEachChunk(center, scale, (chunk) => {
-        const topLeft = chunk.getTopLeft();
-        context.translate(topLeft.x - center.x, topLeft.y - center.y)
-        context.scale(ChunksCache.sideSize, ChunksCache.sideSize);
-        let i = 0;
-        context.lineWidth = 1 / (50 * ChunksCache.sideSize);
-        // fast display (no polygons)
-        if (scale.width > 128) {
-            const sideSize = 1 / ChunksCache.sideSize;
-            for (let j = 0; j < ChunksCache.sideSize; j++)
-                for (let i = 0; i < ChunksCache.sideSize; i++) {
-                    context.fillStyle = chunk.colors[i + j * ChunksCache.sideSize][0];
-                    context.fillRect(i / ChunksCache.sideSize - 0.05 * sideSize, j / ChunksCache.sideSize - 0.05 * sideSize,
-                        sideSize + 0.1 * sideSize, sideSize + 0.1 * sideSize);
-                }
-        } else for (const points of chunk.shape)
-            drawPolygon(points, context, chunk.colors[i++], scale.width > 48);
-        context.scale(1 / ChunksCache.sideSize, 1 / ChunksCache.sideSize);
-        context.translate(center.x - topLeft.x, center.y - topLeft.y)
-    });
-    averageDelay = (averageDelay / 2 + (Date.now() - startTime) / 2);
-    return output;
+    const gl = canvas.getContext("webgl2");
+    const cache = new ChunksCache(1024, gl);
+    const shaderSet = [
+        {
+            type: gl.VERTEX_SHADER,
+            src: vertexShader
+        },
+        {
+            type: gl.FRAGMENT_SHADER,
+            src: fragmentShader
+        }
+    ];
+
+    const shaderProgram = buildShaderProgram(gl, shaderSet);
+    animateScene(gl, cache, center, scale, canvas, shaderProgram);
+    return cache;
 }

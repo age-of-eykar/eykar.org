@@ -7,8 +7,8 @@ export class WheelListener {
     handleMouseWheel(event) {
         const change = event.deltaY / 1000;
         this.setScale({
-            width: Math.min(Math.max(this.scale.width + change * this.scale.width, 1), 250),
-            height: Math.min(Math.max(this.scale.height + change * this.scale.height, 1), 250)
+            width: Math.min(Math.max(this.scale.current.width + change * this.scale.current.width, 1), 256),
+            height: Math.min(Math.max(this.scale.current.height + change * this.scale.current.height, 1), 256)
         })
         event.preventDefault();
     }
@@ -24,26 +24,25 @@ export class KeyListeners {
     }
 
     move(x, y) {
-        this.setCenter({ x: this.center.x + x, y: this.center.y + y });
+        this.setCenter({ x: this.center.current.x + x, y: this.center.current.y + y });
     }
 
     onKeyPressed(event) {
-
         switch (event.key) {
             case "ArrowDown":
-                this.move(0, this.scale.height / 50);
+                this.move(0, -this.scale.current.height / 50);
                 break;
 
             case "ArrowUp":
-                this.move(0, -this.scale.height / 50);
+                this.move(0, this.scale.current.height / 50);
                 break;
 
             case "ArrowLeft":
-                this.move(-this.scale.width / 50, 0);
+                this.move(-this.scale.current.width / 50, 0);
                 break;
 
             case "ArrowRight":
-                this.move(this.scale.width / 50, 0);
+                this.move(this.scale.current.width / 50, 0);
                 break;
 
             default:
