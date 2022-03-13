@@ -41,11 +41,11 @@ export class ChunksCache {
         };
         const a = scale.width / (2 * ChunksCache.sideSize) + 1;
         const b = scale.height / (2 * ChunksCache.sideSize) + 1;
-        let finished = true;
         let pointsSize = 0;
         const stops = [];
         let lastStop = 0;
         const colors = [];
+        /*
         for (let i = Math.trunc(-a); i < a + 1; i++)
             for (let j = Math.trunc(-b); j < b + 1; j++) {
                 const chunk = this.cached.get(szudzik(origin.x + i, origin.y + j));
@@ -56,9 +56,16 @@ export class ChunksCache {
                     lastStop = stops[stops.length - 1];
                     colors.push(...chunk.colors);
                 }
-                else if (finished)
-                    finished = false;
             }
+            */
+        const chunk = this.cached.get(szudzik(origin.x + 0, origin.y + 0));
+        if (chunk && chunk.ready) {
+            allReady.push(chunk);
+            pointsSize += chunk.points.length;
+            stops.push(...chunk.stops.map(v => v + lastStop));
+            lastStop = stops[stops.length - 1];
+            colors.push(...chunk.colors);
+        }
 
         const points = new Float32Array(pointsSize);
         let pointsPrefix = 0;

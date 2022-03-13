@@ -30,7 +30,10 @@ self.onmessage = ({ data: { chunkX, chunkY, size } }) => {
         }
 
     const voronoi = precalculate(points, 2 * size + 3, 2 * size + 3);
+    const shiftedPoints = voronoi.points.map((x, i) => (i % 2 == 0)
+        ? chunkX + x - 0.5
+        : chunkY + x - 0.5);
     self.postMessage({
-        points: voronoi.points, stops: voronoi.stops, colors: colors
+        points: shiftedPoints, stops: voronoi.stops, colors: colors
     });
 };
