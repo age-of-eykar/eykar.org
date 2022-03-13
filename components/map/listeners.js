@@ -18,18 +18,45 @@ export class WheelListener {
 
 export class KeyListeners {
     constructor(
-        cache, speed, center, scale
+        center, scale
     ) {
-        this.cache = cache;
-        this.speed = speed; // plots per second
         this.center = center;
         this.scale = scale;
         this.lastUpdate = performance.now();
 
-        this.down = false;
+        this.upLast = false;
         this.up = false;
+        this.down = false;
+
+        this.leftLast = false;
         this.left = false;
         this.right = false;
+    }
+
+    setCache(cache) {
+        this.cache = cache;
+    }
+
+    // plots per second
+    getSpeed() {
+        let x;
+        let y;
+        if (this.up && this.upLast)
+            y = 1;
+        else if (this.down)
+            y = -1;
+        else
+            y = 0;
+
+        if (this.left && this.leftLast)
+            x = -1;
+        else if (this.right)
+            x = 1;
+        else
+            x = 0;
+
+        const size = Math.sqrt(this.scale.current.width * this.scale.current.width / 2);
+        return { x: x * size, y: y * size };
     }
 
     refresh(expectedCenter) {
@@ -45,32 +72,33 @@ export class KeyListeners {
 
         switch (event.key) {
             case "ArrowDown":
-                this.speed.current.y = -this.scale.current.height / 2;
                 this.down = true;
+                this.upLast = false;
                 break;
 
             case "ArrowUp":
-                this.speed.current.y = this.scale.current.height / 2;
                 this.up = true;
+                this.upLast = true;
                 break;
 
             case "ArrowLeft":
-                this.speed.current.x = -this.scale.current.height / 2;
                 this.left = true;
+                this.leftLast = true;
                 break;
 
             case "ArrowRight":
-                this.speed.current.x = this.scale.current.height / 2;
                 this.right = true;
+                this.leftLast = false;
                 break;
 
             default:
                 break;
         }
 
+        const speed = this.getSpeed(this.center, this.scale);
         this.refresh({
-            x: this.center.current.x + this.speed.current.x / 2,
-            y: this.center.current.y + this.speed.current.y / 2
+            x: this.center.current.x + speed.x / 2,
+            y: this.center.current.y + speed.y / 2
         });
     }
 
@@ -78,31 +106,19 @@ export class KeyListeners {
 
         switch (event.key) {
             case "ArrowDown":
-                this.speed.current.y = 0;
                 this.down = false;
-                if (this.up)
-                    this.speed.current.y = -this.scale.current.height / 2;
                 break;
 
             case "ArrowUp":
-                this.speed.current.y = 0;
                 this.up = false;
-                if (this.down)
-                    this.speed.current.y = this.scale.current.height / 2;
                 break;
 
             case "ArrowLeft":
-                this.speed.current.x = 0;
                 this.left = false;
-                if (this.right)
-                    this.speed.current.x = this.scale.current.height / 2;
                 break;
 
             case "ArrowRight":
-                this.speed.current.x = 0;
                 this.right = false;
-                if (this.left)
-                    this.speed.current.x = -this.scale.current.height / 2;
                 break;
 
             default:

@@ -10,8 +10,6 @@ function MapCanvas({ setClickedPlotCallback }) {
   const center = useRef({ x: 0.0, y: 0.0 });
   // scale in cells displayed per width
   const scale = useRef({ width: 32.0, height: 32.0 });
-  // speed
-  const speed = useRef({ x: 0.0, y: 0.0 });
 
   const canvasRef = useRef(null);
   const pixelRatio = (typeof window === 'undefined') ? 1 : window.devicePixelRatio;
@@ -21,13 +19,16 @@ function MapCanvas({ setClickedPlotCallback }) {
   });
 
   useEffect(() => {
+
+    const keyListeners = new KeyListeners(center, scale);
+
     // handle canvas drawing
-    const cache = startDrawing(canvasRef.current, windowSize, center, scale, speed)
+    const cache = startDrawing(canvasRef.current, windowSize, center, scale, keyListeners)
     cache.refresh(center.current, scale.current);
 
     // handle listeners creation
     const canvas = canvasRef.current;
-    const keyListeners = new KeyListeners(cache, speed, center, scale);
+    keyListeners.setCache(cache);
     const listenKeyDown = keyListeners.onKeyDown.bind(keyListeners);
     const listenKeyUp = keyListeners.onKeyUp.bind(keyListeners);
     canvas.addEventListener("keydown", listenKeyDown);
