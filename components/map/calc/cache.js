@@ -11,27 +11,6 @@ export class ChunksCache {
         this.refreshed = true;
     }
 
-    forEachChunk(center, scale, display) {
-        const ready = [];
-        const origin = {
-            x: Math.trunc((center.x - ChunksCache.sideSize / 2) / ChunksCache.sideSize),
-            y: Math.trunc((center.y - ChunksCache.sideSize / 2) / ChunksCache.sideSize)
-        };
-        const a = scale.width / (2 * ChunksCache.sideSize) + 1;
-        const b = scale.height / (2 * ChunksCache.sideSize) + 1;
-        let finished = true;
-        for (let i = Math.trunc(-a); i < a + 1; i++)
-            for (let j = Math.trunc(-b); j < b + 1; j++) {
-                const chunk = this.cached.get(szudzik(origin.x + i, origin.y + j));
-                if (chunk.ready)
-                    ready.push(chunk);
-                else if (finished)
-                    finished = false;
-            }
-        ready.forEach(chunk => display(chunk));
-        return finished;
-    }
-
     exportData(center, scale) {
         this.refreshed = true;
         const allReady = [];
@@ -56,15 +35,6 @@ export class ChunksCache {
                     colors.push(...chunk.colors);
                 }
             }
-        const chunk = this.cached.get(szudzik(origin.x + 0, origin.y + 0));
-        if (chunk && chunk.ready) {
-            allReady.push(chunk);
-            pointsSize += chunk.points.length;
-            stops.push(...chunk.stops.map(v => v + lastStop));
-            lastStop = stops[stops.length - 1];
-            colors.push(...chunk.colors);
-        }
-
         const points = new Float32Array(pointsSize);
         let pointsPrefix = 0;
         for (const ready of allReady) {
