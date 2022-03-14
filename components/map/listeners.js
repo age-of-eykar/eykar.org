@@ -55,7 +55,7 @@ export class KeyListeners {
         else
             x = 0;
 
-        const norm = 5 * Math.log(this.scale.current.width);
+        const norm = this.scale.current.width / 2;
         const size = Math.sqrt(norm * norm / 2);
         if (x !== 0 && y !== 0)
             return { x: x * size, y: y * size };
@@ -64,10 +64,6 @@ export class KeyListeners {
     }
 
     refresh(expectedCenter) {
-        const deltaTime = performance.now() - this.lastUpdate;
-        const timePerChunk = 1000 * ChunksCache.sideSize / (this.scale.current.height / 5);
-        if (deltaTime < timePerChunk / 2)
-            return;
         this.cache.refresh(expectedCenter, this.scale.current);
         this.lastUpdate = performance.now();
     }
