@@ -49,7 +49,7 @@ export const startDrawing = (canvas, windowSize, center, scale, keyListeners) =>
     canvas.height = windowSize.height;
     canvas.focus();
     const gl = canvas.getContext("webgl2");
-    const cache = new ChunksCache(1024, gl);
+    const cache = new ChunksCache(256, gl);
     const shaderSet = [
         {
             type: gl.VERTEX_SHADER,
