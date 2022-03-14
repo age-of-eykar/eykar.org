@@ -22,7 +22,6 @@ export class KeyListeners {
     ) {
         this.center = center;
         this.scale = scale;
-        this.lastUpdate = performance.now();
 
         this.upLast = false;
         this.up = false;
@@ -65,7 +64,6 @@ export class KeyListeners {
 
     refresh(expectedCenter) {
         this.cache.refresh(expectedCenter, this.scale.current);
-        this.lastUpdate = performance.now();
     }
 
     onKeyDown(event) {
