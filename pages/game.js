@@ -1,18 +1,18 @@
 import styles from '../styles/Game.module.css'
-import { useRouter } from 'next/router'
 import { useEffect } from "react";
 import { useStarknet, useStarknetCall } from '@starknet-react/core'
 import { Spinner } from "../components/spinner"
 import MapCanvas from "../components/map/canvas"
 import WalletMenu from '../components/walletmenu'
+import Tutorial from "../components/tutorial"
 import { useEykarContract } from '../hooks/eykar'
 
 export default function Game() {
     const { account, hasStarknet, connectBrowserWallet, error } = useStarknet()
     const { contract } = useEykarContract()
     const { data, loading } = useStarknetCall({ contract: contract, method: 'get_player_colonies', args: { player: account } })
+    let page = undefined;
 
-    const router = useRouter()
     useEffect(() => {
         if (!hasStarknet)
             return;
@@ -24,22 +24,28 @@ export default function Game() {
             return;
         if (data) {
             if (parseInt(data.colonies_len, 16) > 0) {
-                router.push('/mycolonies')
+                page = 'colonies'
             } else
-                router.push('/tutorial')
+                page = 'tutorial'
         }
-    }, [hasStarknet, account, data, loading, router])
+    }, [hasStarknet, account, data, loading])
+
+    let component;
+    if (page === undefined)
+        component = hasStarknet
+            ? <Spinner color={"white"} className={styles.loading} />
+            : <WalletMenu />;
+    else if (page === 'tutorial')
+        component = <Tutorial />;
+    else if (page === 'colonies')
+        component = undefined;
 
     return (
         <div className={styles.screen}>
             <div className={styles.interactive}>
                 <MapCanvas setClickedPlotCallback={() => { }} />
                 <div className={[styles.overlay, styles.fadeIn].join(" ")}>
-                    {
-                        hasStarknet
-                            ? <Spinner color={"white"} className={styles.loading} />
-                            : <WalletMenu />
-                    }
+                    {component}
                 </div>
             </div>
         </div>
