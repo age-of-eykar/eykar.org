@@ -1,6 +1,6 @@
 import styles from '../styles/Game.module.css'
-import { useEffect } from "react";
-import { useStarknet, useStarknetCall } from '@starknet-react/core'
+import { useState, useEffect } from "react";
+import { useStarknet, useStarknetCall, InjectedConnector } from '@starknet-react/core'
 import { Spinner } from "../components/spinner"
 import MapCanvas from "../components/map/canvas"
 import WalletMenu from '../components/walletmenu'
@@ -8,35 +8,36 @@ import Tutorial from "../components/tutorial"
 import { useEykarContract } from '../hooks/eykar'
 
 export default function Game() {
-    const { account, hasStarknet, connectBrowserWallet, error } = useStarknet()
+    const { account, connect } = useStarknet()
     const { contract } = useEykarContract()
-    const { data, loading } = useStarknetCall({ contract: contract, method: 'get_player_colonies', args: { player: account } })
-    let page = undefined;
+    const { data, loading } = useStarknetCall({ contract: contract, method: 'get_player_colonies', args: account ? [account] : undefined })
+    const [page, setPage] = useState(undefined);
 
     useEffect(() => {
-        if (!hasStarknet)
+        if (!InjectedConnector.ready)
             return;
         if (!account) {
-            connectBrowserWallet()
+            connect(new InjectedConnector())
             return;
         }
         if (!contract || loading)
             return;
         if (data) {
-            if (parseInt(data.colonies_len, 16) > 0) {
-                page = 'colonies'
+            console.log(account, data)
+            if (data.colonies_len > 0) {
+                setPage('colonies')
             } else
-                page = 'tutorial'
+                setPage('tutorial')
         }
-    }, [hasStarknet, account, data, loading])
+    }, [account, data, loading])
 
     let component;
     if (page === undefined)
-        component = hasStarknet
-            ? <Spinner color={"white"} className={styles.loading} />
-            : <WalletMenu />;
+        component = <Spinner color={"white"} className={styles.loading} />;
     else if (page === 'tutorial')
-        component = <Tutorial />;
+        component = <Tutorial setPage={setPage} />;
+    else if (page === 'mint')
+        component = undefined;
     else if (page === 'colonies')
         component = undefined;
 
@@ -45,7 +46,9 @@ export default function Game() {
             <div className={styles.interactive}>
                 <MapCanvas setClickedPlotCallback={() => { }} />
                 <div className={[styles.overlay, styles.fadeIn].join(" ")}>
-                    {component}
+                    {InjectedConnector.ready
+                        ? component
+                        : <WalletMenu />}
                 </div>
             </div>
         </div>

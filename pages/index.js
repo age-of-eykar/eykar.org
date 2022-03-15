@@ -3,11 +3,11 @@ import React from 'react'
 import Powered from '../components/powered'
 import WalletMenu from '../components/walletmenu'
 import Link from 'next/link'
-import { useStarknet } from '@starknet-react/core'
+import { useStarknet, InjectedConnector } from '@starknet-react/core'
 import { useRouter } from 'next/router'
 
 export default function Home() {
-  const { account, hasStarknet, connectBrowserWallet } = useStarknet()
+  const { account, connect } = useStarknet()
   const [connectMenuToggled, setConnectMenuToggled] = React.useState(false);
   const router = useRouter()
 
@@ -20,8 +20,8 @@ export default function Home() {
 
         <button className={
           [styles.button, styles.play].join(" ")} onClick={() => {
-            if (hasStarknet) {
-              connectBrowserWallet()
+            if (InjectedConnector.ready) {
+              connect(new InjectedConnector())
               router.push('/game');
             } else {
               setConnectMenuToggled(true)
