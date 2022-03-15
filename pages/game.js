@@ -23,7 +23,6 @@ export default function Game() {
         if (!contract || loading)
             return;
         if (data) {
-            console.log(account, data)
             if (data.colonies_len > 0) {
                 setPage('colonies')
             } else

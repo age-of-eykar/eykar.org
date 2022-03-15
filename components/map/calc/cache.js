@@ -56,8 +56,13 @@ export class ChunksCache {
         // should be added to the end of the map
         this.cached.set(szudzik(x, y), chunk);
 
-        while (this.cached.size > this.capacity)
-            this.cached.delete(this.cached.keys().next().value);
+        while (this.cached.size > this.capacity) {
+            const key = this.cached.keys().next().value;
+            const chunk = this.cached.get(key);
+            this.webgl.deleteBuffer(chunk.vertexBuffer);
+            this.webgl.deleteBuffer(chunk.colorBuffer);
+            this.cached.delete(key);
+        }
 
         if (chunk.ready)
             return chunk;
