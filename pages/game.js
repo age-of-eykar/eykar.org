@@ -4,7 +4,8 @@ import { useStarknet, useStarknetCall, InjectedConnector } from '@starknet-react
 import { Spinner } from "../components/spinner"
 import MapCanvas from "../components/map/canvas"
 import WalletMenu from '../components/walletmenu'
-import Tutorial from "../components/tutorial"
+import Tutorial from "../components/game/tutorial"
+import Mint from "../components/game/mint"
 import { useEykarContract } from '../hooks/eykar'
 
 export default function Game() {
@@ -22,7 +23,7 @@ export default function Game() {
         }
         if (!contract || loading)
             return;
-        if (data) {
+        if (data && page === undefined) {
             if (data.colonies_len > 0) {
                 setPage('colonies')
             } else
@@ -36,7 +37,7 @@ export default function Game() {
     else if (page === 'tutorial')
         component = <Tutorial setPage={setPage} />;
     else if (page === 'mint')
-        component = undefined;
+        component = <Mint setPage={setPage} />;
     else if (page === 'colonies')
         component = undefined;
 

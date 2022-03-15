@@ -1,8 +1,8 @@
-import styles from '../styles/Game.module.css'
+import styles from '../../styles/Game.module.css'
 import { useState } from "react";
 import { useStarknetInvoke } from '@starknet-react/core'
-import TextInput from './input'
-import { useEykarContract } from '../hooks/eykar'
+import TextInput from '../input'
+import { useEykarContract } from '../../hooks/eykar'
 
 export default function Mint() {
     const [name, setName] = useState("")
@@ -26,7 +26,7 @@ export default function Mint() {
                 </div>
 
                 {name ? <button className={[styles.footer_element, styles.button].join(" ")} onClick={() => {
-                    invoke({ args: { name: "0x" + new Buffer.from(name).toString('hex') } })
+                    invoke({ args: ["0x" + new Buffer.from(name).toString('hex')] })
                 }}>
                     <svg className={styles.button_icon} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                     <p className={styles.button_text}>Establish a settler camp</p>

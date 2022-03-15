@@ -1,6 +1,6 @@
-import styles from '../styles/Game.module.css'
+import styles from '../../styles/Game.module.css'
 import { useStarknet } from '@starknet-react/core'
-import { useDisplayName } from '../hooks/starknet'
+import { useDisplayName } from '../../hooks/starknet'
 
 export default function Tutorial({ setPage }) {
     const { account } = useStarknet()
