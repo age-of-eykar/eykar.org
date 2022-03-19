@@ -47,7 +47,7 @@ function Discover() {
                                 <div>
                                     <h1>Contribute</h1>
                                     <p>
-                                        You are a solidity or react developer and want to contribute?s
+                                        You are a solidity or react developer and want to contribute?
                                         The project is fully open source, feel free to check out our <a href="https://github.com/age-of-eykar">github</a>.
                                     </p>
                                 </div>
