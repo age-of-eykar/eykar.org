@@ -28,20 +28,43 @@ export class PanningListener {
             event.offsetX,
             event.offsetY
         ];
+        this.start = [
+            event.offsetX,
+            event.offsetY
+        ];
     }
 
     handleMouseUp(event) {
         this.isDown = false;
-        this.cache.refresh(this.center.current, this.scale.current,
+        const stop = [
+            (this.scale.current / this.windowSize.width) * (event.offsetX - this.start[0]),
+            (this.scale.current / this.windowSize.height) * (event.offsetY - this.start[1])
+        ];
+        this.cache.refresh({
+            x: this.center.current.x - stop[0] / 2,
+            y: this.center.current.y + stop[1] / 2
+        }, this.scale.current / 2,
+            this.windowSize.height / this.windowSize.width);
+
+        this.cache.refresh({
+            x: this.center.current.x,
+            y: this.center.current.y + stop[1] / 2
+        }, this.scale.current / 2,
+            this.windowSize.height / this.windowSize.width);
+
+        this.cache.refresh({
+            x: this.center.current.x - stop[0] / 2,
+            y: this.center.current.y
+        }, this.scale.current / 2,
             this.windowSize.height / this.windowSize.width);
     }
 
     handleMouseMove(event) {
         // don't pan if mouse is not pressed
         if (!this.isDown) return;
-
-        const x = (event.offsetX - this.last[0]) * this.scale.current / this.windowSize.width;
-        const y = (event.offsetY - this.last[1]) * this.scale.current / this.windowSize.width;
+        const norm = this.scale.current / this.windowSize.width;
+        const x = (event.offsetX - this.last[0]) * norm;
+        const y = (event.offsetY - this.last[1]) * norm;
 
         this.last = [event.offsetX, event.offsetY];
         this.center.current = { x: this.center.current.x - x, y: this.center.current.y + y };
