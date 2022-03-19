@@ -16,10 +16,11 @@ export class WheelListener {
 
 export class PanningListener {
     constructor(
-        center, scale, cache
+        center, scale, windowSize, cache
     ) {
         this.center = center;
         this.scale = scale;
+        this.windowSize = windowSize;
         this.cache = cache;
 
         this.isDown = false;
@@ -42,8 +43,8 @@ export class PanningListener {
         // don't pan if mouse is not pressed
         if (!this.isDown) return;
 
-        const x = (event.offsetX - this.last[0]) * this.scale.current.width / 1024;
-        const y = (event.offsetY - this.last[1]) * this.scale.current.height / 1024;
+        const x = (event.offsetX - this.last[0]) * this.scale.current.width / this.windowSize.width;
+        const y = (event.offsetY - this.last[1]) * this.scale.current.height / this.windowSize.height;
 
         this.last = [event.offsetX, event.offsetY];
         this.center.current = { x: this.center.current.x - x, y: this.center.current.y + y };

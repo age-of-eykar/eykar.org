@@ -25,10 +25,9 @@ function MapCanvas({ setClickedPlotCallback }) {
     // handle canvas drawing
     const cache = startDrawing(canvasRef.current, windowSize, center, scale, keyListeners)
     cache.refresh(center.current, scale.current);
-    const window = canvasRef.current;
 
     // handle listeners creation
-    const panningListener = new PanningListener(center, scale, cache);
+    const panningListener = new PanningListener(center, scale, windowSize, cache);
     const panningStart = panningListener.handleMouseDown.bind(panningListener);
     const panningStop = panningListener.handleMouseUp.bind(panningListener);
     const panningMove = panningListener.handleMouseMove.bind(panningListener);
@@ -58,10 +57,10 @@ function MapCanvas({ setClickedPlotCallback }) {
 
     window.addEventListener("resize", handler);
     return () => {
-      window.removeEventListener("resize", handler);
       window.removeEventListener("mousedown", panningStart);
       window.removeEventListener("mouseup", panningStop);
       window.removeEventListener("mousemove", panningMove);
+      window.removeEventListener("resize", handler);
       window.removeEventListener("keydown", listenKeyDown);
       window.removeEventListener("keyup", listenKeyUp);
       window.removeEventListener("mousewheel", listenMouseWheel);
