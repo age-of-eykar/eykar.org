@@ -44,7 +44,7 @@ export class PanningListener {
         if (!this.isDown) return;
 
         const x = (event.offsetX - this.last[0]) * this.scale.current.width / this.windowSize.width;
-        const y = (event.offsetY - this.last[1]) * this.scale.current.height / this.windowSize.height;
+        const y = (event.offsetY - this.last[1]) * this.scale.current.width / this.windowSize.width;
 
         this.last = [event.offsetX, event.offsetY];
         this.center.current = { x: this.center.current.x - x, y: this.center.current.y + y };
