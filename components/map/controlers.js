@@ -96,6 +96,18 @@ export class SpeedControler {
         this.leftLast = false;
         this.left = false;
         this.right = false;
+
+        this.controledSpeed = false;
+    }
+
+    takeControl() {
+        const angle = Math.random() * 2 * Math.PI;
+        const multiplier = this.scale.current / 16;
+        this.controledSpeed = { x: Math.cos(angle) * multiplier, y: Math.sin(angle) * multiplier };
+    }
+
+    releaseControl() {
+        this.controledSpeed = false;
     }
 
     setCache(cache) {
@@ -104,6 +116,8 @@ export class SpeedControler {
 
     // plots per second
     getSpeed() {
+        if (this.controledSpeed)
+            return this.controledSpeed;
         let x;
         let y;
         if (this.up && this.upLast)

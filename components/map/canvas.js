@@ -5,6 +5,7 @@ import { WheelControler, SpeedControler, PanningControler } from "./controlers";
 import { startDrawing } from "./draw";
 
 export let cache;
+export let speedControler;
 
 export function MapCanvas({ setClickedPlotCallback }) {
 
@@ -22,10 +23,10 @@ export function MapCanvas({ setClickedPlotCallback }) {
 
   useEffect(() => {
 
-    const keyControlers = new SpeedControler(center, scale, windowSize);
+    speedControler = new SpeedControler(center, scale, windowSize);
 
     // handle canvas drawing
-    cache = startDrawing(canvasRef.current, windowSize, center, scale, keyControlers)
+    cache = startDrawing(canvasRef.current, windowSize, center, scale, speedControler)
     cache.refresh(center.current, scale.current, windowSize.height / windowSize.width);
 
     // handle listeners creation
@@ -37,9 +38,9 @@ export function MapCanvas({ setClickedPlotCallback }) {
     window.addEventListener("mouseup", panningStop);
     window.addEventListener("mousemove", panningMove);
 
-    keyControlers.setCache(cache);
-    const listenKeyDown = keyControlers.onKeyDown.bind(keyControlers);
-    const listenKeyUp = keyControlers.onKeyUp.bind(keyControlers);
+    speedControler.setCache(cache);
+    const listenKeyDown = speedControler.onKeyDown.bind(speedControler);
+    const listenKeyUp = speedControler.onKeyUp.bind(speedControler);
     window.addEventListener("keydown", listenKeyDown);
     window.addEventListener("keyup", listenKeyUp);
 

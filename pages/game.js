@@ -2,7 +2,7 @@ import styles from '../styles/Game.module.css'
 import { useState, useEffect } from "react";
 import { useStarknet, useStarknetCall, InjectedConnector } from '@starknet-react/core'
 import { Spinner } from "../components/spinner"
-import { cache, MapCanvas } from "../components/map/canvas"
+import { speedControler, MapCanvas } from "../components/map/canvas"
 import WalletMenu from '../components/walletmenu'
 import Tutorial from "../components/game/tutorial"
 import Mint from "../components/game/mint"
@@ -13,6 +13,14 @@ export default function Game() {
     const { contract } = useEykarContract()
     const { data, loading } = useStarknetCall({ contract: contract, method: 'get_player_colonies', args: account ? [account] : undefined })
     const [page, setPage] = useState(undefined);
+    const [hasControl, setHasControl] = useState(true);
+
+    useEffect(() => {
+        if (hasControl)
+            speedControler.takeControl();
+        else
+            speedControler.releaseControl();
+    }, [hasControl])
 
     useEffect(() => {
         if (!InjectedConnector.ready())

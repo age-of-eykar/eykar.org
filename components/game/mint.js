@@ -5,7 +5,6 @@ import TextInput from '../input'
 import { useEykarContract } from '../../hooks/eykar'
 import { Spinner } from "../spinner"
 import { useStarknetTransactionManager } from '@starknet-react/core'
-import debounce from "debounce";
 
 export default function Mint({ setPage }) {
     const [name, setName] = useState("")
