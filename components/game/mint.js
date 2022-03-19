@@ -17,9 +17,8 @@ export default function Mint({ setPage }) {
     useEffect(() => {
         for (const transaction of transactions)
             if (transaction.transactionHash === data) {
-                console.log(transaction.status)
-                // todo: ensure status is success
-                if (transaction.status === 'ACCEPTED_ON_L2' || transaction.status === 'ACCEPTED_ON_L1')
+                if (transaction.status === 'ACCEPTED_ON_L2'
+                    || transaction.status === 'ACCEPTED_ON_L1')
                     setMinted(true);
             }
     }, [data, transactions])
