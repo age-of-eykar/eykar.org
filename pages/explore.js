@@ -1,5 +1,5 @@
 import Header from "../components/header";
-import MapCanvas from "../components/map/canvas";
+import { MapCanvas } from "../components/map/canvas";
 
 export default function Explore() {
   return (

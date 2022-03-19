@@ -4,7 +4,9 @@ import debounce from "debounce";
 import { WheelListener, KeyListeners, PanningListener } from "./listeners";
 import { startDrawing } from "./draw";
 
-function MapCanvas({ setClickedPlotCallback }) {
+export let cache;
+
+export function MapCanvas({ setClickedPlotCallback }) {
 
   // center of the map (normal coordinates)
   const center = useRef({ x: 0.0, y: 0.0 });
@@ -23,7 +25,7 @@ function MapCanvas({ setClickedPlotCallback }) {
     const keyListeners = new KeyListeners(center, scale);
 
     // handle canvas drawing
-    const cache = startDrawing(canvasRef.current, windowSize, center, scale, keyListeners)
+    cache = startDrawing(canvasRef.current, windowSize, center, scale, keyListeners)
     cache.refresh(center.current, scale.current);
 
     // handle listeners creation
@@ -76,5 +78,3 @@ function MapCanvas({ setClickedPlotCallback }) {
     />
   );
 }
-
-export default MapCanvas;
