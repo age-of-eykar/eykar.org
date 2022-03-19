@@ -17,8 +17,8 @@ export class ChunksCache {
             x: Math.trunc((center.x - ChunksCache.sideSize / 2) / ChunksCache.sideSize),
             y: Math.trunc((center.y - ChunksCache.sideSize / 2) / ChunksCache.sideSize)
         };
-        const a = scale.width / (2 * ChunksCache.sideSize) + 1;
-        const b = scale.height / (2 * ChunksCache.sideSize) + 1;
+        const a = scale / (2 * ChunksCache.sideSize) + 1;
+        const b = scale / (2 * ChunksCache.sideSize) + 1;
         let finished = true;
         for (let i = Math.trunc(-a); i < a + 1; i++)
             for (let j = Math.trunc(-b); j < b + 1; j++) {
@@ -37,8 +37,8 @@ export class ChunksCache {
             x: Math.trunc((center.x - ChunksCache.sideSize / 2) / ChunksCache.sideSize),
             y: Math.trunc((center.y - ChunksCache.sideSize / 2) / ChunksCache.sideSize)
         };
-        const a = scale.width / (2 * ChunksCache.sideSize) + 2;
-        const b = scale.height / (2 * ChunksCache.sideSize) + 2;
+        const a = scale / (2 * ChunksCache.sideSize) + 2;
+        const b = scale / (2 * ChunksCache.sideSize) + 2;
         for (let i = Math.trunc(-a); i < a; i++)
             for (let j = Math.trunc(-b); j < b; j++)
                 this.prepare(origin.x + i, origin.y + j);

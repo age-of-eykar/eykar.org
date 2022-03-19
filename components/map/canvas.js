@@ -11,7 +11,7 @@ export function MapCanvas({ setClickedPlotCallback }) {
   // center of the map (normal coordinates)
   const center = useRef({ x: 0.0, y: 0.0 });
   // scale in cells displayed per width
-  const scale = useRef({ width: 32.0, height: 32.0 });
+  const scale = useRef(32.0);
 
   const canvasRef = useRef(null);
   const pixelRatio = (typeof window === 'undefined') ? 1 : window.devicePixelRatio;
