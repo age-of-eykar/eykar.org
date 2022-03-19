@@ -20,7 +20,7 @@ export default function Home() {
 
         <button className={
           [styles.button, styles.play].join(" ")} onClick={() => {
-            if (InjectedConnector.ready) {
+            if (InjectedConnector.ready()) {
               connect(new InjectedConnector())
               router.push('/game');
             } else {

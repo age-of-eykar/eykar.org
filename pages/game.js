@@ -15,7 +15,7 @@ export default function Game() {
     const [page, setPage] = useState(undefined);
 
     useEffect(() => {
-        if (!InjectedConnector.ready)
+        if (!InjectedConnector.ready())
             return;
         if (!account) {
             connect(new InjectedConnector())
@@ -46,7 +46,7 @@ export default function Game() {
             <div className={styles.interactive}>
                 <MapCanvas setClickedPlotCallback={() => { }} />
                 <div className={[styles.overlay, styles.fadeIn].join(" ")}>
-                    {InjectedConnector.ready
+                    {InjectedConnector.ready()
                         ? component
                         : <WalletMenu />}
                 </div>
