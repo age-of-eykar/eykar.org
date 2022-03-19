@@ -104,30 +104,38 @@ export class SpeedControler {
 
     // plots per second
     getSpeed() {
+        let speed;
         if (this.controledSpeed)
-            return this.controledSpeed;
-        let x;
-        let y;
-        if (this.up && this.upLast)
-            y = 1;
-        else if (this.down)
-            y = -1;
-        else
-            y = 0;
+            speed = this.controledSpeed;
+        else {
+            let x;
+            let y;
+            if (this.up && this.upLast)
+                y = 1;
+            else if (this.down)
+                y = -1;
+            else
+                y = 0;
 
-        if (this.left && this.leftLast)
-            x = -1;
-        else if (this.right)
-            x = 1;
-        else
-            x = 0;
+            if (this.left && this.leftLast)
+                x = -1;
+            else if (this.right)
+                x = 1;
+            else
+                x = 0;
 
-        const norm = this.scale.current / 2;
-        const size = Math.sqrt(norm * norm / 2);
-        if (x !== 0 && y !== 0)
-            return { x: x * size, y: y * size };
-        else
-            return { x: x * norm, y: y * norm };
+            const norm = this.scale.current / 2;
+            const size = Math.sqrt(norm * norm / 2);
+            if (x !== 0 && y !== 0)
+                speed = { x: x * size, y: y * size };
+            else
+                speed = { x: x * norm, y: y * norm };
+        }
+        this.refresh({
+            x: this.center.current.x + speed.x / 2,
+            y: this.center.current.y + speed.y / 2
+        });
+        return speed;
     }
 
     refresh(expectedCenter) {
@@ -162,11 +170,7 @@ export class SpeedControler {
                 break;
         }
 
-        const speed = this.getSpeed(this.center, this.scale);
-        this.refresh({
-            x: this.center.current.x + speed.x / 2,
-            y: this.center.current.y + speed.y / 2
-        });
+        this.getSpeed(this.center, this.scale);
     }
 
     onKeyUp(event) {
