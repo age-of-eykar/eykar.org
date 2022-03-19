@@ -10,8 +10,8 @@ function animateScene(gl, cache, center, scale, keyListeners, canvas, shaderProg
     gl.viewport(0, 0, canvas.width, canvas.height);
     gl.useProgram(shaderProgram);
     const shaderScale = gl.getUniformLocation(shaderProgram, "scale");
-    gl.uniform2fv(shaderScale, [2 * ChunksCache.sideSize / scale.current.width,
-    2 * (canvas.width / canvas.height) * ChunksCache.sideSize / scale.current.height]);
+    gl.uniform2fv(shaderScale, [2 * ChunksCache.sideSize / scale.current,
+    2 * (canvas.width / canvas.height) * ChunksCache.sideSize / scale.current]);
     const locationShift = gl.getUniformLocation(shaderProgram, "shift");
     gl.uniform2fv(locationShift, [center.current.x / ChunksCache.sideSize,
     center.current.y / ChunksCache.sideSize]);
@@ -31,7 +31,7 @@ function animateScene(gl, cache, center, scale, keyListeners, canvas, shaderProg
 
         if (chunk.vertexes)
             gl.drawArrays(gl.TRIANGLES, 0, chunk.vertexes.length / 2);
-    })
+    }, canvas.height / canvas.width)
 
     window.requestAnimationFrame(function (currentTime) {
         const deltaTime = currentTime - previousTime;

@@ -6,10 +6,7 @@ export class WheelListener {
 
     handleMouseWheel(event) {
         const change = event.deltaY / 1000;
-        this.setScale({
-            width: Math.min(Math.max(this.scale.current.width + change * this.scale.current.width, 1), 256),
-            height: Math.min(Math.max(this.scale.current.height + change * this.scale.current.height, 1), 256)
-        })
+        this.setScale(Math.min(Math.max(this.scale.current + change * this.scale.current, 1), 256))
         event.preventDefault();
     }
 }
@@ -36,15 +33,16 @@ export class PanningListener {
 
     handleMouseUp(event) {
         this.isDown = false;
-        this.cache.refresh(this.center.current, this.scale.current);
+        this.cache.refresh(this.center.current, this.scale.current,
+            this.windowSize.height / this.windowSize.width);
     }
 
     handleMouseMove(event) {
         // don't pan if mouse is not pressed
         if (!this.isDown) return;
 
-        const x = (event.offsetX - this.last[0]) * this.scale.current.width / this.windowSize.width;
-        const y = (event.offsetY - this.last[1]) * this.scale.current.width / this.windowSize.width;
+        const x = (event.offsetX - this.last[0]) * this.scale.current / this.windowSize.width;
+        const y = (event.offsetY - this.last[1]) * this.scale.current / this.windowSize.width;
 
         this.last = [event.offsetX, event.offsetY];
         this.center.current = { x: this.center.current.x - x, y: this.center.current.y + y };
@@ -54,10 +52,11 @@ export class PanningListener {
 
 export class KeyListeners {
     constructor(
-        center, scale
+        center, scale, windowSize
     ) {
         this.center = center;
         this.scale = scale;
+        this.windowSize = windowSize;
 
         this.upLast = false;
         this.up = false;
@@ -90,7 +89,7 @@ export class KeyListeners {
         else
             x = 0;
 
-        const norm = this.scale.current.width / 2;
+        const norm = this.scale.current / 2;
         const size = Math.sqrt(norm * norm / 2);
         if (x !== 0 && y !== 0)
             return { x: x * size, y: y * size };
@@ -99,7 +98,8 @@ export class KeyListeners {
     }
 
     refresh(expectedCenter) {
-        this.cache.refresh(expectedCenter, this.scale.current);
+        this.cache.refresh(expectedCenter, this.scale.current,
+            this.windowSize.current.height / this.windowSize.current.width);
     }
 
     onKeyDown(event) {

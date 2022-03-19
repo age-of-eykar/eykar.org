@@ -22,11 +22,11 @@ export function MapCanvas({ setClickedPlotCallback }) {
 
   useEffect(() => {
 
-    const keyListeners = new KeyListeners(center, scale);
+    const keyListeners = new KeyListeners(center, scale, windowSize);
 
     // handle canvas drawing
     cache = startDrawing(canvasRef.current, windowSize, center, scale, keyListeners)
-    cache.refresh(center.current, scale.current);
+    cache.refresh(center.current, scale.current, windowSize.height / windowSize.width);
 
     // handle listeners creation
     const panningListener = new PanningListener(center, scale, windowSize, cache);
@@ -45,7 +45,7 @@ export function MapCanvas({ setClickedPlotCallback }) {
 
     const wheelListener = new WheelListener(scale, (newScale) => {
       scale.current = newScale;
-      cache.refresh(center.current, newScale);
+      cache.refresh(center.current, newScale, windowSize.height / windowSize.width);
     });
     const listenMouseWheel = wheelListener.handleMouseWheel.bind(wheelListener);
     window.addEventListener("mousewheel", listenMouseWheel);
