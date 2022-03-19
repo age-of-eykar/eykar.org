@@ -29,7 +29,7 @@ export default function Game() {
             } else
                 setPage('tutorial')
         }
-    }, [account, data, loading])
+    }, [account, data, loading, page, contract, connect])
 
     let component;
     if (page === undefined)
