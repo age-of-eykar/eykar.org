@@ -99,7 +99,7 @@ export class KeyListeners {
 
     refresh(expectedCenter) {
         this.cache.refresh(expectedCenter, this.scale.current,
-            this.windowSize.current.height / this.windowSize.current.width);
+            this.windowSize.height / this.windowSize.width);
     }
 
     onKeyDown(event) {
