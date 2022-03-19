@@ -1,5 +1,3 @@
-import { ChunksCache } from "./calc/cache";
-
 export class WheelListener {
     constructor(scale, setScale) {
         this.scale = scale;
@@ -14,6 +12,43 @@ export class WheelListener {
         })
         event.preventDefault();
     }
+}
+
+export class PanningListener {
+    constructor(
+        center, scale, cache
+    ) {
+        this.center = center;
+        this.scale = scale;
+        this.cache = cache;
+
+        this.isDown = false;
+    }
+
+    handleMouseDown(event) {
+        this.isDown = true;
+        this.last = [
+            event.offsetX,
+            event.offsetY
+        ];
+    }
+
+    handleMouseUp(event) {
+        this.isDown = false;
+        this.cache.refresh(this.center.current, this.scale.current);
+    }
+
+    handleMouseMove(event) {
+        // don't pan if mouse is not pressed
+        if (!this.isDown) return;
+
+        const x = (event.offsetX - this.last[0]) * this.scale.current.width / 1024;
+        const y = (event.offsetY - this.last[1]) * this.scale.current.height / 1024;
+
+        this.last = [event.offsetX, event.offsetY];
+        this.center.current = { x: this.center.current.x - x, y: this.center.current.y + y };
+    }
+
 }
 
 export class KeyListeners {

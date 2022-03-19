@@ -1,7 +1,7 @@
 import styles from '../../styles/Map.module.css'
 import React, { useRef, useEffect, useState } from "react";
 import debounce from "debounce";
-import { WheelListener, KeyListeners } from "./listeners";
+import { WheelListener, KeyListeners, PanningListener } from "./listeners";
 import { startDrawing } from "./draw";
 
 function MapCanvas({ setClickedPlotCallback }) {
@@ -25,22 +25,30 @@ function MapCanvas({ setClickedPlotCallback }) {
     // handle canvas drawing
     const cache = startDrawing(canvasRef.current, windowSize, center, scale, keyListeners)
     cache.refresh(center.current, scale.current);
+    const window = canvasRef.current;
 
     // handle listeners creation
-    const canvas = canvasRef.current;
+    const panningListener = new PanningListener(center, scale, cache);
+    const panningStart = panningListener.handleMouseDown.bind(panningListener);
+    const panningStop = panningListener.handleMouseUp.bind(panningListener);
+    const panningMove = panningListener.handleMouseMove.bind(panningListener);
+    window.addEventListener("mousedown", panningStart);
+    window.addEventListener("mouseup", panningStop);
+    window.addEventListener("mousemove", panningMove);
+
     keyListeners.setCache(cache);
     const listenKeyDown = keyListeners.onKeyDown.bind(keyListeners);
     const listenKeyUp = keyListeners.onKeyUp.bind(keyListeners);
-    canvas.addEventListener("keydown", listenKeyDown);
-    canvas.addEventListener("keyup", listenKeyUp);
+    window.addEventListener("keydown", listenKeyDown);
+    window.addEventListener("keyup", listenKeyUp);
 
     const wheelListener = new WheelListener(scale, (newScale) => {
       scale.current = newScale;
       cache.refresh(center.current, newScale);
     });
     const listenMouseWheel = wheelListener.handleMouseWheel.bind(wheelListener);
-    canvas.addEventListener("mousewheel", listenMouseWheel);
-    canvas.addEventListener("onwheel", listenMouseWheel);
+    window.addEventListener("mousewheel", listenMouseWheel);
+    window.addEventListener("onwheel", listenMouseWheel);
 
     // screen resize
     const handler = debounce(() => setWindowSize({
@@ -51,10 +59,13 @@ function MapCanvas({ setClickedPlotCallback }) {
     window.addEventListener("resize", handler);
     return () => {
       window.removeEventListener("resize", handler);
+      window.removeEventListener("mousedown", panningStart);
+      window.removeEventListener("mouseup", panningStop);
+      window.removeEventListener("mousemove", panningMove);
       window.removeEventListener("keydown", listenKeyDown);
       window.removeEventListener("keyup", listenKeyUp);
-      canvas.removeEventListener("mousewheel", listenMouseWheel);
-      canvas.removeEventListener("onwheel", listenMouseWheel);
+      window.removeEventListener("mousewheel", listenMouseWheel);
+      window.removeEventListener("onwheel", listenMouseWheel);
     };
   }, [windowSize, pixelRatio]);
 
