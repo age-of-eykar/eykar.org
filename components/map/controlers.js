@@ -47,19 +47,7 @@ export class PanningControler {
         this.cache.refresh({
             x: this.center.current.x - stop[0] / 2,
             y: this.center.current.y + stop[1] / 2
-        }, this.scale.current / 2,
-            this.windowSize.height / this.windowSize.width);
-
-        this.cache.refresh({
-            x: this.center.current.x,
-            y: this.center.current.y + stop[1] / 2
-        }, this.scale.current / 2,
-            this.windowSize.height / this.windowSize.width);
-
-        this.cache.refresh({
-            x: this.center.current.x - stop[0] / 2,
-            y: this.center.current.y
-        }, this.scale.current / 2,
+        }, this.scale.current * 2,
             this.windowSize.height / this.windowSize.width);
     }
 
