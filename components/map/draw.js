@@ -5,7 +5,7 @@ import { buildShaderProgram } from "./shadertools";
 
 
 // gl, cache, center, scale, stops, colors, glCanvas, shaderProgram
-function animateScene(gl, cache, center, scale, keyListeners, canvas, shaderProgram) {
+function animateScene(gl, cache, center, scale, keyControlers, canvas, shaderProgram) {
     let previousTime = performance.now();
     gl.viewport(0, 0, canvas.width, canvas.height);
     gl.useProgram(shaderProgram);
@@ -35,14 +35,14 @@ function animateScene(gl, cache, center, scale, keyListeners, canvas, shaderProg
 
     window.requestAnimationFrame(function (currentTime) {
         const deltaTime = currentTime - previousTime;
-        const speed = keyListeners.getSpeed();
+        const speed = keyControlers.getSpeed();
         center.current.x += speed.x * deltaTime / 1000;
         center.current.y += speed.y * deltaTime / 1000;
-        animateScene(gl, cache, center, scale, keyListeners, canvas, shaderProgram);
+        animateScene(gl, cache, center, scale, keyControlers, canvas, shaderProgram);
     });
 }
 
-export const startDrawing = (canvas, windowSize, center, scale, keyListeners) => {
+export const startDrawing = (canvas, windowSize, center, scale, keyControlers) => {
 
     // canvas fixes
     canvas.width = windowSize.width;
@@ -62,6 +62,6 @@ export const startDrawing = (canvas, windowSize, center, scale, keyListeners) =>
     ];
 
     const shaderProgram = buildShaderProgram(gl, shaderSet);
-    animateScene(gl, cache, center, scale, keyListeners, canvas, shaderProgram);
+    animateScene(gl, cache, center, scale, keyControlers, canvas, shaderProgram);
     return cache;
 }

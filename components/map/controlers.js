@@ -1,4 +1,4 @@
-export class WheelListener {
+export class WheelControler {
     constructor(scale, setScale) {
         this.scale = scale;
         this.setScale = setScale;
@@ -10,19 +10,21 @@ export class WheelListener {
     }
 }
 
-export class PanningListener {
+export class PanningControler {
     constructor(
-        center, scale, windowSize, cache
+        center, scale, windowSize, canvasRef, cache
     ) {
         this.center = center;
         this.scale = scale;
         this.windowSize = windowSize;
+        this.canvasRef = canvasRef;
         this.cache = cache;
-
         this.isDown = false;
     }
 
     handleMouseDown(event) {
+        if (event.target !== this.canvasRef.current)
+            return;
         this.isDown = true;
         this.last = [
             event.offsetX,
@@ -35,6 +37,8 @@ export class PanningListener {
     }
 
     handleMouseUp(event) {
+        if (!this.isDown)
+            return;
         this.isDown = false;
         const stop = [
             (this.scale.current / this.windowSize.width) * (event.offsetX - this.start[0]),
@@ -60,6 +64,11 @@ export class PanningListener {
     }
 
     handleMouseMove(event) {
+        if (event.target !== this.canvasRef.current &&
+            event.target.tagName !== "HTML") {
+            return;
+        }
+
         // don't pan if mouse is not pressed
         if (!this.isDown) return;
         const norm = this.scale.current / this.windowSize.width;
@@ -72,7 +81,7 @@ export class PanningListener {
 
 }
 
-export class KeyListeners {
+export class SpeedControler {
     constructor(
         center, scale, windowSize
     ) {

@@ -1,7 +1,7 @@
 import styles from '../../styles/Map.module.css'
 import React, { useRef, useEffect, useState } from "react";
 import debounce from "debounce";
-import { WheelListener, KeyListeners, PanningListener } from "./listeners";
+import { WheelControler, SpeedControler, PanningControler } from "./controlers";
 import { startDrawing } from "./draw";
 
 export let cache;
@@ -22,32 +22,32 @@ export function MapCanvas({ setClickedPlotCallback }) {
 
   useEffect(() => {
 
-    const keyListeners = new KeyListeners(center, scale, windowSize);
+    const keyControlers = new SpeedControler(center, scale, windowSize);
 
     // handle canvas drawing
-    cache = startDrawing(canvasRef.current, windowSize, center, scale, keyListeners)
+    cache = startDrawing(canvasRef.current, windowSize, center, scale, keyControlers)
     cache.refresh(center.current, scale.current, windowSize.height / windowSize.width);
 
     // handle listeners creation
-    const panningListener = new PanningListener(center, scale, windowSize, cache);
-    const panningStart = panningListener.handleMouseDown.bind(panningListener);
-    const panningStop = panningListener.handleMouseUp.bind(panningListener);
-    const panningMove = panningListener.handleMouseMove.bind(panningListener);
+    const panningControler = new PanningControler(center, scale, windowSize, canvasRef, cache);
+    const panningStart = panningControler.handleMouseDown.bind(panningControler);
+    const panningStop = panningControler.handleMouseUp.bind(panningControler);
+    const panningMove = panningControler.handleMouseMove.bind(panningControler);
     window.addEventListener("mousedown", panningStart);
     window.addEventListener("mouseup", panningStop);
     window.addEventListener("mousemove", panningMove);
 
-    keyListeners.setCache(cache);
-    const listenKeyDown = keyListeners.onKeyDown.bind(keyListeners);
-    const listenKeyUp = keyListeners.onKeyUp.bind(keyListeners);
+    keyControlers.setCache(cache);
+    const listenKeyDown = keyControlers.onKeyDown.bind(keyControlers);
+    const listenKeyUp = keyControlers.onKeyUp.bind(keyControlers);
     window.addEventListener("keydown", listenKeyDown);
     window.addEventListener("keyup", listenKeyUp);
 
-    const wheelListener = new WheelListener(scale, (newScale) => {
+    const wheelControler = new WheelControler(scale, (newScale) => {
       scale.current = newScale;
       cache.refresh(center.current, newScale, windowSize.height / windowSize.width);
     });
-    const listenMouseWheel = wheelListener.handleMouseWheel.bind(wheelListener);
+    const listenMouseWheel = wheelControler.handleMouseWheel.bind(wheelControler);
     window.addEventListener("mousewheel", listenMouseWheel);
     window.addEventListener("onwheel", listenMouseWheel);
 
