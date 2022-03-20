@@ -2,7 +2,7 @@ import { szudzik } from "../../../utils/deterministic";
 
 export class ChunksCache {
 
-    static halfsize = 32;
+    static halfsize = 48;
     static sideSize = 2 * ChunksCache.halfsize + 1;
 
     constructor(capacity, webgl) {
