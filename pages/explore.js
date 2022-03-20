@@ -1,4 +1,4 @@
-import Header from "../components/header";
+import Header from "../components/headers/normal";
 import { MapCanvas } from "../components/map/canvas";
 
 export default function Explore() {

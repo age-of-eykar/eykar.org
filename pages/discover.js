@@ -1,5 +1,5 @@
 import styles from '../styles/Discover.module.css'
-import Header from "../components/header";
+import Header from "../components/headers/normal";
 
 function Discover() {
 

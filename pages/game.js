@@ -7,6 +7,7 @@ import WalletMenu from '../components/walletmenu'
 import Tutorial from "../components/game/tutorial"
 import Mint from "../components/game/mint"
 import { useEykarContract } from '../hooks/eykar'
+import Header from "../components/headers/game";
 
 export default function Game() {
     const { account, connect } = useStarknet()
@@ -52,6 +53,7 @@ export default function Game() {
     return (
         <div className={styles.screen}>
             <div className={styles.interactive}>
+                <Header />
                 <MapCanvas setClickedPlotCallback={() => { }} />
                 <div className={[styles.overlay, styles.fadeIn].join(" ")}>
                     {InjectedConnector.ready()

@@ -10,6 +10,18 @@
     backdrop-filter: blur(16px);
 }
 
+.game_nav {
+    z-index        : 1;
+    position       : fixed;
+    left           : calc(50% - 330px);
+    width          : 660px;
+    height         : 60px;
+    border-radius  : 0px 0px 16px 16px;
+    background     : rgba(49, 44, 42, 0.6);
+    box-shadow     : 0px 0px 150px rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(16px);
+}
+
 .icons {
     display        : flex;
     justify-content: center;
@@ -35,6 +47,7 @@
 }
 
 .logo {
+    cursor: pointer;
     width : 90px;
     margin: 4px 30px 0px 4px;
 }
