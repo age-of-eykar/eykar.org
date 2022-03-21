@@ -3,11 +3,11 @@ import React from 'react'
 import Powered from '../components/powered'
 import WalletMenu from '../components/walletmenu'
 import Link from 'next/link'
-import { useStarknet, InjectedConnector } from '@starknet-react/core'
+import { useStarknet } from '@starknet-react/core'
 import { useRouter } from 'next/router'
 
 export default function Home() {
-  const { account, connect } = useStarknet()
+  const { account, hasStarknet, connectBrowserWallet } = useStarknet()
   const [connectMenuToggled, setConnectMenuToggled] = React.useState(false);
   const router = useRouter()
 
@@ -19,20 +19,12 @@ export default function Home() {
         <img className={styles.logo} src="/logo.svg" alt="Eykar Logo" />
 
         <button className={
-          [styles.button, styles.play].join(" ")} onClick={() => {
-            if (InjectedConnector.ready()) {
-              connect(new InjectedConnector())
-              router.push('/game');
-            } else {
-              setConnectMenuToggled(true)
-            }
+          [styles.button, styles.highlighted, styles.toggled].join(" ")} onClick={() => {
+
           }} >
           <div className={styles.button_div}></div>
-          <svg className={styles.playicon} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-          </svg>
-          <p className={styles.play_button_text}>
-            Play
+          <p className={styles.button_text}>
+            Coming soon
           </p>
         </button>
 
