@@ -48,10 +48,10 @@ export class ChunksCache {
     prepare(x, y) {
         let chunk = this.cached.get(szudzik(x, y));
         if (chunk === undefined)
-            chunk = new Chunk(x, y, (chunk) => {
+            chunk = new Chunk(x, y, (chunk, vertexes, colors) => {
                 chunk.bufferInfo = createBufferInfoFromArrays(this.webgl, {
-                    position: { numComponents: 2, data: chunk.vertexes },
-                    fillColor: { numComponents: 3, data: chunk.colors }
+                    position: { numComponents: 2, data: vertexes },
+                    fillColor: { numComponents: 3, data: colors }
                 });
             });
         // should be added to the end of the map
@@ -97,9 +97,8 @@ class Chunk {
             size: ChunksCache.halfsize
         });
         worker.onmessage = ({ data: { vertexes, colors } }) => {
-            this.vertexes = vertexes;
-            this.colors = colors;
             worker.terminate();
+            this.refresh(this, vertexes, colors);
             if (!waitingCache)
                 this.setReady();
         };
@@ -126,7 +125,6 @@ class Chunk {
     }
 
     setReady() {
-        this.refresh(this);
         this.ready = true;
     }
 
