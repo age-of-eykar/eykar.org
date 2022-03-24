@@ -1,4 +1,5 @@
 import { szudzik } from "../../../utils/deterministic";
+import { createBufferInfoFromArrays } from "twgl.js";
 
 export class ChunksCache {
 
@@ -47,15 +48,14 @@ export class ChunksCache {
     prepare(x, y) {
         let chunk = this.cached.get(szudzik(x, y));
         if (chunk === undefined)
-            chunk = new Chunk(x, y, this.webgl.createBuffer(), this.webgl.createBuffer(), (chunk) => {
-                this.webgl.bindBuffer(this.webgl.ARRAY_BUFFER, chunk.vertexBuffer);
-                this.webgl.bufferData(this.webgl.ARRAY_BUFFER, chunk.vertexes, this.webgl.STATIC_DRAW);
-                this.webgl.bindBuffer(this.webgl.ARRAY_BUFFER, chunk.colorBuffer);
-                this.webgl.bufferData(this.webgl.ARRAY_BUFFER, chunk.colors, this.webgl.STATIC_DRAW);
+            chunk = new Chunk(x, y, (chunk) => {
+                chunk.bufferInfo = createBufferInfoFromArrays(this.webgl, {
+                    position: { numComponents: 2, data: chunk.vertexes },
+                    fillColor: { numComponents: 3, data: chunk.colors }
+                });
             });
         // should be added to the end of the map
         this.cached.set(szudzik(x, y), chunk);
-
         while (this.cached.size > this.capacity) {
             const key = this.cached.keys().next().value;
             const chunk = this.cached.get(key);
@@ -71,11 +71,9 @@ export class ChunksCache {
 }
 
 class Chunk {
-    constructor(x, y, vertexBuffer, colorBuffer, refresh) {
+    constructor(x, y, refresh) {
         this.x = x;
         this.y = y;
-        this.vertexBuffer = vertexBuffer;
-        this.colorBuffer = colorBuffer;
         this.plots = new Map();
         this.ready = false;
         this.refresh = refresh;
@@ -128,8 +126,8 @@ class Chunk {
     }
 
     setReady() {
-        this.ready = true;
         this.refresh(this);
+        this.ready = true;
     }
 
 }
