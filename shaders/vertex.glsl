@@ -1,7 +1,10 @@
 #version 300 es
 
-uniform vec2 scale;
-uniform vec2 shift;
+#define PI 3.1415926538
+
+uniform float scale;
+uniform vec2 ratio;
+uniform vec2 center;
 in vec3 fillColor;
 in vec2 position;
 
@@ -9,5 +12,5 @@ out vec3 color;
 
 void main() {
   color = fillColor;
-  gl_Position = vec4((position-shift) * scale, 0.0, 1.0);
+  gl_Position = vec4((position - center) * ratio, 0.0, scale);
 }

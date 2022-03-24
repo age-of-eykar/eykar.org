@@ -9,12 +9,16 @@ function animateScene(gl, cache, center, scale, keyControlers, canvas, shaderPro
     let previousTime = performance.now();
     gl.viewport(0, 0, canvas.width, canvas.height);
     gl.useProgram(shaderProgram);
+
     const shaderScale = gl.getUniformLocation(shaderProgram, "scale");
-    gl.uniform2fv(shaderScale, [2 * ChunksCache.sideSize / scale.current,
-    2 * (canvas.width / canvas.height) * ChunksCache.sideSize / scale.current]);
-    const locationShift = gl.getUniformLocation(shaderProgram, "shift");
-    gl.uniform2fv(locationShift, [center.current.x / ChunksCache.sideSize,
-    center.current.y / ChunksCache.sideSize]);
+    gl.uniform1f(shaderScale, scale.current / 2);
+
+    const ratio = gl.getUniformLocation(shaderProgram, "ratio");
+    gl.uniform2fv(ratio, [1.0, (canvas.width / canvas.height)]);
+
+    const vecCenter = gl.getUniformLocation(shaderProgram, "center");
+    gl.uniform2fv(vecCenter, [center.current.x,
+    center.current.y]);
 
     cache.forEachChunk(center.current, scale.current, (chunk) => {
         gl.bindBuffer(gl.ARRAY_BUFFER, chunk.colorBuffer);
