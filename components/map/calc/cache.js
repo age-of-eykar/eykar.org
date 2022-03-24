@@ -48,9 +48,9 @@ export class ChunksCache {
     prepare(x, y) {
         let chunk = this.cached.get(szudzik(x, y));
         if (chunk === undefined)
-            chunk = new Chunk(x, y, (chunk, vertexes, colors) => {
+            chunk = new Chunk(x, y, (chunk, vertices, colors) => {
                 chunk.bufferInfo = createBufferInfoFromArrays(this.webgl, {
-                    position: { numComponents: 2, data: vertexes },
+                    position: { numComponents: 2, data: vertices },
                     fillColor: { numComponents: 3, data: colors }
                 });
             });
@@ -96,9 +96,9 @@ class Chunk {
             chunkY: this.y,
             size: ChunksCache.halfsize
         });
-        worker.onmessage = ({ data: { vertexes, colors } }) => {
+        worker.onmessage = ({ data: { vertices, colors } }) => {
             worker.terminate();
-            this.refresh(this, vertexes, colors);
+            this.refresh(this, vertices, colors);
             if (!waitingCache)
                 this.setReady();
         };

@@ -44,6 +44,6 @@ self.onmessage = ({ data: { chunkX, chunkY, size } }) => {
     }
 
     self.postMessage({
-        vertexes: shiftedPoints, colors: pointColors
+        vertices: shiftedPoints, colors: pointColors
     }, null, [shiftedPoints, pointColors]);
 };
