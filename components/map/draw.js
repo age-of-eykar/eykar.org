@@ -1,22 +1,17 @@
 import { ChunksCache } from "./calc/cache";
 import fragmentShader from '../../shaders/fragment.glsl'
 import vertexShader from '../../shaders/vertex.glsl'
-import { createProgramInfo, setUniforms, setBuffersAndAttributes, drawBufferInfo, m4, v3 } from "twgl.js";
+import { createProgramInfo, setUniforms, setBuffersAndAttributes, drawBufferInfo } from "twgl.js";
 
 function animateScene(gl, cache, center, scale, keyControlers, canvas, programInfo) {
     let previousTime = performance.now();
     gl.viewport(0, 0, canvas.width, canvas.height);
     gl.useProgram(programInfo.program);
-
-    const ratio = (canvas.width / canvas.height);
-
-    let projectionMatrix =
-        m4.translate(
-            m4.scaling(v3.create(2 / scale.current, 2 * ratio / scale.current, 1)),
-            v3.create(-center.current.x, -center.current.y, 1));
-
     setUniforms(programInfo, {
-        matrix: projectionMatrix,
+        scale: scale.current / 2,
+        ratio: [1.0, (canvas.width / canvas.height)],
+        center: [center.current.x,
+        center.current.y],
     });
 
     cache.forEachChunk(center.current, scale.current, (chunk) => {
