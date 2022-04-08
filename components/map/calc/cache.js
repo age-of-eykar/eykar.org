@@ -1,5 +1,6 @@
 import { szudzik } from "../../../utils/deterministic";
-import { createBufferInfoFromArrays } from "twgl.js";
+import { createBufferInfoFromArrays, setAttribInfoBufferFromArray } from "twgl.js";
+import { useColonyColor } from "../../../hooks/colors";
 
 export class ChunksCache {
 
@@ -53,7 +54,11 @@ export class ChunksCache {
                     position: { numComponents: 2, data: vertices },
                     fillColor: { numComponents: 3, data: colors }
                 });
-            });
+            },
+                (chunk) => {
+                    setAttribInfoBufferFromArray(this.webgl, chunk.bufferInfo.attribs.fillColor, chunk.colors);
+                },
+            );
         // should be added to the end of the map
         this.cached.set(szudzik(x, y), chunk);
         while (this.cached.size > this.capacity) {
@@ -71,12 +76,12 @@ export class ChunksCache {
 }
 
 class Chunk {
-    constructor(x, y, refresh) {
+    constructor(x, y, loadBuffer, updateColorBuffer) {
         this.x = x;
         this.y = y;
-        this.plots = new Map();
         this.ready = false;
-        this.refresh = refresh;
+        this.loadBuffer = loadBuffer;
+        this.updateColorBuffer = updateColorBuffer;
         (async () => { this.prepare(); })();
     }
 
@@ -84,6 +89,26 @@ class Chunk {
         return {
             x: this.x * ChunksCache.sideSize - ChunksCache.sideSize / 2,
             y: this.y * ChunksCache.sideSize - ChunksCache.sideSize / 2
+        }
+    }
+
+    updateColors() {
+        const topLeft = this.getTopLeft();
+        for (const plot of this.colonies) {
+            const [x, y] = [plot.x - topLeft.x, plot.y - topLeft.y];
+            let [start, stop] = [0, this.stops[0]];
+            if (x != 0 || y != 0) {
+                const index = x + y * ChunksCache.sideSize;
+                start = this.stops[index - 1];
+                stop = this.stops[index];
+            }
+
+            for (let i = start; i < stop; i++) {
+                const [r, g, b] = useColonyColor(plot.colony_id);
+                this.colors[i * 3] = r;
+                this.colors[i * 3 + 1] = g;
+                this.colors[i * 3 + 2] = b;
+            }
         }
     }
 
@@ -96,36 +121,32 @@ class Chunk {
             chunkY: this.y,
             size: ChunksCache.halfsize
         });
-        worker.onmessage = ({ data: { vertices, colors } }) => {
+        worker.onmessage = ({ data: { vertices, colors, stops } }) => {
             worker.terminate();
-            this.refresh(this, vertices, colors);
+            this.colors = colors;
+            this.stops = stops;
             if (!waitingCache)
-                this.setReady();
+                this.updateColors();
+            this.loadBuffer(this, vertices, colors);
+            this.ready = true;
         };
 
-        /*
-        const newPlots = await (await fetch("https://cache.eykar.org/colonies",
+        const topLeft = this.getTopLeft();
+        this.colonies = await (await fetch("https://cache.eykar.org/colonies",
             {
                 method: 'POST', body: JSON.stringify({
-                    "xmin": this.x, "ymin": this.y,
-                    "xmax": this.x + ChunksCache.sideSize, "ymax": this.y + ChunksCache.sideSize
+                    "xmin": topLeft.x, "ymin": topLeft.y,
+                    "xmax": topLeft.x + ChunksCache.sideSize, "ymax": topLeft.y + ChunksCache.sideSize
                 })
             })).json();
-            */
-        const newPlots = [];
+
         waitingCache = false;
-
-        for (const plotKey in newPlots) {
-            const plot = newPlots[plotKey];
-            this.plots.set(szudzik(plot.x, plot.y), plot.colony_id);
+        if (this.ready) {
+            console.log("updating buffers!")
+            this.updateColors();
+            this.updateColorBuffer(this);
         }
-
-        if (this.points)
-            this.setReady();
     }
 
-    setReady() {
-        this.ready = true;
-    }
 
 }

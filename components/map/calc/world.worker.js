@@ -44,6 +44,6 @@ self.onmessage = ({ data: { chunkX, chunkY, size } }) => {
     }
 
     self.postMessage({
-        vertices: shiftedPoints, colors: pointColors
+        vertices: shiftedPoints, colors: pointColors, stops: voronoi.stops
     }, null, [shiftedPoints, pointColors]);
 };
