@@ -5,6 +5,7 @@ import { Spinner } from "../components/spinner"
 import { speedControler, MapCanvas } from "../components/map/canvas"
 import WalletMenu from '../components/walletmenu'
 import Tutorial from "../components/game/tutorial"
+import Colonies from "../components/game/colonies"
 import Mint from "../components/game/mint"
 import { useEykarContract } from '../hooks/eykar'
 import Header from "../components/headers/game";
@@ -33,7 +34,7 @@ export default function Game() {
         if (!contract || loading)
             return;
         if (data && page === undefined) {
-            if (data.colonies_len > 0) {
+            if (data.colonies.length > 0) {
                 setPage('colonies')
             } else
                 setPage('tutorial')
@@ -48,7 +49,7 @@ export default function Game() {
     else if (page === 'mint')
         component = <Mint setPage={setPage} />;
     else if (page === 'colonies')
-        component = undefined;
+        component = <Colonies setPage={setPage} colonies={data.colonies} />;
 
     return (
         <div className={styles.screen}>
