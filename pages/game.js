@@ -54,7 +54,7 @@ export default function Game() {
         <div className={styles.screen}>
             <div className={styles.interactive}>
                 <Header />
-                <MapCanvas setClickedPlotCallback={() => { }} />
+                <MapCanvas onPlotClick={(x, y) => { }} />
                 <div className={[styles.overlay, styles.fadeIn].join(" ")}>
                     {InjectedConnector.ready()
                         ? component

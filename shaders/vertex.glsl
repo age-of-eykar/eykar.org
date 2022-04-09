@@ -12,5 +12,10 @@ void main() {
   vec2 pos = (position - center) * ratio;
   color = fillColor;
   float bottomScale = 1.25;
-  gl_Position = vec4(bottomScale * pos.x / scale, pos.y / scale, 0.0, (pos.y / scale + 1.0) / 2.0 * (bottomScale - 1.0) + 1.0);
+  float w = (pos.y / scale + 1.0) / 2.0 * (bottomScale - 1.0) + 1.0;
+  gl_Position = vec4(
+          (bottomScale * pos.x / scale),
+          (pos.y / scale),
+          0.0,
+          w);
 }

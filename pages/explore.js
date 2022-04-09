@@ -5,7 +5,7 @@ export default function Explore() {
   return (
     <>
       <Header />
-      <MapCanvas setClickedPlotCallback={() => { }} />
+      <MapCanvas onPlotClick={(x, y) => { }} />
     </>
   );
 }

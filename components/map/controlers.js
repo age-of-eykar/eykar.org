@@ -12,12 +12,13 @@ export class WheelControler {
 
 export class MouseControler {
     constructor(
-        center, scale, windowSize, canvasRef, cache
+        center, scale, windowSize, canvasRef, onPlotClick, cache
     ) {
         this.center = center;
         this.scale = scale;
         this.windowSize = windowSize;
         this.canvasRef = canvasRef;
+        this.onPlotClick = onPlotClick;
         this.cache = cache;
         this.isDown = false;
     }
@@ -54,20 +55,20 @@ export class MouseControler {
 
         if (stop[0] ** 2 + stop[1] ** 2 < 1.0) {
 
-            let x = event.clientX / this.windowSize.width - 1 / 2;
-            let y = event.clientY / this.windowSize.height;
-            const zoom = (1. + y * 0.25);
-            y -= 1 / 2;
+            let x = 2 * event.clientX / this.windowSize.width - 1;
+            let y = 2 * event.clientY / this.windowSize.height - 1;
 
-            x /= zoom;
-            y /= zoom;
+            const bottomScale = 1.25;
+            const scale = this.scale.current / 2;
+            const w = (y / scale + 1.0) / 2.0 * (bottomScale - 1.0) + 1.0;
 
-            y *= ratio;
-            x *= this.scale.current;
-            y *= this.scale.current;
+            x = (x * w * scale) / bottomScale;
+            y = (y * w * scale) * ratio;
 
             x += this.center.current.x;
             y -= this.center.current.y;
+
+            this.onPlotClick(Math.floor(x), Math.floor(y));
             console.log("clicked (" + x + " ," + y + ")");
         }
 

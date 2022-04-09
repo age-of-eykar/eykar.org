@@ -7,7 +7,7 @@ import { startDrawing } from "./draw";
 export let cache;
 export let speedControler;
 
-export function MapCanvas({ setClickedPlotCallback }) {
+export function MapCanvas({ onPlotClick }) {
 
   // center of the map (normal coordinates)
   const center = useRef({ x: 0.0, y: 0.0 });
@@ -30,7 +30,7 @@ export function MapCanvas({ setClickedPlotCallback }) {
     cache.refresh(center.current, scale.current, windowSize.height / windowSize.width);
 
     // handle listeners creation
-    const mouseControler = new MouseControler(center, scale, windowSize, canvasRef, cache);
+    const mouseControler = new MouseControler(center, scale, windowSize, canvasRef, onPlotClick, cache);
     const mouseStart = mouseControler.handleMouseDown.bind(mouseControler);
     const mouseStop = mouseControler.handleMouseUp.bind(mouseControler);
     const mouseMove = mouseControler.handleMouseMove.bind(mouseControler);
