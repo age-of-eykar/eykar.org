@@ -10,7 +10,7 @@ export class WheelControler {
     }
 }
 
-export class PanningControler {
+export class MouseControler {
     constructor(
         center, scale, windowSize, canvasRef, cache
     ) {
@@ -44,11 +44,33 @@ export class PanningControler {
             (this.scale.current / this.windowSize.width) * (event.offsetX - this.start[0]),
             (this.scale.current / this.windowSize.height) * (event.offsetY - this.start[1])
         ];
+
+        const ratio = this.windowSize.height / this.windowSize.width;
         this.cache.refresh({
             x: this.center.current.x - stop[0] / 2,
             y: this.center.current.y + stop[1] / 2
         }, this.scale.current * 2,
-            this.windowSize.height / this.windowSize.width);
+            ratio);
+
+        if (stop[0] ** 2 + stop[1] ** 2 < 1.0) {
+
+            let x = event.clientX / this.windowSize.width - 1 / 2;
+            let y = event.clientY / this.windowSize.height;
+            const zoom = (1. + y * 0.25);
+            y -= 1 / 2;
+
+            x /= zoom;
+            y /= zoom;
+
+            y *= ratio;
+            x *= this.scale.current;
+            y *= this.scale.current;
+
+            x += this.center.current.x;
+            y -= this.center.current.y;
+            console.log("clicked (" + x + " ," + y + ")");
+        }
+
     }
 
     handleMouseMove(event) {

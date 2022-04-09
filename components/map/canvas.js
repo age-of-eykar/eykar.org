@@ -1,7 +1,7 @@
 import styles from '../../styles/Map.module.css'
 import React, { useRef, useEffect, useState } from "react";
 import debounce from "debounce";
-import { WheelControler, SpeedControler, PanningControler } from "./controlers";
+import { WheelControler, SpeedControler, MouseControler } from "./controlers";
 import { startDrawing } from "./draw";
 
 export let cache;
@@ -30,13 +30,13 @@ export function MapCanvas({ setClickedPlotCallback }) {
     cache.refresh(center.current, scale.current, windowSize.height / windowSize.width);
 
     // handle listeners creation
-    const panningControler = new PanningControler(center, scale, windowSize, canvasRef, cache);
-    const panningStart = panningControler.handleMouseDown.bind(panningControler);
-    const panningStop = panningControler.handleMouseUp.bind(panningControler);
-    const panningMove = panningControler.handleMouseMove.bind(panningControler);
-    window.addEventListener("mousedown", panningStart);
-    window.addEventListener("mouseup", panningStop);
-    window.addEventListener("mousemove", panningMove);
+    const mouseControler = new MouseControler(center, scale, windowSize, canvasRef, cache);
+    const mouseStart = mouseControler.handleMouseDown.bind(mouseControler);
+    const mouseStop = mouseControler.handleMouseUp.bind(mouseControler);
+    const mouseMove = mouseControler.handleMouseMove.bind(mouseControler);
+    window.addEventListener("mousedown", mouseStart);
+    window.addEventListener("mouseup", mouseStop);
+    window.addEventListener("mousemove", mouseMove);
 
     speedControler.setCache(cache);
     const listenKeyDown = speedControler.onKeyDown.bind(speedControler);
@@ -60,9 +60,9 @@ export function MapCanvas({ setClickedPlotCallback }) {
 
     window.addEventListener("resize", handler);
     return () => {
-      window.removeEventListener("mousedown", panningStart);
-      window.removeEventListener("mouseup", panningStop);
-      window.removeEventListener("mousemove", panningMove);
+      window.removeEventListener("mousedown", mouseStart);
+      window.removeEventListener("mouseup", mouseStop);
+      window.removeEventListener("mousemove", mouseMove);
       window.removeEventListener("resize", handler);
       window.removeEventListener("keydown", listenKeyDown);
       window.removeEventListener("keyup", listenKeyUp);
