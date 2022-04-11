@@ -1,19 +1,16 @@
 import styles from '../../styles/Game.module.css'
+import Colony from "./colony";
 
-export default function Colonies({ setPage, colonies }) {
+export default function Colonies({ setPage, colonyIds }) {
 
-    console.log(colonies)
     return (
         <div className={styles.box}>
 
             <h1 className={styles.title}>Your colonies</h1>
-            <p className={styles.text}>
-                {colonies.map(id => (
-                    <li>
-                        {id.toString()}
-                    </li>
-                ))}
-            </p>
+
+            {colonyIds.map(colonyId => (
+                <Colony id={colonyId} />
+            ))}
 
         </div>
     );

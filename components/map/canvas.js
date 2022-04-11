@@ -6,6 +6,7 @@ import { startDrawing } from "./draw";
 
 export let cache;
 export let speedControler;
+export let wheelControler;
 
 export function MapCanvas({ onPlotClick }) {
 
@@ -44,7 +45,7 @@ export function MapCanvas({ onPlotClick }) {
     window.addEventListener("keydown", listenKeyDown);
     window.addEventListener("keyup", listenKeyUp);
 
-    const wheelControler = new WheelControler(scale, (newScale) => {
+    wheelControler = new WheelControler(scale, (newScale) => {
       scale.current = newScale;
       cache.refresh(center.current, newScale, windowSize.height / windowSize.width);
     });

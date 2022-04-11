@@ -2,7 +2,7 @@ import styles from '../styles/Game.module.css'
 import { useState, useEffect } from "react";
 import { useStarknet, useStarknetCall, InjectedConnector } from '@starknet-react/core'
 import { Spinner } from "../components/spinner"
-import { speedControler, MapCanvas } from "../components/map/canvas"
+import { speedControler, wheelControler, MapCanvas } from "../components/map/canvas"
 import WalletMenu from '../components/walletmenu'
 import Tutorial from "../components/game/tutorial"
 import Colonies from "../components/game/colonies"
@@ -18,10 +18,13 @@ export default function Game() {
     const [hasControl, setHasControl] = useState(true);
 
     useEffect(() => {
-        if (hasControl)
+        if (hasControl) {
             speedControler.takeControl();
-        else
+            wheelControler.takeControl();
+        } else {
             speedControler.releaseControl();
+            wheelControler.releaseControl();
+        }
     }, [hasControl])
 
     useEffect(() => {
@@ -49,7 +52,7 @@ export default function Game() {
     else if (page === 'mint')
         component = <Mint setPage={setPage} />;
     else if (page === 'colonies')
-        component = <Colonies setPage={setPage} colonies={data.colonies} />;
+        component = <Colonies setPage={setPage} colonyIds={data.colonies} />;
 
     return (
         <div className={styles.screen}>

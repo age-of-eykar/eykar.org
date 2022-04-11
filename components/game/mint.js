@@ -1,10 +1,11 @@
 import styles from '../../styles/Game.module.css'
 import { useState, useEffect } from "react";
 import { useStarknetInvoke } from '@starknet-react/core'
-import TextInput from '../input'
+import ShortTextInput from '../input'
 import { useEykarContract } from '../../hooks/eykar'
 import { Spinner } from "../spinner"
 import { useStarknetTransactionManager } from '@starknet-react/core'
+import { stringToFelt } from '../../utils/felt';
 
 export default function Mint({ setPage }) {
     const [name, setName] = useState("")
@@ -34,7 +35,7 @@ export default function Mint({ setPage }) {
                         Your ship is approaching the ground of the planet. You are going to start a new colony.
                     </p>
 
-                    <TextInput content={name} setContent={setName} />
+                    <ShortTextInput content={name} setContent={setName} />
 
                     <div className={styles.box_footer}>
 
@@ -46,7 +47,7 @@ export default function Mint({ setPage }) {
                         </div>
 
                         {name ? <button className={[styles.footer_element, styles.button].join(" ")} onClick={() => {
-                            invoke({ args: ["0x" + new Buffer.from(name).toString('hex')] })
+                            invoke({ args: [stringToFelt(name)] })
                         }}>
                             <svg className={styles.button_icon} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                             <p className={styles.button_text}>Establish a settler camp</p>
