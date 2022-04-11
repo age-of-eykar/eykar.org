@@ -12,16 +12,20 @@ function Colony({ id }) {
     let name = 'Loading...'
     let x = "x";
     let y = "y";
+    let plots = "...";
     if (!loading && data) {
         name = feltToString(data.colony.name)
         x = toNegativeNumber(data.colony.x).toString()
         y = toNegativeNumber(data.colony.y).toString()
+        plots = data.colony.plots_amount.toString()
     }
 
     return (
-        <div>
-            <h1>{name}</h1>
-            Location: {x}, {y}
+        <div className={styles.box}>
+            <h1 className={styles.title}>{name}</h1>
+            <div>Location: ({x}, {y})</div>
+            <div>Territories: {plots}</div>
+            <div>LOGO</div>
         </div>
     );
 
