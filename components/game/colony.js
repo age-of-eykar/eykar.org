@@ -13,8 +13,6 @@ function Colony({ id }) {
     let x = "x";
     let y = "y";
     if (!loading && data) {
-        console.log(data)
-        console.log(data.colony)
         name = feltToString(data.colony.name)
         x = toNegativeNumber(data.colony.x).toString()
         y = toNegativeNumber(data.colony.y).toString()

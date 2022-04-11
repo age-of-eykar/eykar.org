@@ -106,9 +106,9 @@ class Chunk {
             const [br, bg, bb] = getBiomeColors(plot.x, plot.y * 2);
             const [r, g, b] = useColonyColor(plot.colony_id);
             for (let i = start; i < stop; i++) {
-                this.colors[i * 3] = 0.5*br + 0.5*r;
-                this.colors[i * 3 + 1] = 0.5*bg + 0.5*g;
-                this.colors[i * 3 + 2] = 0.5*bb + 0.5*b;
+                this.colors[i * 3] = 0.5 * br + 0.5 * r;
+                this.colors[i * 3 + 1] = 0.5 * bg + 0.5 * g;
+                this.colors[i * 3 + 2] = 0.5 * bb + 0.5 * b;
             }
         }
     }
@@ -143,11 +143,9 @@ class Chunk {
 
         waitingCache = false;
         if (this.ready) {
-            console.log("updating buffers!")
             this.updateColors();
             this.updateColorBuffer(this);
         }
     }
-
 
 }
