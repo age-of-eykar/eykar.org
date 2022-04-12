@@ -38,7 +38,7 @@ export function useRgbFromHsl(h, s, l) {
 }
 
 export function useColonyHue(seed) {
-    return (lcg(seed, 2) % 361) / 360.0;
+    return (24 * seed % 361) / 360.0;
 }
 
 export function weightedW3C(r, g, b) {
@@ -51,6 +51,6 @@ export function useColonyColor(seed) {
     const value = 65 / 100;
     let [r, g, b] = useRgbFromHsl(hue, brightness, value);
     const norm = weightedW3C(r, g, b);
-    [r, g, b] = useRgbFromHsl(hue, brightness * Math.sqrt(norm), value);
+    [r, g, b] = useRgbFromHsl(hue, brightness * (Math.log(norm + 1.0) - 1.0), value);
     return [r, g, b];
 }
