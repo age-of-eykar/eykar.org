@@ -47,11 +47,10 @@ export function weightedW3C(r, g, b) {
 
 export function useColonyColor(seed) {
     const hue = useColonyHue(seed);
-    let brightness = 88 / 100;
-    const value = 57 / 100;
+    let brightness = 94 / 100;
+    const value = 65 / 100;
     let [r, g, b] = useRgbFromHsl(hue, brightness, value);
     const norm = weightedW3C(r, g, b);
-
     [r, g, b] = useRgbFromHsl(hue, brightness * Math.sqrt(norm), value);
     return [r, g, b];
 }

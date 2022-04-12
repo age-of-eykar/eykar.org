@@ -113,7 +113,7 @@
 
 .box::-webkit-scrollbar {
     width      : 16px;
-    margin-left: -100px;
+    margin-right: 100px;
 }
 
 .box::-webkit-scrollbar-track {
