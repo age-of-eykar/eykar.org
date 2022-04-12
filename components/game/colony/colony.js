@@ -1,8 +1,8 @@
-import styles from '../../styles/components/Colony.module.css'
-import { useEykarContract } from '../../hooks/eykar'
+import styles from '../../../styles/components/Colony.module.css'
+import { useEykarContract } from '../../../hooks/eykar'
 import { useStarknetCall } from '@starknet-react/core'
-import { feltToString, toNegativeNumber } from '../../utils/felt'
-import { useColonyColor, weightedW3C } from '../../hooks/colors'
+import { feltToString, toNegativeNumber } from '../../../utils/felt'
+import { useColonyColor, weightedW3C } from '../../../hooks/colors'
 
 function Colony({ id }) {
 

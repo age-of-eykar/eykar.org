@@ -2,7 +2,7 @@
     min-width    : 44%;
     padding      : 12px 25px;
     border-radius: 12px;
-    color        : #F3F2ED;
+    color        : #ecebe5;
     font-family  : Verdana, sans-serif;
     font-size    : 14px;
     margin       : 3%;
@@ -21,7 +21,7 @@
 }
 
 .icon {
-    width: 28px;
-    height: 28px;
+    width: 26px;
+    height: 26px;
     margin-right: 4px;
 }

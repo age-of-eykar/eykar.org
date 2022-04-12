@@ -95,25 +95,22 @@
 }
 
 .box {
-    position       : absolute;
-    align-self     : center;
-    left           : 50%;
-    top            : 50%;
-    transform      : translate(-50%, -50%);
-    background     : #191b1f;
-    backdrop-filter: blur(10px);
-    border-radius  : 20px;
-    z-index        : 1;
-    padding        : 36px 36px 36px 36px;
-    width          : 100%;
-    max-width      : 50%;
-    max-height     : 50%;
-    overflow       : auto;
+    position     : absolute;
+    align-self   : center;
+    left         : 50%;
+    top          : 50%;
+    transform    : translate(-50%, -50%);
+    background   : #191b1f;
+    border-radius: 20px 10px 10px 20px;
+    z-index      : 1;
+    padding      : 36px;
+    max-width    : 50%;
+    max-height   : 50%;
+    overflow     : auto;
 }
 
 .box::-webkit-scrollbar {
-    width      : 16px;
-    margin-right: 100px;
+    width: 16px;
 }
 
 .box::-webkit-scrollbar-track {

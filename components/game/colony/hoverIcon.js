@@ -1,8 +1,7 @@
-import styles from '../../styles/Game.module.css'
-import coloniesStyles from '../../styles/components/Colonies.module.css'
-import Colony from "./colony";
 
-export default function Colonies({ setPage, colonyIds }) {
+import styles from '../../styles/components/Colony.module.css'
+
+export default function Colonies({}) {
 
     return (
         <div className={styles.box}>
@@ -12,7 +11,6 @@ export default function Colonies({ setPage, colonyIds }) {
                     <Colony id={colonyId} />
                 ))}
             </div>
-
         </div>
     );
 }

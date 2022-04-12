@@ -5,7 +5,7 @@ import { Spinner } from "../components/spinner"
 import { speedControler, wheelControler, MapCanvas } from "../components/map/canvas"
 import WalletMenu from '../components/walletmenu'
 import Tutorial from "../components/game/tutorial"
-import Colonies from "../components/game/colonies"
+import Colonies from "../components/game/colony/colonies"
 import Mint from "../components/game/mint"
 import { useEykarContract } from '../hooks/eykar'
 import Header from "../components/headers/game";
