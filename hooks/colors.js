@@ -37,7 +37,21 @@ export function useRgbFromHsl(h, s, l) {
     return [r, g, b];
 }
 
+export function useColonyHue(seed) {
+    return (lcg(seed, 2) % 361) / 360.0;
+}
+
+export function weightedW3C(r, g, b) {
+    return r * 0.299 + b * 0.587 + g * 0.114;
+}
+
 export function useColonyColor(seed) {
-    const hue = (lcg(seed, 2)%361)/360.0;
-    return useRgbFromHsl(hue, 78/100, 57/100);
+    const hue = useColonyHue(seed);
+    let brightness = 88 / 100;
+    const value = 57 / 100;
+    let [r, g, b] = useRgbFromHsl(hue, brightness, value);
+    const norm = weightedW3C(r, g, b);
+
+    [r, g, b] = useRgbFromHsl(hue, brightness * Math.sqrt(norm), value);
+    return [r, g, b];
 }

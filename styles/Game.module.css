@@ -112,18 +112,18 @@
 }
 
 .box::-webkit-scrollbar {
-    width      : 20px;
+    width      : 16px;
     margin-left: -100px;
 }
 
 .box::-webkit-scrollbar-track {
     background-color: #2A2A2A;
-    border-radius   : 10px;
+    border-radius   : 8px;
 }
 
 .box::-webkit-scrollbar-thumb {
     background-color: #4B4B4B;
-    border-radius   : 10px;
+    border-radius   : 8px;
 }
 
 @media (max-width: 1200px) {
