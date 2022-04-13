@@ -1,11 +1,13 @@
 export class WheelControler {
     constructor(scale, setScale) {
+        console.log("created")
         this.scale = scale;
         this.setScale = setScale;
         this.disabled = false;
     }
 
     handleMouseWheel(event) {
+        console.log(this.disabled);
         if (this.disabled)
             return;
         const change = event.deltaY / 1000;
@@ -13,6 +15,7 @@ export class WheelControler {
     }
 
     takeControl() {
+        console.log("disabled")
         this.disabled = true;
     }
 

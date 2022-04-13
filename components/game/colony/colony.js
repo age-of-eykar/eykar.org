@@ -26,7 +26,7 @@ function Colony({ id }) {
     }
 
     return (
-        <div style={{ 'background-color': 'rgb(' + r + ',  ' + g + ', ' + b + ')' }} className={styles.box}>
+        <div style={{ 'backgroundColor': 'rgb(' + r + ',  ' + g + ', ' + b + ')' }} className={styles.box}>
             <h1 className={styles.title}>{name}</h1>
             <div>Place of Power: ({x}, {y})</div>
             <div>Territories: {plots}</div>

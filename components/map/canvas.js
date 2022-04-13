@@ -1,5 +1,5 @@
 import styles from '../../styles/Map.module.css'
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect } from "react";
 import debounce from "debounce";
 import { WheelControler, SpeedControler, MouseControler } from "./controlers";
 import { startDrawing, stopDrawing } from "./draw";
@@ -74,7 +74,7 @@ export function MapCanvas({ onPlotClick }) {
       window.removeEventListener("keyup", listenKeyUp);
       window.removeEventListener("wheel", listenMouseWheel);
     };
-  }, [pixelRatio, onPlotClick]);
+  }, [pixelRatio]);
 
   return (
     <canvas
