@@ -2,7 +2,7 @@ import styles from '../../../styles/components/Colony.module.css'
 import { useEykarContract } from '../../../hooks/eykar'
 import { useStarknetCall } from '@starknet-react/core'
 import { feltToString, toNegativeNumber } from '../../../utils/felt'
-import { useColonyColor, weightedW3C } from '../../../hooks/colors'
+import { getColonyColor } from '../../../utils/colors'
 import WarehousesInfo from './icons/warehouses'
 import TroopsInfo  from './icons/troops'
 
@@ -16,7 +16,7 @@ function Colony({ id }) {
     let x = "x";
     let y = "y";
     let plots = "...";
-    let [r, g, b] = useColonyColor(id);
+    let [r, g, b] = getColonyColor(id);
     [r, g, b] = [r * 255, g * 255, b * 255];
     if (!loading && data) {
         name = feltToString(data.colony.name)

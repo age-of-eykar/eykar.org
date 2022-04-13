@@ -1,5 +1,3 @@
-import { lcg } from "../utils/deterministic";
-
 /**
  * Converts an HSL color value to RGB. Conversion formula
  * adapted from http://en.wikipedia.org/wiki/HSL_color_space.
@@ -11,7 +9,7 @@ import { lcg } from "../utils/deterministic";
  * @param   Number  l       The lightness
  * @return  Array           The RGB representation
  */
-export function useRgbFromHsl(h, s, l) {
+export function getRgbFromHsl(h, s, l) {
     let r, g, b;
 
     if (s == 0) {
@@ -37,7 +35,7 @@ export function useRgbFromHsl(h, s, l) {
     return [r, g, b];
 }
 
-export function useColonyHue(seed) {
+export function getColonyHue(seed) {
     return (24 * seed % 361) / 360.0;
 }
 
@@ -45,12 +43,12 @@ export function weightedW3C(r, g, b) {
     return r * 0.299 + b * 0.587 + g * 0.114;
 }
 
-export function useColonyColor(seed) {
-    const hue = useColonyHue(seed);
+export function getColonyColor(seed) {
+    const hue = getColonyHue(seed);
     let brightness = 94 / 100;
     const value = 65 / 100;
-    let [r, g, b] = useRgbFromHsl(hue, brightness, value);
+    let [r, g, b] = getRgbFromHsl(hue, brightness, value);
     const norm = weightedW3C(r, g, b);
-    [r, g, b] = useRgbFromHsl(hue, brightness * (Math.log(norm + 1.0) - 1.0), value);
+    [r, g, b] = getRgbFromHsl(hue, brightness * (Math.log(norm + 1.0) - 1.0), value);
     return [r, g, b];
 }

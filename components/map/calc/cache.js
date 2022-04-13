@@ -1,6 +1,6 @@
 import { szudzik } from "../../../utils/deterministic";
 import { createBufferInfoFromArrays, setAttribInfoBufferFromArray } from "twgl.js";
-import { useColonyColor } from "../../../hooks/colors";
+import { getColonyColor } from "../../../utils/colors";
 import { getBiomeColors } from "./biomes";
 
 export class ChunksCache {
@@ -104,7 +104,7 @@ class Chunk {
                 stop = this.stops[index];
             }
             const [br, bg, bb] = getBiomeColors(plot.x, plot.y * 2);
-            const [r, g, b] = useColonyColor(plot.colony_id);
+            const [r, g, b] = getColonyColor(plot.colony_id);
             for (let i = start; i < stop; i++) {
                 this.colors[i * 3] = 0.5 * br + 0.5 * r;
                 this.colors[i * 3 + 1] = 0.5 * bg + 0.5 * g;
