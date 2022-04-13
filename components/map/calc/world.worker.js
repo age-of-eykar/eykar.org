@@ -2,7 +2,6 @@ import { precalculate } from "modular-voronoi";
 import { getBiomeColors } from "./biomes";
 import { szudzik, lcg } from "../../../utils/deterministic.js"
 
-
 self.onmessage = ({ data: { chunkX, chunkY, size } }) => {
     const sideLength = (2 * size + 1);
     const prefixX = -size + chunkX * sideLength;
@@ -30,9 +29,9 @@ self.onmessage = ({ data: { chunkX, chunkY, size } }) => {
         }
 
     const voronoi = precalculate(points, 2 * size + 3, 2 * size + 3);
-    const shiftedPoints = voronoi.points.map((x, i) => (i % 2 == 0)
+    const shiftedPoints = voronoi.points.map((x, i) => sideLength * ((i % 2 == 0)
         ? chunkX + x - 0.5
-        : chunkY + x - 0.5);
+        : chunkY + x - 0.5));
     const pointColors = new Float32Array(3 * shiftedPoints.length / 2);
     let lastStop = 0;
     for (let i = 0; i < voronoi.stops.length; i++) {
@@ -45,6 +44,6 @@ self.onmessage = ({ data: { chunkX, chunkY, size } }) => {
     }
 
     self.postMessage({
-        vertexes: shiftedPoints, colors: pointColors
+        vertices: shiftedPoints, colors: pointColors, stops: voronoi.stops
     }, null, [shiftedPoints, pointColors]);
 };
