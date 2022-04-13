@@ -51,8 +51,7 @@ export function MapCanvas({ onPlotClick }) {
       cache.refresh(center.current, newScale, windowSize.current.height / windowSize.current.width);
     });
     const listenMouseWheel = wheelControler.handleMouseWheel.bind(wheelControler);
-    window.addEventListener("mousewheel", listenMouseWheel);
-    window.addEventListener("onwheel", listenMouseWheel);
+    window.addEventListener("wheel", listenMouseWheel);
 
     // screen resize
     const handler = debounce(() => {
@@ -73,8 +72,7 @@ export function MapCanvas({ onPlotClick }) {
       window.removeEventListener("resize", handler);
       window.removeEventListener("keydown", listenKeyDown);
       window.removeEventListener("keyup", listenKeyUp);
-      window.removeEventListener("mousewheel", listenMouseWheel);
-      window.removeEventListener("onwheel", listenMouseWheel);
+      window.removeEventListener("wheel", listenMouseWheel);
     };
   }, [pixelRatio, onPlotClick]);
 
