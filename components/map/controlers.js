@@ -53,34 +53,38 @@ export class MouseControler {
             return;
         this.isDown = false;
         const stop = [
-            (this.scale.current / this.windowSize.width) * (event.offsetX - this.start[0]),
-            (this.scale.current / this.windowSize.height) * (event.offsetY - this.start[1])
+            (this.scale.current / this.windowSize.current.width) * (event.offsetX - this.start[0]),
+            (this.scale.current / this.windowSize.current.height) * (event.offsetY - this.start[1])
         ];
 
-        const ratio = this.windowSize.height / this.windowSize.width;
+        const ratio = this.windowSize.current.width / this.windowSize.current.height;
         this.cache.refresh({
             x: this.center.current.x - stop[0] / 2,
             y: this.center.current.y + stop[1] / 2
         }, this.scale.current * 2,
-            ratio);
+            1 / ratio);
 
         if (stop[0] ** 2 + stop[1] ** 2 < 1.0) {
 
-            let x = 2 * event.clientX / this.windowSize.width - 1;
-            let y = 2 * event.clientY / this.windowSize.height - 1;
+            // cela me permet de trouver la coordonnée cliquée sur l'écran dans [-1, 1]^2
+            let X = 2 * event.clientX / this.windowSize.current.width - 1;
+            let Y = 2 * event.clientY / this.windowSize.current.height - 1;
 
-            const bottomScale = 1.25;
-            const scale = this.scale.current / 2;
-            const w = (y / scale + 1.0) / 2.0 * (bottomScale - 1.0) + 1.0;
+            // je redonne ici les mêmes paramètres que ceux transmis au shader
+            const slope = 0.25;
+            //scale.current représente le nombre de cases que j'aimerais afficher en largeur
+            const scale = 2 / this.scale.current;
 
-            x = (x * w * scale) / bottomScale;
-            y = (y * w * scale) * ratio;
+            // ici avec les calculs de votre page web
+            const y1 = this.center.current.y + Y / (scale * ratio * (1 - slope * Y))
+            const x1 = this.center.current.x + X / (scale + X * ratio * slope * (y1 - this.center.current.y));
 
-            x += this.center.current.x;
-            y -= this.center.current.y;
+            // ici avec mes calcul
+            const y2 = (1 / (1 - slope * Y) - 1) / (slope * ratio * scale) + this.center.current.y;
+            const x2 = ((scale * X) / (1 - slope * Y) - X);
 
-            this.onPlotClick(Math.floor(x), Math.floor(y));
-            console.log("clicked (" + x + " ," + y + ")");
+            console.log("version 1 (" + x1 + ", " + y1 + ")");
+            console.log("version 2 (" + x2 + ", " + y2 + ")");
         }
 
     }
@@ -93,7 +97,7 @@ export class MouseControler {
 
         // don't pan if mouse is not pressed
         if (!this.isDown) return;
-        const norm = this.scale.current / this.windowSize.width;
+        const norm = this.scale.current / this.windowSize.current.width;
         const x = (event.offsetX - this.last[0]) * norm;
         const y = (event.offsetY - this.last[1]) * norm;
 
@@ -174,7 +178,7 @@ export class SpeedControler {
 
     refresh(expectedCenter) {
         this.cache.refresh(expectedCenter, this.scale.current,
-            this.windowSize.height / this.windowSize.width);
+            this.windowSize.current.height / this.windowSize.current.width);
     }
 
     onKeyDown(event) {

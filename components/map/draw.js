@@ -3,13 +3,15 @@ import fragmentShader from '../../shaders/fragment.glsl'
 import vertexShader from '../../shaders/vertex.glsl'
 import { createProgramInfo, setUniforms, setBuffersAndAttributes, drawBufferInfo } from "twgl.js";
 
+let frameRequest;
+
 function animateScene(gl, cache, center, scale, keyControlers, canvas, programInfo) {
     let previousTime = performance.now();
     gl.viewport(0, 0, canvas.width, canvas.height);
     gl.useProgram(programInfo.program);
     setUniforms(programInfo, {
-        scale: scale.current / 2,
-        ratio: [1.0, (canvas.width / canvas.height)],
+        scale: 2 / scale.current,
+        ratio: canvas.width / canvas.height,
         center: [center.current.x,
         center.current.y],
     });
@@ -21,7 +23,7 @@ function animateScene(gl, cache, center, scale, keyControlers, canvas, programIn
         drawBufferInfo(gl, chunk.bufferInfo);
     }, canvas.height / canvas.width)
 
-    window.requestAnimationFrame(function (currentTime) {
+    frameRequest = window.requestAnimationFrame(function (currentTime) {
         const deltaTime = currentTime - previousTime;
         const speed = keyControlers.getSpeed();
         center.current.x += speed.x * deltaTime / 1000;
@@ -30,14 +32,16 @@ function animateScene(gl, cache, center, scale, keyControlers, canvas, programIn
     });
 }
 
-export const startDrawing = (canvas, windowSize, center, scale, keyControlers) => {
+export const startDrawing = (canvas, center, scale, keyControlers) => {
     // canvas fixes
-    canvas.width = windowSize.width;
-    canvas.height = windowSize.height;
     canvas.focus();
     const gl = canvas.getContext("webgl2");
     const programInfo = createProgramInfo(gl, [vertexShader, fragmentShader]);
     const cache = new ChunksCache(256, gl);
     animateScene(gl, cache, center, scale, keyControlers, canvas, programInfo);
     return cache;
+}
+
+export const stopDrawing = () => {
+    window.cancelAnimationFrame(frameRequest);
 }
