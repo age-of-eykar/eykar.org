@@ -76,7 +76,7 @@ export function MapCanvas({ onPlotClick }) {
       window.removeEventListener("mousewheel", listenMouseWheel);
       window.removeEventListener("onwheel", listenMouseWheel);
     };
-  }, [pixelRatio]);
+  }, [pixelRatio, onPlotClick]);
 
   return (
     <canvas

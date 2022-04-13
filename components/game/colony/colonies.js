@@ -9,7 +9,7 @@ export default function Colonies({ setPage, colonyIds }) {
             <h1 className={styles.bigtitle}>Your colonies</h1>
             <div className={coloniesStyles.colonies}>
                 {colonyIds.map(colonyId => (
-                    <Colony id={colonyId} />
+                    <Colony key={colonyId} id={colonyId} />
                 ))}
             </div>
         </div>
