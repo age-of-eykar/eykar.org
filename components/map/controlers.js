@@ -1,13 +1,11 @@
 export class WheelControler {
     constructor(scale, setScale) {
-        console.log("created")
         this.scale = scale;
         this.setScale = setScale;
         this.disabled = false;
     }
 
     handleMouseWheel(event) {
-        console.log(this.disabled);
         if (this.disabled)
             return;
         const change = event.deltaY / 1000;
@@ -15,7 +13,6 @@ export class WheelControler {
     }
 
     takeControl() {
-        console.log("disabled")
         this.disabled = true;
     }
 
@@ -68,28 +65,17 @@ export class MouseControler {
             1 / ratio);
 
         if (stop[0] ** 2 + stop[1] ** 2 < 1.0) {
-
-            // cela me permet de trouver la coordonnée cliquée sur l'écran dans [-1, 1]^2
             let X = 2 * event.clientX / this.windowSize.current.width - 1;
-            let Y = 2 * event.clientY / this.windowSize.current.height - 1;
-
-            // je redonne ici les mêmes paramètres que ceux transmis au shader
-            const slope = 0.25;
-            //scale.current représente le nombre de cases que j'aimerais afficher en largeur
-            const scale = 2 / this.scale.current;
-
-            // ici avec les calculs de votre page web
-            const y1 = this.center.current.y + Y / (scale * ratio * (1 - slope * Y))
-            const x1 = this.center.current.x + X / (scale + X * ratio * slope * (y1 - this.center.current.y));
-
-            // ici avec mes calcul
-            const y2 = (1 / (1 - slope * Y) - 1) / (slope * ratio * scale) + this.center.current.y;
-            const x2 = ((scale * X) / (1 - slope * Y) - X);
-
-            console.log("version 1 (" + x1 + ", " + y1 + ")");
-            console.log("version 2 (" + x2 + ", " + y2 + ")");
+            let Y = - (2 * event.clientY / this.windowSize.current.height - 1);
+            const Cx = this.center.current.x
+            const Cy = this.center.current.y
+            const r = ratio
+            const s = 2 / this.scale.current
+            const p = 0.25
+            const y = Cy + Y / (s * r * (1 - p * Y))
+            const x = Cx + X / s + X * r * p * (y - Cy)
+            console.log("version (" + x + ", " + y + ")");
         }
-
     }
 
     handleMouseMove(event) {
