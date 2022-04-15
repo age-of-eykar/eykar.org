@@ -104,7 +104,7 @@
     border-radius: 20px 10px 10px 20px;
     z-index      : 1;
     padding      : 36px;
-    max-width    : 50%;
+    max-width    : min(50%, 800px);
     max-height   : 50%;
     overflow     : auto;
 }
