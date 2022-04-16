@@ -74,7 +74,7 @@ export class MouseControler {
             const p = 0.25
             const y = Cy + Y / (s * r * (1 - p * Y))
             const x = Cx + X / s + X * r * p * (y - Cy)
-            console.log("click: (" + x + ", " + y + ")");
+            this.onPlotClick(Math.floor(x), Math.floor(y))
         }
     }
 
