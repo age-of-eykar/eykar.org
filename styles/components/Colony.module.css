@@ -1,5 +1,8 @@
 .box {
-    min-width    : 44%;
+    flex-grow    : 1;
+    flex-shrink  : 1;
+    flex-basis   : 0;
+    min-width    : 230px;
     padding      : 12px 25px;
     border-radius: 12px;
     color        : #ecebe5;
@@ -21,16 +24,14 @@
     display   : flex;
 }
 
-
-
 .icon_container {
-    height      : 26px;
-    display: flex;
+    height     : 26px;
+    display    : flex;
     align-items: center;
 }
 
 .icon_text {
-    display: none;
+    display     : none;
     margin-right: 8px;
 }
 
@@ -45,10 +46,10 @@
 }
 
 .icon_container:hover .icon {
-    height      : 22px;
+    height: 22px;
 }
 
 .icon_container:hover {
     background-color: #ecebe5;
-    border-radius: 12px;
+    border-radius   : 12px;
 }

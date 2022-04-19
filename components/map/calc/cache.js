@@ -18,7 +18,7 @@ export class ChunksCache {
         const ready = [];
         const origin = {
             x: Math.trunc((center.x - ChunksCache.sideSize / 2) / ChunksCache.sideSize),
-            y: Math.trunc((center.y - ChunksCache.sideSize / 2) / ChunksCache.sideSize)
+            y: Math.trunc((center.y + scale / 16 - ChunksCache.sideSize / 2) / ChunksCache.sideSize)
         };
         const a = scale / (2 * ChunksCache.sideSize) + 1;
         const b = ratio * scale / (2 * ChunksCache.sideSize) + 1;
@@ -38,7 +38,7 @@ export class ChunksCache {
     refresh(center, scale, ratio = 1) {
         const origin = {
             x: Math.trunc((center.x - ChunksCache.sideSize / 2) / ChunksCache.sideSize),
-            y: Math.trunc((center.y - ChunksCache.sideSize / 2) / ChunksCache.sideSize)
+            y: Math.trunc((center.y + scale / 16 - ChunksCache.sideSize / 2) / ChunksCache.sideSize)
         };
         const a = scale / (2 * ChunksCache.sideSize) + 2;
         const b = ratio * scale / (2 * ChunksCache.sideSize) + 2;
