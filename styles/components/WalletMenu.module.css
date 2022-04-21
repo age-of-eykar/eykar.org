@@ -52,16 +52,15 @@
     background-color: #9e7231;
     display         : flex;
     align-items     : center;
-    justify-content : space-between;
     border-radius   : 15px;
     height          : 40px;
     margin-left     : 7.5px;
 }
 
 .button_text {
-    font-family : Verdana, sans-serif;
-    font-size   : 15px;
-    margin-right: 48px;
+    font-family: Verdana, sans-serif;
+    font-size  : 15px;
+    margin-left: 18px;
 }
 
 .button_icon {
@@ -74,8 +73,18 @@
         width: 95%;
     }
 
+    .menu_title {
+        font-size: 19px;
+        margin   : -7px -2px 2px;
+    }
+
+    .menu_text {
+        font-size: 13.5px;
+        margin   : 12px 4px 18px;
+    }
+
     .button_text {
-        font-size   : 14px;
-        margin-right: 16px;
+        font-size  : 15px;
+        margin-left: 12px;
     }
 }
