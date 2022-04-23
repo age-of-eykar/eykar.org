@@ -14,14 +14,14 @@ export class ChunksCache {
         this.cached = new Map();
     }
 
-    forEachChunk(center, scale, display, ratio = 1) {
+    forEachChunk(center, scale, foo, ratio = 1, margin = 1) {
         const ready = [];
         const origin = {
             x: Math.trunc((center.x - ChunksCache.sideSize / 2) / ChunksCache.sideSize),
             y: Math.trunc((center.y + scale / 16 - ChunksCache.sideSize / 2) / ChunksCache.sideSize)
         };
-        const a = scale / (2 * ChunksCache.sideSize) + 1;
-        const b = ratio * scale / (2 * ChunksCache.sideSize) + 1;
+        const a = scale / (2 * ChunksCache.sideSize) + margin;
+        const b = ratio * scale / (2 * ChunksCache.sideSize) + margin;
         let finished = true;
         for (let i = Math.trunc(-a); i < a + 1; i++)
             for (let j = Math.trunc(-b); j < b + 1; j++) {
@@ -31,7 +31,7 @@ export class ChunksCache {
                 else if (finished)
                     finished = false;
             }
-        ready.forEach(chunk => display(chunk));
+        ready.forEach(chunk => foo(chunk));
         return finished;
     }
 
@@ -74,6 +74,17 @@ export class ChunksCache {
             return chunk;
     }
 
+    getPlotEdges(plot) {
+        let vertices;
+        this.forEachChunk(plot, 0, (chunk) => {
+            vertices = chunk.getVertices(plot);
+        }, 1, 0);
+        const output = [vertices[0], vertices[1], vertices[2]];
+        for (let i = 3; i < vertices.length; i += 3)
+            output.push(vertices[i]);
+        return output;
+    }
+
 }
 
 class Chunk {
@@ -93,16 +104,29 @@ class Chunk {
         }
     }
 
-    updateColors() {
+    getStops(plot) {
         const topLeft = this.getTopLeft();
+        const [x, y] = [plot.x - topLeft.x, plot.y - topLeft.y];
+        let [start, stop] = [0, this.stops[0]];
+        if (x != 0 || y != 0) {
+            const index = ChunksCache.halfsize + x + (y - 1) * ChunksCache.sideSize;
+            start = this.stops[index - 1];
+            stop = this.stops[index];
+        }
+        return [start, stop];
+    }
+
+    getVertices(plot) {
+        const [start, stop] = this.getStops(plot);
+        const output = [];
+        for (let i = start; i < stop; i++)
+            output.push([this.vertices[i * 2], this.vertices[i * 2 + 1]]);
+        return output;
+    }
+
+    updateColors() {
         for (const plot of this.colonies) {
-            const [x, y] = [plot.x - topLeft.x, plot.y - topLeft.y];
-            let [start, stop] = [0, this.stops[0]];
-            if (x != 0 || y != 0) {
-                const index = ChunksCache.halfsize + x + (y - 1) * ChunksCache.sideSize;
-                start = this.stops[index - 1];
-                stop = this.stops[index];
-            }
+            let [start, stop] = this.getStops(plot)
             const [br, bg, bb] = getBiomeColors(plot.x, plot.y * 2);
             const [r, g, b] = getColonyColor(plot.colony_id);
             for (let i = start; i < stop; i++) {
@@ -124,6 +148,7 @@ class Chunk {
         });
         worker.onmessage = ({ data: { vertices, colors, stops } }) => {
             worker.terminate();
+            this.vertices = vertices;
             this.colors = colors;
             this.stops = stops;
             if (!waitingCache)

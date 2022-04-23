@@ -74,7 +74,9 @@ export class MouseControler {
             const p = 0.25
             const y = Cy + Y / (s * r * (1 - p * Y))
             const x = Cx + X / s + X * r * p * (y - Cy)
-            this.onPlotClick(Math.floor(x), Math.floor(y))
+            const plot = { x: Math.floor(x), y: Math.floor(y) };
+            this.cache.getPlotEdges(plot);
+            this.onPlotClick(plot.x, plot.y)
         }
     }
 
