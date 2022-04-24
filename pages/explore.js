@@ -10,10 +10,13 @@ export default function Explore() {
   return (
     <>
       <Header />
-
       <div>{selected ? <Selected x={selected[0]} y={selected[1]} /> : undefined}</div>
-
-      <MapCanvas onPlotClick={(x, y) => setClicked([x, y])} />
+      <MapCanvas onPlotClick={(x, y) => {
+        setClicked((currentState) => {
+          return (currentState && currentState[0] === x && currentState[1] === y)
+            ? undefined : [x, y];
+        })
+      }} />
     </>
   );
 }

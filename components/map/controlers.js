@@ -76,11 +76,16 @@ export class MouseControler {
             const p = 0.25
             const y = Cy + Y / (s * r * (1 - p * Y))
             const x = Cx + X / s + X * r * p * (y - Cy)
-            const plot = { x: Math.floor(x), y: Math.floor(y) };
-            console.log(this.cache.getPlotEdges({ x: 0, y: 0 }))
-            console.log(x, y)
-            console.log(isInsideConvex([x, y], this.cache.getPlotEdges({ x: 0, y: 0 })))
-            this.onPlotClick(plot.x, plot.y)
+            const flooredX = Math.floor(x);
+            const flooredY = Math.floor(y);
+            if (isInsideConvex([x, y], this.cache.getPlotEdges({ x: flooredX, y: flooredY })))
+                return this.onPlotClick(flooredX, flooredY)
+            for (let i = -1; i <= 1; i++)
+                for (let j = -1; j <= 1; j++)
+                    if (i == j && i == 0)
+                        continue;
+                    else if (isInsideConvex([x, y], this.cache.getPlotEdges({ x: flooredX + i, y: flooredY + j })))
+                        return this.onPlotClick(flooredX + i, flooredY + j)
         }
     }
 
