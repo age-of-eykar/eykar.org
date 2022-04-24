@@ -1,3 +1,5 @@
+import { isInsideConvex } from '../../utils/polygon';
+
 export class WheelControler {
     constructor(scale, setScale) {
         this.scale = scale;
@@ -75,7 +77,9 @@ export class MouseControler {
             const y = Cy + Y / (s * r * (1 - p * Y))
             const x = Cx + X / s + X * r * p * (y - Cy)
             const plot = { x: Math.floor(x), y: Math.floor(y) };
-            this.cache.getPlotEdges(plot);
+            console.log(this.cache.getPlotEdges({ x: 0, y: 0 }))
+            console.log(x, y)
+            console.log(isInsideConvex([x, y], this.cache.getPlotEdges({ x: 0, y: 0 })))
             this.onPlotClick(plot.x, plot.y)
         }
     }

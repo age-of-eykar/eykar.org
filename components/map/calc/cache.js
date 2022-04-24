@@ -79,8 +79,8 @@ export class ChunksCache {
         this.forEachChunk(plot, 0, (chunk) => {
             vertices = chunk.getVertices(plot);
         }, 1, 0);
-        const output = [vertices[0], vertices[1], vertices[2]];
-        for (let i = 3; i < vertices.length; i += 3)
+        const output = [vertices[0], vertices[1]];
+        for (let i = 2; i < vertices.length; i += 3)
             output.push(vertices[i]);
         return output;
     }
