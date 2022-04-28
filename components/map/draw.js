@@ -5,7 +5,7 @@ import { createProgramInfo, setUniforms, setBuffersAndAttributes, drawBufferInfo
 
 let frameRequest;
 
-function animateScene(gl, cache, center, scale, keyControlers, canvas, programInfo) {
+function animateScene(gl, cache, center, scale, selected, keyControlers, canvas, programInfo) {
     let previousTime = performance.now();
     gl.viewport(0, 0, canvas.width, canvas.height);
     gl.useProgram(programInfo.program);
@@ -19,6 +19,16 @@ function animateScene(gl, cache, center, scale, keyControlers, canvas, programIn
     cache.forEachChunk(center.current, scale.current, (chunk) => {
         if (!chunk.ready)
             return;
+        if (chunk.x == selected.current[2] && chunk.y == selected.current[3])
+            setUniforms(programInfo, {
+                selectedStart: selected.current[0],
+                selectedEnd: selected.current[1]
+            });
+        else
+            setUniforms(programInfo, {
+                selectedStart: Number.MAX_SAFE_INTEGER,
+                selectedEnd: Number.MAX_SAFE_INTEGER
+            });
         setBuffersAndAttributes(gl, programInfo, chunk.bufferInfo);
         drawBufferInfo(gl, chunk.bufferInfo);
     }, canvas.height / canvas.width)
@@ -28,17 +38,17 @@ function animateScene(gl, cache, center, scale, keyControlers, canvas, programIn
         const speed = keyControlers.getSpeed();
         center.current.x += speed.x * deltaTime / 1000;
         center.current.y += speed.y * deltaTime / 1000;
-        animateScene(gl, cache, center, scale, keyControlers, canvas, programInfo);
+        animateScene(gl, cache, center, scale, selected, keyControlers, canvas, programInfo);
     });
 }
 
-export const startDrawing = (canvas, center, scale, keyControlers) => {
+export const startDrawing = (canvas, center, scale, selected, keyControlers) => {
     // canvas fixes
     canvas.focus();
     const gl = canvas.getContext("webgl2");
     const programInfo = createProgramInfo(gl, [vertexShader, fragmentShader]);
     const cache = new ChunksCache(256, gl);
-    animateScene(gl, cache, center, scale, keyControlers, canvas, programInfo);
+    animateScene(gl, cache, center, scale, selected, keyControlers, canvas, programInfo);
     return cache;
 }
 

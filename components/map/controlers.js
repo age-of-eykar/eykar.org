@@ -23,15 +23,17 @@ export class WheelControler {
 
 export class MouseControler {
     constructor(
-        center, scale, windowSize, canvasRef, onPlotClick, cache
+        center, scale, windowSize, canvasRef, selected, onPlotClick, cache
     ) {
         this.center = center;
         this.scale = scale;
         this.windowSize = windowSize;
         this.canvasRef = canvasRef;
+        this.selected = selected;
         this.onPlotClick = onPlotClick;
         this.cache = cache;
         this.isDown = false;
+        this.lastMove = performance.now();
     }
 
     handleMouseDown(event) {
@@ -67,15 +69,24 @@ export class MouseControler {
         if (stop[0] ** 2 + stop[1] ** 2 < 1.0) {
             let X = 2 * event.clientX / this.windowSize.current.width - 1;
             let Y = - (2 * event.clientY / this.windowSize.current.height - 1);
-            const Cx = this.center.current.x
-            const Cy = this.center.current.y
-            const r = ratio
-            const s = 2 / this.scale.current
-            const p = 0.25
-            const y = Cy + Y / (s * r * (1 - p * Y))
-            const x = Cx + X / s + X * r * p * (y - Cy)
-            this.onPlotClick(Math.floor(x), Math.floor(y))
+            const result = this.cache.getPlotAt(X, Y,
+                this.center.current, this.scale.current, ratio);
+            if (result)
+                return this.onPlotClick(result[0], result[1]);
         }
+    }
+
+    handleSelection(X, Y) {
+        const now = performance.now();
+        if (now - this.lastMove < 10)
+            return;
+        this.lastMove = now;
+
+        const ratio = this.windowSize.current.width / this.windowSize.current.height;
+        const output = this.cache.getVerticesAt(X, Y,
+            this.center.current, this.scale.current, ratio);
+        if (output)
+            this.selected.current = output;
     }
 
     handleMouseMove(event) {
@@ -83,6 +94,9 @@ export class MouseControler {
             event.target.tagName !== "HTML") {
             return;
         }
+        const X = 2 * event.clientX / this.windowSize.current.width - 1;
+        const Y = - (2 * event.clientY / this.windowSize.current.height - 1);
+        this.handleSelection(X, Y);
 
         // don't pan if mouse is not pressed
         if (!this.isDown) return;
