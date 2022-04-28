@@ -97,12 +97,12 @@
 
 .mask1 {
     height   : 100%;
-    clip-path: circle(150% at 155% 35%);
+    clip-path: circle(154% at 155% 35%);
 }
 
 .mask2 {
     height   : 100%;
-    clip-path: circle(150% at 155% 65%);
+    clip-path: circle(154% at 155% 65%);
 }
 
 @media (min-width: 1920px) {
