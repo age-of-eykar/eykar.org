@@ -1,6 +1,7 @@
 import { szudzik } from "../../../utils/deterministic";
 import { createBufferInfoFromArrays, setAttribInfoBufferFromArray } from "twgl.js";
 import { getColonyColor } from "../../../utils/colors";
+import { isInsideConvex } from '../../../utils/polygon';
 import { getBiomeColors } from "./biomes";
 
 export class ChunksCache {
@@ -74,15 +75,63 @@ export class ChunksCache {
             return chunk;
     }
 
+    estimatePlot(X, Y, center, scale, ratio) {
+        const Cx = center.x
+        const Cy = center.y
+        const r = ratio
+        const s = 2 / scale
+        const p = 0.25
+        const y = Cy + Y / (s * r * (1 - p * Y))
+        const x = Cx + X / s + X * r * p * (y - Cy)
+        return [x, y];
+    }
+
     getPlotEdges(plot) {
         let vertices;
+        let chunkFound;
         this.forEachChunk(plot, 0, (chunk) => {
             vertices = chunk.getVertices(plot);
+            chunkFound = chunk;
         }, 1, 0);
+        if (vertices === undefined || vertices[0] === undefined)
+            return [undefined, undefined];
         const output = [vertices[0], vertices[1]];
         for (let i = 2; i < vertices.length; i += 3)
             output.push(vertices[i]);
-        return output;
+        return [output, chunkFound];
+    }
+
+    getPlotAt(X, Y, center, scale, ratio) {
+        const [x, y] = this.estimatePlot(X, Y, center, scale, ratio);
+        const flooredX = Math.floor(x);
+        const flooredY = Math.floor(y);
+        const [vertices, _] = this.getPlotEdges({ x: flooredX, y: flooredY });
+        if (vertices === undefined)
+            return undefined;
+        if (isInsideConvex([x, y], vertices))
+            return [flooredX, flooredY]
+        for (let i = -1; i <= 1; i++)
+            for (let j = -1; j <= 1; j++) {
+                const [vertices, _] = this.getPlotEdges({ x: flooredX + i, y: flooredY + j })
+                if (i == j && i == 0)
+                    continue;
+                else if (isInsideConvex([x, y], vertices))
+                    return [flooredX + i, flooredY + j]
+            }
+    }
+
+    getVerticesAt(X, Y, center, scale, ratio) {
+        const coo = this.getPlotAt(X, Y, center, scale, ratio);
+        if (!coo)
+            return;
+        const plot = { x: coo[0], y: coo[1] };
+        let stops;
+        let finalChunk;
+        this.forEachChunk(plot, 0, (chunk) => {
+            stops = chunk.getStops(plot);
+            finalChunk = chunk;
+        }, 1, 0);
+        return [stops[0], stops[1], finalChunk.x, finalChunk.y];
     }
 
 }

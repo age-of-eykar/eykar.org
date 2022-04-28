@@ -16,6 +16,8 @@ export function MapCanvas({ onPlotClick }) {
   const scale = useRef(32.0);
 
   const canvasRef = useRef(null);
+  const selected = useRef([0, 0]);
+
   const pixelRatio = (typeof window === 'undefined') ? 1 : window.devicePixelRatio;
   const windowSize = useRef((typeof window === 'undefined') ? null : {
     width: window.innerWidth * pixelRatio,
@@ -28,11 +30,11 @@ export function MapCanvas({ onPlotClick }) {
     speedControler = new SpeedControler(center, scale, windowSize);
 
     // handle canvas drawing
-    cache = startDrawing(canvasRef.current, center, scale, speedControler)
+    cache = startDrawing(canvasRef.current, center, scale, selected, speedControler)
     cache.refresh(center.current, scale.current, windowSize.current.height / windowSize.current.width);
 
     // handle listeners creation
-    const mouseControler = new MouseControler(center, scale, windowSize, canvasRef, onPlotClick, cache);
+    const mouseControler = new MouseControler(center, scale, windowSize, canvasRef, selected, onPlotClick, cache);
     const mouseStart = mouseControler.handleMouseDown.bind(mouseControler);
     const mouseStop = mouseControler.handleMouseUp.bind(mouseControler);
     const mouseMove = mouseControler.handleMouseMove.bind(mouseControler);
