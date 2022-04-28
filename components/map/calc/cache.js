@@ -105,6 +105,7 @@ export class ChunksCache {
         const [x, y] = this.estimatePlot(X, Y, center, scale, ratio);
         const flooredX = Math.floor(x);
         const flooredY = Math.floor(y);
+        return [flooredX, flooredY];
         const [vertices, _] = this.getPlotEdges({ x: flooredX, y: flooredY });
         if (vertices === undefined)
             return undefined;
@@ -112,10 +113,12 @@ export class ChunksCache {
             return [flooredX, flooredY]
         for (let i = -1; i <= 1; i++)
             for (let j = -1; j <= 1; j++) {
-                const [vertices, _] = this.getPlotEdges({ x: flooredX + i, y: flooredY + j })
                 if (i == j && i == 0)
                     continue;
-                else if (isInsideConvex([x, y], vertices))
+                const [vertices, _] = this.getPlotEdges({ x: flooredX + i, y: flooredY + j })
+                if (vertices === undefined)
+                    continue;
+                if (isInsideConvex([x, y], vertices))
                     return [flooredX + i, flooredY + j]
             }
     }
