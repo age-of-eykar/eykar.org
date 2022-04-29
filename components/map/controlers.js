@@ -83,7 +83,7 @@ export class MouseControler {
         this.lastMove = now;
 
         const ratio = this.windowSize.current.width / this.windowSize.current.height;
-        const output = this.cache.getVerticesAt(X, Y,
+        const output = this.cache.getVerticesStopsAt(X, Y,
             this.center.current, this.scale.current, ratio);
         if (output)
             this.selected.current = output;
