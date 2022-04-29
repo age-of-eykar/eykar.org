@@ -15,18 +15,33 @@ export class ChunksCache {
         this.cached = new Map();
     }
 
+    /**
+     * Returns the coordinates of a chunk from plot coordinates
+     * @param {number} x coordinate of the plot
+     * @param {number} y coordinate of the plot
+     * @returns {x:number, y:number} the chunk coordinates
+     **/
+    getChunkCoordinates(x, y) {
+        let x_origin = x / ChunksCache.sideSize
+        x_origin = (Math.abs(x_origin) < 0.5) ? 0 : Math.trunc(x_origin + (x_origin > 0 ? 0.5 : -0.5))
+        let y_origin = y / ChunksCache.sideSize
+        y_origin = (Math.abs(y_origin) < 0.5) ? 0 : Math.trunc(y_origin + (y_origin > 0 ? 0.5 : -0.5))
+        return { x: x_origin, y: y_origin }
+    }
+
+    getChunk(x, y) {
+        return this.cached.get(szudzik(x, y));
+    }
+
     forEachChunk(center, scale, foo, ratio = 1, margin = 1) {
         const ready = [];
-        const origin = {
-            x: Math.trunc((center.x - ChunksCache.sideSize / 2) / ChunksCache.sideSize),
-            y: Math.trunc((center.y + scale / 16 - ChunksCache.sideSize / 2) / ChunksCache.sideSize)
-        };
+        const origin = this.getChunkCoordinates(center.x, center.y + scale / 16);
         const a = scale / (2 * ChunksCache.sideSize) + margin;
         const b = ratio * scale / (2 * ChunksCache.sideSize) + margin;
         let finished = true;
         for (let i = Math.trunc(-a); i < a + 1; i++)
             for (let j = Math.trunc(-b); j < b + 1; j++) {
-                const chunk = this.cached.get(szudzik(origin.x + i, origin.y + j));
+                const chunk = this.getChunk(origin.x + i, origin.y + j);
                 if (chunk && chunk.ready)
                     ready.push(chunk);
                 else if (finished)
@@ -49,7 +64,7 @@ export class ChunksCache {
     }
 
     prepare(x, y) {
-        let chunk = this.cached.get(szudzik(x, y));
+        let chunk = this.getChunk(x, y);
         if (chunk === undefined)
             chunk = new Chunk(x, y, (chunk, vertices, colors) => {
                 chunk.bufferInfo = createBufferInfoFromArrays(this.webgl, {
@@ -87,24 +102,24 @@ export class ChunksCache {
     }
 
     getPlotEdges(plot) {
-        let vertices;
-        let chunkFound;
-        this.forEachChunk(plot, 0, (chunk) => {
-            vertices = chunk.getVertices(plot);
-            chunkFound = chunk;
-        }, 1, 0);
+        const coo = this.getChunkCoordinates(plot.x, plot.y);
+        const chunk = this.getChunk(coo.x, coo.y);
+        if (!chunk || !chunk.ready)
+            return;
+        const vertices = chunk.getVertices(plot);
         if (vertices === undefined || vertices[0] === undefined)
             return [undefined, undefined];
         const output = [vertices[0], vertices[1]];
         for (let i = 2; i < vertices.length; i += 3)
             output.push(vertices[i]);
-        return [output, chunkFound];
+        return [output, chunk];
     }
 
     getPlotAt(X, Y, center, scale, ratio) {
         const [x, y] = this.estimatePlot(X, Y, center, scale, ratio);
         const flooredX = Math.floor(x);
         const flooredY = Math.floor(y);
+
         const [vertices, _] = this.getPlotEdges({ x: flooredX, y: flooredY });
         if (vertices === undefined)
             return undefined;
@@ -112,26 +127,30 @@ export class ChunksCache {
             return [flooredX, flooredY]
         for (let i = -1; i <= 1; i++)
             for (let j = -1; j <= 1; j++) {
-                const [vertices, _] = this.getPlotEdges({ x: flooredX + i, y: flooredY + j })
                 if (i == j && i == 0)
                     continue;
-                else if (isInsideConvex([x, y], vertices))
+                const [vertices, _] = this.getPlotEdges({ x: flooredX + i, y: flooredY + j })
+                if (vertices === undefined)
+                    continue;
+                if (isInsideConvex([x, y], vertices))
                     return [flooredX + i, flooredY + j]
             }
     }
 
-    getVerticesAt(X, Y, center, scale, ratio) {
+    getVerticesStopsAt(X, Y, center, scale, ratio) {
         const coo = this.getPlotAt(X, Y, center, scale, ratio);
         if (!coo)
             return;
         const plot = { x: coo[0], y: coo[1] };
-        let stops;
-        let finalChunk;
-        this.forEachChunk(plot, 0, (chunk) => {
-            stops = chunk.getStops(plot);
-            finalChunk = chunk;
-        }, 1, 0);
-        return [stops[0], stops[1], finalChunk.x, finalChunk.y];
+
+        const chunkCoo = this.getChunkCoordinates(plot.x, plot.y);
+        const chunk = this.getChunk(chunkCoo.x, chunkCoo.y);
+        if (!chunk || !chunk.ready)
+            return;
+        const stops = chunk.getStops(plot);
+
+        if (stops)
+            return [stops[0], stops[1], chunk.x, chunk.y];
     }
 
 }
