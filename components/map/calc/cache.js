@@ -105,7 +105,7 @@ export class ChunksCache {
         const coo = this.getChunkCoordinates(plot.x, plot.y);
         const chunk = this.getChunk(coo.x, coo.y);
         if (!chunk || !chunk.ready)
-            return;
+            return [undefined, undefined];
         const vertices = chunk.getVertices(plot);
         if (vertices === undefined || vertices[0] === undefined)
             return [undefined, undefined];
