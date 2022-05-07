@@ -92,7 +92,6 @@ export default class PanningControler {
         if (touches.length === 0)
             return;
         const touch = touches[0];
-        event.preventDefault();
         this.movePanning(touch.clientX, touch.clientY);
     }
 
