@@ -1,8 +1,10 @@
 import styles from '../../styles/Map.module.css'
 import React, { useRef, useEffect } from "react";
 import debounce from "debounce";
-import { WheelControler, SpeedControler, MouseControler } from "./controlers";
 import { startDrawing, stopDrawing } from "./draw";
+import ZoomControler from './events/zoom';
+import PanningControler from './events/panning';
+import SpeedControler from "./events/speed";
 
 export let cache;
 export let speedControler;
@@ -34,7 +36,13 @@ export function MapCanvas({ onPlotClick }) {
     cache.refresh(center.current, scale.current, windowSize.current.height / windowSize.current.width);
 
     // handle listeners creation
-    const mouseControler = new MouseControler(center, scale, windowSize, canvasRef, selected, onPlotClick, cache);
+    const mouseControler = new PanningControler(center, scale, windowSize, canvasRef, selected, onPlotClick, cache);
+
+    const touchDown = mouseControler.handleTouchDown.bind(mouseControler);
+    const touchMove = mouseControler.handleTouchMove.bind(mouseControler);
+    window.addEventListener("touchstart", touchDown);
+    window.addEventListener("touchmove", touchMove);
+
     const mouseStart = mouseControler.handleMouseDown.bind(mouseControler);
     const mouseStop = mouseControler.handleMouseUp.bind(mouseControler);
     const mouseMove = mouseControler.handleMouseMove.bind(mouseControler);
@@ -48,7 +56,7 @@ export function MapCanvas({ onPlotClick }) {
     window.addEventListener("keydown", listenKeyDown);
     window.addEventListener("keyup", listenKeyUp);
 
-    wheelControler = new WheelControler(scale, (newScale) => {
+    wheelControler = new ZoomControler(scale, (newScale) => {
       scale.current = newScale;
       cache.refresh(center.current, newScale, windowSize.current.height / windowSize.current.width);
     });

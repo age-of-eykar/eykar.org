@@ -90,14 +90,13 @@ export class ChunksCache {
             return chunk;
     }
 
-    estimatePlot(X, Y, center, scale, ratio) {
+    convertCoordinates(X, Y, center, scale, ratio) {
         const Cx = center.x
         const Cy = center.y
-        const r = ratio
         const s = 2 / scale
         const p = 0.25
-        const y = Cy + Y / (s * r * (1 - p * Y))
-        const x = Cx + X / s + X * r * p * (y - Cy)
+        const y = Cy + Y / (s * ratio * (1 - p * Y))
+        const x = Cx + X / s + X * ratio * p * (y - Cy)
         return [x, y];
     }
 
@@ -116,7 +115,7 @@ export class ChunksCache {
     }
 
     getPlotAt(X, Y, center, scale, ratio) {
-        const [x, y] = this.estimatePlot(X, Y, center, scale, ratio);
+        const [x, y] = this.convertCoordinates(X, Y, center, scale, ratio);
         const flooredX = Math.floor(x);
         const flooredY = Math.floor(y);
 
