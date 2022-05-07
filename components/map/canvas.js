@@ -40,15 +40,18 @@ export function MapCanvas({ onPlotClick }) {
 
     const touchDown = mouseControler.handleTouchDown.bind(mouseControler);
     const touchMove = mouseControler.handleTouchMove.bind(mouseControler);
+    const touchEnd = mouseControler.handleTouchEnd.bind(mouseControler);
     window.addEventListener("touchstart", touchDown);
     window.addEventListener("touchmove", touchMove);
+    window.addEventListener("touchend", touchEnd);
+
 
     const mouseStart = mouseControler.handleMouseDown.bind(mouseControler);
-    const mouseStop = mouseControler.handleMouseUp.bind(mouseControler);
     const mouseMove = mouseControler.handleMouseMove.bind(mouseControler);
+    const mouseStop = mouseControler.handleMouseUp.bind(mouseControler);
     window.addEventListener("mousedown", mouseStart);
-    window.addEventListener("mouseup", mouseStop);
     window.addEventListener("mousemove", mouseMove);
+    window.addEventListener("mouseup", mouseStop);
 
     speedControler.setCache(cache);
     const listenKeyDown = speedControler.onKeyDown.bind(speedControler);

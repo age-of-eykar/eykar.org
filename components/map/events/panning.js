@@ -88,11 +88,11 @@ export default class PanningControler {
     }
 
     handleTouchMove(event) {
-        console.log(event)
-    }
-
-    handleMouseUp(event) {
-        this.stopPanning(event.clientX, event.clientY);
+        const touches = event.changedTouches;
+        if (touches.length === 0)
+            return;
+        const touch = touches[0];
+        this.movePanning(touch.clientX, touch.clientY);
     }
 
     handleMouseMove(event) {
@@ -101,6 +101,18 @@ export default class PanningControler {
             return;
         }
         this.movePanning(event.clientX, event.clientY);
+    }
+
+    handleTouchEnd(event) {
+        const touches = event.changedTouches;
+        if (touches.length === 0)
+            return;
+        const touch = touches[0];
+        this.stopPanning(touch.clientX, touch.clientY);
+    }
+
+    handleMouseUp(event) {
+        this.stopPanning(event.clientX, event.clientY);
     }
 
 }
