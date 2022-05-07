@@ -4,9 +4,18 @@
   box-sizing: border-box;
 }
 
+html {
+  height  : 100%;
+  overflow: hidden;
+  position: relative;
+}
+
 body {
-  margin                 : 0;
+  height                 : 100%;
+  overflow               : auto;
+  position               : relative;
   overscroll-behavior    : contain;
+  margin                 : 0;
   -webkit-font-smoothing : antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
