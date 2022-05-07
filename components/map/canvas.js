@@ -40,11 +40,8 @@ export function MapCanvas({ onPlotClick }) {
 
     const touchDown = mouseControler.handleTouchDown.bind(mouseControler);
     const touchMove = mouseControler.handleTouchMove.bind(mouseControler);
-    const touchEnd = mouseControler.handleTouchEnd.bind(mouseControler);
     window.addEventListener("touchstart", touchDown);
     window.addEventListener("touchmove", touchMove);
-    window.addEventListener("touchend", touchEnd);
-
 
     const mouseStart = mouseControler.handleMouseDown.bind(mouseControler);
     const mouseMove = mouseControler.handleMouseMove.bind(mouseControler);
@@ -79,6 +76,8 @@ export function MapCanvas({ onPlotClick }) {
     window.addEventListener("resize", handler);
     return () => {
       stopDrawing();
+      window.removeEventListener("touchstart", touchDown);
+      window.removeEventListener("touchmove", touchMove);
       window.removeEventListener("mousedown", mouseStart);
       window.removeEventListener("mouseup", mouseStop);
       window.removeEventListener("mousemove", mouseMove);

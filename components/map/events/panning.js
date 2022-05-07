@@ -14,8 +14,8 @@ export default class PanningControler {
     }
 
     select(x, y) {
-        const X = 2 * x / this.windowSize.current.width - 1;
-        const Y = - (2 * y / this.windowSize.current.height - 1);
+        const X = 2 * x * window.devicePixelRatio / this.windowSize.current.width - 1;
+        const Y = - (2 * y * window.devicePixelRatio / this.windowSize.current.height - 1);
         const now = performance.now();
         if (now - this.lastMove < 10)
             return;
@@ -39,7 +39,7 @@ export default class PanningControler {
 
         // don't pan if mouse is not pressed
         if (!this.isDown) return;
-        const norm = this.scale.current / this.windowSize.current.width;
+        const norm = this.scale.current * window.devicePixelRatio / this.windowSize.current.width;
         const xMap = (x - this.last[0]) * norm;
         const yMap = (y - this.last[1]) * norm;
 
@@ -52,20 +52,20 @@ export default class PanningControler {
             return;
         this.isDown = false;
         const stop = [
-            (this.scale.current / this.windowSize.current.width) * (x - this.start[0]),
-            (this.scale.current / this.windowSize.current.height) * (y - this.start[1])
+            (this.scale.current / this.windowSize.current.width) * (x - this.start[0]) * window.devicePixelRatio,
+            (this.scale.current / this.windowSize.current.height) * (y - this.start[1]) * window.devicePixelRatio
         ];
 
         const ratio = this.windowSize.current.width / this.windowSize.current.height;
         this.cache.refresh({
-            x: this.center.current.x - stop[0] / 2,
-            y: this.center.current.y + stop[1] / 2
+            x: this.center.current.x,
+            y: this.center.current.y
         }, this.scale.current * 2,
             1 / ratio);
 
         if (stop[0] ** 2 + stop[1] ** 2 < 1.0) {
-            let X = 2 * x / this.windowSize.current.width - 1;
-            let Y = - (2 * y / this.windowSize.current.height - 1);
+            let X = 2 * x * window.devicePixelRatio / this.windowSize.current.width - 1;
+            let Y = - (2 * y * window.devicePixelRatio / this.windowSize.current.height - 1);
             const result = this.cache.getPlotAt(X, Y,
                 this.center.current, this.scale.current, ratio);
             if (result)
@@ -103,14 +103,7 @@ export default class PanningControler {
         this.movePanning(event.clientX, event.clientY);
     }
 
-    handleTouchEnd(event) {
-        const touches = event.changedTouches;
-        if (touches.length === 0)
-            return;
-        const touch = touches[0];
-        this.stopPanning(touch.clientX, touch.clientY);
-    }
-
+    // also called on mobile
     handleMouseUp(event) {
         this.stopPanning(event.clientX, event.clientY);
     }
