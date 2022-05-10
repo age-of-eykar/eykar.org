@@ -37,22 +37,21 @@
 }
 
 .bigcard h1 {
-    font-family: Verdana, sans-serif;
+    font-family: 'Readex Pro', Verdana, sans-serif;
     font-style : normal;
-    font-weight: bold;
+    font-weight: 700;
     font-size  : 35px;
-    padding    : 30px 45px;
+    padding    : 30px 28px;
     color      : #FFFFFF;
 }
 
 .bigcard p {
-    font-family   : Verdana, sans-serif;
-    font-style    : normal;
-    font-size     : 16px;
-    letter-spacing: 1px;
-    padding       : 0px 28px 28px 28px;
-    color         : #FFFFFF;
-    line-height   : 20px;
+    font-family: 'Readex Pro', Verdana, sans-serif;
+    font-style : normal;
+    font-size  : 17.5px;
+    padding    : 0px 28px 28px 28px;
+    color      : #FFFFFF;
+    line-height: 20px;
 }
 
 .card {
@@ -69,7 +68,7 @@
 }
 
 .card h1 {
-    font-family: Verdana, sans-serif;
+    font-family: 'Readex Pro', Verdana, sans-serif;
     font-weight: bold;
     font-size  : 28px;
     padding    : 22px;
@@ -77,14 +76,13 @@
 }
 
 .card p {
-    font-family   : Verdana, sans-serif;
-    font-style    : normal;
-    font-size     : 16px;
-    letter-spacing: 2px;
-    padding       : 1px 25px;
-    color         : #FFFFFF;
-    line-height   : 20px;
-    margin-bottom : 20px;
+    font-family  : 'Readex Pro', Verdana, sans-serif;
+    font-style   : normal;
+    font-size    : 17.5px;
+    padding      : 1px 25px;
+    color        : #FFFFFF;
+    line-height  : 20px;
+    margin-bottom: 20px;
 }
 
 .card a {

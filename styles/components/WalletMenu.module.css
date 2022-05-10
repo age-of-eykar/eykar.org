@@ -33,7 +33,7 @@
 
 .menu_title {
     color      : white;
-    font-family: Verdana, sans-serif;
+    font-family: 'Readex Pro', Verdana, sans-serif;
     font-size  : 21px;
     font-weight: bold;
     margin     : 4px;
@@ -41,7 +41,7 @@
 
 .menu_text {
     color      : #F3F2ED;
-    font-family: Verdana, sans-serif;
+    font-family: 'Readex Pro', Verdana, sans-serif;
     font-size  : 14px;
     margin     : 14px 5px 18px;
 }
@@ -58,7 +58,7 @@
 }
 
 .button_text {
-    font-family: Verdana, sans-serif;
+    font-family: 'Readex Pro', Verdana, sans-serif;
     font-size  : 15px;
     margin-left: 18px;
 }
