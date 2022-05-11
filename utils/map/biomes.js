@@ -1,10 +1,10 @@
 import { perlin } from "../perlinNoise";
 
-function getElevation(x, y) {
+export function getElevation(x, y) {
   return perlin(x, y, 3, 0.5, 0.01, 0);
 }
 
-function getTemperature(x, y) {
+export function getTemperature(x, y) {
   return perlin(x, y, 1, 1, 0.015, 0);
 }
 

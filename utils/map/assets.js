@@ -1,16 +1,17 @@
 import { getElevation } from "./biomes";
+import { szudzik, lcg } from "../deterministic";
 import svgLoader from "svg-webgl-loader";
 
 /**
  * Apply foo to assets coordinates over a specific area
  * @param {number} topx top left x coordinate of the chunk, for chunk: topLeft.x - 0.5
  * @param {number} topy top left y coordinate of the chunk, for chunk: topLeft.y - 0.5
- * @param {number} spacing spacing between assets
  * @param {number} length to go through
+ * @param {number} spacing spacing between assets
  * @param {(x, y) -> (bool)} condition to apply to asset
  * @param {(x, y) -> ()} foo function to apply
  */
-function applyToAssets(topx, topy, spacing, length, condition, foo) {
+function applyToAssets(topx, topy, length, spacing, condition, foo) {
     for (let i = topx - (topx % spacing); i < topx + length; i += spacing)
         for (let j = topy - (topy % spacing); j < topy + length; j += spacing)
             if (condition(i, j))
@@ -43,6 +44,37 @@ class Asset {
         this.loaded = true;
         console.log("loaded!")
     }
+
+    getRandomVariant(x, y) {
+        const id = szudzik(x, y); // designed for integers but works fine to get float entropy
+
+
+        return this.getVariant(lcg(id, 2) % this.maxThreshold);
+    }
+
+    apply(chunkTopLeft, length, canvas) {
+        if (!this.loaded)
+            return;
+        applyToAssets(chunkTopLeft.x - 0.5, chunkTopLeft.y - 0.5, length, this.spacing, this.condition, (x, y) => {
+            const assetVariant = this.getRandomVariant(x, y);
+            if (assetVariant.loaded) {
+
+                assetVariant.loaded.draw({
+                    canvas, loc: {
+                        x: x,
+                        y: y === 144 ? 100 : 300,
+                        width: 100 * assetVariant.size,
+                        height: 100 * assetVariant.size
+                    },
+                    config: {
+                        needTrim: false,
+                        needFill: true,
+                        needStroke: false
+                    }
+                })
+            }
+        });
+    }
 }
 
 class AssetVariant {
@@ -60,7 +92,7 @@ class AssetVariant {
 
 }
 
-export const MOUNTAINS_ASSET = new Asset(12, (x, y) => { getElevation(x, y) > 0.5 },
-    [new AssetVariant("/textures/mountains/small.svg", 1.8, 5),
+export const MOUNTAINS_ASSET = new Asset(12, (x, y) => { return getElevation(x, y) > 0.95 },
+    [new AssetVariant("/textures/mountains/small.svg", 1.8, 100),
     new AssetVariant("/textures/mountains/medium.svg", 2.4, 3),
     new AssetVariant("/textures/mountains/big.svg", 3.2, 17)]);
