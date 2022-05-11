@@ -3,6 +3,7 @@ import { szudzik } from "../deterministic";
 import { getColonyColor } from "../colors";
 import { isInsideConvex } from '../polygon';
 import { getBiomeColors } from "./biomes";
+import { MOUNTAINS_ASSET } from "./assets";
 
 export class ChunksCache {
 
@@ -13,6 +14,11 @@ export class ChunksCache {
         this.capacity = capacity;
         this.webgl = webgl;
         this.cached = new Map();
+        // load assets
+        (async () => {
+            MOUNTAINS_ASSET.load()
+            this.assets_loaded = true;
+        })();
     }
 
     /**
@@ -205,6 +211,9 @@ class Chunk {
     }
 
     async prepare() {
+
+        // to do: generate assets coordinates
+
         let waitingCache = true;
 
         const worker = new Worker(new URL('./world.worker.js', import.meta.url));

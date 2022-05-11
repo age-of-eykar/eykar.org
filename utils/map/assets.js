@@ -1,4 +1,5 @@
 import { getElevation } from "./biomes";
+import svgLoader from "svg-webgl-loader";
 
 /**
  * Apply foo to assets coordinates over a specific area
@@ -16,26 +17,50 @@ function applyToAssets(topx, topy, spacing, length, condition, foo) {
                 foo(i, j);
 }
 
-const ASSETS = [
-    {
-        spacing: 12,
-        condition: (x, y) => { getElevation(x, y) > 0.5 },
-        variants: [
-            {
-                texture: "mountains/small.svg",
-                size: 1.8,
-                rarity: 5
-            },
-            {
-                texture: "mountains/regular.svg",
-                size: 2.5,
-                rarity: 3
-            },
-            {
-                texture: "mountains/big.svg",
-                size: 3.2,
-                rarity: 17
-            },
-        ]
+class Asset {
+    constructor(spacing, condition, variants) {
+        this.spacing = spacing
+        this.condition = condition
+        this.oddsThresholds = new Map();
+        let threshold = 0;
+        for (const variant of variants) {
+            threshold += variant.rarity;
+            this.oddsThresholds.set(threshold, variant);
+        }
+        this.maxThreshold = threshold;
+        this.loaded = false;
     }
-];
+
+    getVariant(interThreshold) {
+        for (const threshold of this.oddsThresholds.keys())
+            if (interThreshold < threshold)
+                return this.oddsThresholds.get(threshold);
+    }
+
+    async load() {
+        for (const variant of this.oddsThresholds.values())
+            await variant.load();
+        this.loaded = true;
+        console.log("loaded!")
+    }
+}
+
+class AssetVariant {
+
+    constructor(texture, size, rarity) {
+        this.texture = texture;
+        this.size = size;
+        this.rarity = rarity;
+        this.loaded = false;
+    }
+
+    async load() {
+        this.loaded = await svgLoader(this.texture);
+    }
+
+}
+
+export const MOUNTAINS_ASSET = new Asset(12, (x, y) => { getElevation(x, y) > 0.5 },
+    [new AssetVariant("/textures/mountains/small.svg", 1.8, 5),
+    new AssetVariant("/textures/mountains/medium.svg", 2.4, 3),
+    new AssetVariant("/textures/mountains/big.svg", 3.2, 17)]);
