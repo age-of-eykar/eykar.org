@@ -1,7 +1,7 @@
-import { szudzik } from "../../../utils/deterministic";
 import { createBufferInfoFromArrays, setAttribInfoBufferFromArray } from "twgl.js";
-import { getColonyColor } from "../../../utils/colors";
-import { isInsideConvex } from '../../../utils/polygon';
+import { szudzik } from "../deterministic";
+import { getColonyColor } from "../colors";
+import { isInsideConvex } from '../polygon';
 import { getBiomeColors } from "./biomes";
 
 export class ChunksCache {

@@ -1,6 +1,6 @@
 import { precalculate } from "modular-voronoi";
 import { getBiomeColors } from "./biomes";
-import { szudzik, lcg } from "../../../utils/deterministic.js"
+import { szudzik, lcg } from "../deterministic.js"
 
 self.onmessage = ({ data: { chunkX, chunkY, size } }) => {
     const sideLength = (2 * size + 1);

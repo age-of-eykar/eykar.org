@@ -1,4 +1,4 @@
-import { ChunksCache } from "./calc/cache";
+import { ChunksCache } from "../../utils/map/cache";
 import fragmentShader from '../../shaders/fragment.glsl'
 import vertexShader from '../../shaders/vertex.glsl'
 import { createProgramInfo, setUniforms, setBuffersAndAttributes, drawBufferInfo } from "twgl.js";
