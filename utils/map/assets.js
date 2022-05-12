@@ -42,38 +42,20 @@ class Asset {
         for (const variant of this.oddsThresholds.values())
             await variant.load();
         this.loaded = true;
-        console.log("loaded!")
     }
 
     getRandomVariant(x, y) {
         const id = szudzik(x, y); // designed for integers but works fine to get float entropy
-
-
         return this.getVariant(lcg(id, 2) % this.maxThreshold);
     }
 
-    apply(chunkTopLeft, length, canvas) {
+    apply(chunkTopLeft, length, foo) {
         if (!this.loaded)
             return;
-        applyToAssets(chunkTopLeft.x - 0.5, chunkTopLeft.y - 0.5, length, this.spacing, this.condition, (x, y) => {
-            const assetVariant = this.getRandomVariant(x, y);
-            if (assetVariant.loaded) {
-
-                assetVariant.loaded.draw({
-                    canvas, loc: {
-                        x: x,
-                        y: y === 144 ? 100 : 300,
-                        width: 100 * assetVariant.size,
-                        height: 100 * assetVariant.size
-                    },
-                    config: {
-                        needTrim: false,
-                        needFill: true,
-                        needStroke: false
-                    }
-                })
-            }
-        });
+        applyToAssets(chunkTopLeft.x - 0.5, chunkTopLeft.y - 0.5, length,
+            this.spacing, this.condition, (x, y) => {
+                foo(x, y, this.getRandomVariant(x, y));
+            });
     }
 }
 

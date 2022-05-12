@@ -2,7 +2,6 @@ import { ChunksCache } from "../../utils/map/cache";
 import fragmentShader from '../../shaders/fragment.glsl'
 import vertexShader from '../../shaders/vertex.glsl'
 import { createProgramInfo, setUniforms, setBuffersAndAttributes, drawBufferInfo } from "twgl.js";
-import { MOUNTAINS_ASSET } from "../../utils/map/assets";
 
 let frameRequest;
 
@@ -32,8 +31,22 @@ function animateScene(gl, cache, center, scale, selected, keyControlers, canvas,
             });
         setBuffersAndAttributes(gl, programInfo, chunk.bufferInfo);
         drawBufferInfo(gl, chunk.bufferInfo);
-        if (cache.assets_loaded)
-            MOUNTAINS_ASSET.apply(chunk.getTopLeft(), ChunksCache.sideSize, canvas)
+        for (const { x, y, variant } of chunk.mountains) {
+            variant.loaded.draw({
+                canvas, loc: {
+                    x: x,
+                    y: y === 144 ? 100 : 300,
+                    width: 100 * variant.size,
+                    height: 100 * variant.size
+                },
+                config: {
+                    needTrim: false,
+                    needFill: true,
+                    needStroke: false
+                }
+            })
+        }
+
     }, canvas.height / canvas.width)
 
     frameRequest = window.requestAnimationFrame(function (currentTime) {

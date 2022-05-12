@@ -16,9 +16,13 @@ export class ChunksCache {
         this.cached = new Map();
         // load assets
         (async () => {
-            MOUNTAINS_ASSET.load()
-            this.assets_loaded = true;
-        })();
+            await MOUNTAINS_ASSET.load()
+            for (const chunk of this.cached.values()) {
+                // todo: update existing chunk assets
+                if (chunk.ready)
+                    console.log("already created chunk needs new mountains")
+            }
+        })()
     }
 
     /**
@@ -71,7 +75,7 @@ export class ChunksCache {
 
     prepare(x, y) {
         let chunk = this.getChunk(x, y);
-        if (chunk === undefined)
+        if (chunk === undefined) {
             chunk = new Chunk(x, y, (chunk, vertices, colors) => {
                 chunk.bufferInfo = createBufferInfoFromArrays(this.webgl, {
                     position: { numComponents: 2, data: vertices },
@@ -82,6 +86,7 @@ export class ChunksCache {
                     setAttribInfoBufferFromArray(this.webgl, chunk.bufferInfo.attribs.fillColor, chunk.colors);
                 },
             );
+        }
         // should be added to the end of the map
         this.cached.set(szudzik(x, y), chunk);
         while (this.cached.size > this.capacity) {
@@ -167,6 +172,7 @@ class Chunk {
         this.ready = false;
         this.loadBuffer = loadBuffer;
         this.updateColorBuffer = updateColorBuffer;
+        this.mountains = [];
         (async () => { this.prepare(); })();
     }
 
@@ -212,8 +218,6 @@ class Chunk {
 
     async prepare() {
 
-        // to do: generate assets coordinates
-
         let waitingCache = true;
 
         const worker = new Worker(new URL('./world.worker.js', import.meta.url));
@@ -230,6 +234,13 @@ class Chunk {
             if (!waitingCache)
                 this.updateColors();
             this.loadBuffer(this, vertices, colors);
+
+            // to do: generate assets coordinates from a worker
+            if (MOUNTAINS_ASSET.loaded)
+                MOUNTAINS_ASSET.apply(this.getTopLeft(), ChunksCache.sideSize, (x, y, variant) => {
+                    this.mountains.push({ x, y, variant })
+                });
+
             this.ready = true;
         };
 
