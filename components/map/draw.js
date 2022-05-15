@@ -31,7 +31,7 @@ function animateScene(gl, cache, center, scale, selected, keyControlers, canvas,
             });
         setBuffersAndAttributes(gl, programInfo, chunk.bufferInfo);
         drawBufferInfo(gl, chunk.bufferInfo);
-        
+
         for (const { x, y, variant } of chunk.mountains) {
 
         }
@@ -50,11 +50,15 @@ function animateScene(gl, cache, center, scale, selected, keyControlers, canvas,
 export const startDrawing = (canvas, center, scale, selected, keyControlers) => {
     // canvas fixes
     canvas.focus();
-    const gl = canvas.getContext("webgl2", {
+    const gl = canvas.getContext('webgl2', {
+        alpha: true,
+        depth: false,
+        stencil: true,
+        antialias: true,
         preserveDrawingBuffer: true,
-        powerPreference: 'high-performance',
-        failIfMajorPerformanceCaveat: false,
+        powerPreference: 'default',
     });
+
     const programInfo = createProgramInfo(gl, [vertexShader, fragmentShader]);
     const cache = new ChunksCache(256, gl);
     animateScene(gl, cache, center, scale, selected, keyControlers, canvas, programInfo);

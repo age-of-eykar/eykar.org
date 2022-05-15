@@ -72,7 +72,6 @@ class AssetVariant {
 
     async load(webgl) {
         this.loaded = await svgLoader(this.texture);
-        console.log(this.loaded)
         this.loaded.load({
             webgl,
             shaders: {
