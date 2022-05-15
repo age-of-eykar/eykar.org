@@ -1,6 +1,8 @@
 import { getElevation } from "./biomes";
 import { szudzik, lcg } from "../deterministic";
-import svgLoader from "svg-webgl-loader";
+import svgLoader from "svg-webgl-loader-opti";
+import fragmentShader from '../../shaders/vectors/fragment.glsl'
+import vertexShader from '../../shaders/vectors/vertex.glsl'
 
 /**
  * Apply foo to assets coordinates over a specific area
@@ -38,9 +40,9 @@ class Asset {
                 return this.oddsThresholds.get(threshold);
     }
 
-    async load() {
+    async load(webgl) {
         for (const variant of this.oddsThresholds.values())
-            await variant.load();
+            await variant.load(webgl);
         this.loaded = true;
     }
 
@@ -68,8 +70,21 @@ class AssetVariant {
         this.loaded = false;
     }
 
-    async load() {
+    async load(webgl) {
         this.loaded = await svgLoader(this.texture);
+        console.log(this.loaded)
+        this.loaded.load({
+            webgl,
+            shaders: {
+                vertex: vertexShader,
+                fragment: fragmentShader,
+            },
+            loc: {
+                width: 400,
+                height: 400,
+            },
+            needTrim: false,
+        });
     }
 
 }

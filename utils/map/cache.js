@@ -16,7 +16,7 @@ export class ChunksCache {
         this.cached = new Map();
         // load assets
         (async () => {
-            await MOUNTAINS_ASSET.load()
+            await MOUNTAINS_ASSET.load(webgl)
             for (const chunk of this.cached.values()) {
                 // todo: update existing chunk assets
                 if (chunk.ready)

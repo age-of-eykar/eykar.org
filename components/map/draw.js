@@ -1,6 +1,6 @@
 import { ChunksCache } from "../../utils/map/cache";
-import fragmentShader from '../../shaders/fragment.glsl'
-import vertexShader from '../../shaders/vertex.glsl'
+import fragmentShader from '../../shaders/background/fragment.glsl'
+import vertexShader from '../../shaders/background/vertex.glsl'
 import { createProgramInfo, setUniforms, setBuffersAndAttributes, drawBufferInfo } from "twgl.js";
 
 let frameRequest;
@@ -31,20 +31,9 @@ function animateScene(gl, cache, center, scale, selected, keyControlers, canvas,
             });
         setBuffersAndAttributes(gl, programInfo, chunk.bufferInfo);
         drawBufferInfo(gl, chunk.bufferInfo);
+        
         for (const { x, y, variant } of chunk.mountains) {
-            variant.loaded.draw({
-                canvas, loc: {
-                    x: x,
-                    y: y === 144 ? 100 : 300,
-                    width: 100 * variant.size,
-                    height: 100 * variant.size
-                },
-                config: {
-                    needTrim: false,
-                    needFill: true,
-                    needStroke: false
-                }
-            })
+
         }
 
     }, canvas.height / canvas.width)
@@ -61,7 +50,11 @@ function animateScene(gl, cache, center, scale, selected, keyControlers, canvas,
 export const startDrawing = (canvas, center, scale, selected, keyControlers) => {
     // canvas fixes
     canvas.focus();
-    const gl = canvas.getContext("webgl2");
+    const gl = canvas.getContext("webgl2", {
+        preserveDrawingBuffer: true,
+        powerPreference: 'high-performance',
+        failIfMajorPerformanceCaveat: false,
+    });
     const programInfo = createProgramInfo(gl, [vertexShader, fragmentShader]);
     const cache = new ChunksCache(256, gl);
     animateScene(gl, cache, center, scale, selected, keyControlers, canvas, programInfo);
