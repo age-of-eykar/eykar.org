@@ -7,20 +7,30 @@ import vectorFragmentShader from '../../shaders/vectors/fragment.glsl'
 import vectorVertexShader from '../../shaders/vectors/vertex.glsl'
 
 let frameRequest;
-let loader;
+let assets = {
+    "small_mountain": false,
+    "medium_mountain": false,
+    "big_mountain": false,
+    "huge_mountain": false,
+    "peak_mountain": false,
+    "twins_mountain": false,
+    "arch_mountain": false,
+    "magic_mountain": false,
+};
 
 function animateScene(gl, cache, center, scale, selected, keyControlers, canvas, programInfo) {
     let previousTime = performance.now();
     gl.viewport(0, 0, canvas.width, canvas.height);
-    gl.useProgram(programInfo.program);
-    setUniforms(programInfo, {
-        scale: 2 / scale.current,
-        ratio: canvas.width / canvas.height,
-        center: [center.current.x,
-        center.current.y],
-    });
 
     cache.forEachChunk(center.current, scale.current, (chunk) => {
+        gl.useProgram(programInfo.program);
+        setUniforms(programInfo, {
+            scale: 2 / scale.current,
+            ratio: canvas.width / canvas.height,
+            center: [center.current.x,
+            center.current.y],
+        });
+
         if (!chunk.ready)
             return;
         if (chunk.x == selected.current[2] && chunk.y == selected.current[3])
@@ -35,22 +45,22 @@ function animateScene(gl, cache, center, scale, selected, keyControlers, canvas,
             });
         setBuffersAndAttributes(gl, programInfo, chunk.bufferInfo);
         drawBufferInfo(gl, chunk.bufferInfo);
+        for (const [x, y, variant] of chunk.assets)
+            if (assets[variant.sprite]) {
+                assets[variant.sprite].draw({
+                    uniforms: {
+                        scale: 2 / scale.current,
+                        zoom: variant.zoom,
+                        location: [x, y],
+                        center: [center.current.x,
+                        center.current.y],
+                        ratio: canvas.width / canvas.height,
+                    },
+                    needFill: true,
+                    needStroke: true,
+                });
+            }
     }, canvas.height / canvas.width)
-
-    if (loader)
-        loader.draw({
-            uniforms: {
-                scale: 2 / scale.current,
-                zoom: 3.0,
-                location: [4.0, 3.0],
-                center: [center.current.x,
-                center.current.y],
-                ratio: canvas.width / canvas.height,
-            },
-            needFill: true,
-            needStroke: true,
-        });
-
 
     frameRequest = window.requestAnimationFrame(function (currentTime) {
         const deltaTime = currentTime - previousTime;
@@ -73,26 +83,50 @@ export const startDrawing = (canvas, center, scale, selected, keyControlers) => 
         powerPreference: 'default',
     });
 
-    loader = false;
     (async () => {
-        loader = await svgLoader("/textures/mountains/medium.svg");
-        loader.load({
-            gl,
-            shaders: {
-                vertex: vectorVertexShader,
-                fragment: vectorFragmentShader,
-            },
-            loc: {
-                width: 400,
-                height: 400,
-            },
-            needTrim: false,
-        });
+        await loadAssets(gl)
     })();
+
+
     const programInfo = createProgramInfo(gl, [vertexShader, fragmentShader]);
     const cache = new ChunksCache(256, gl);
     animateScene(gl, cache, center, scale, selected, keyControlers, canvas, programInfo);
     return cache;
+}
+
+async function loadAssets(gl) {
+    const conf = {
+        gl,
+        shaders: {
+            vertex: vectorVertexShader,
+            fragment: vectorFragmentShader,
+        },
+        needTrim: false,
+    };
+
+    assets.small_mountain = await svgLoader("/textures/mountains/small.svg");
+    assets.small_mountain.load(conf);
+
+    assets.medium_mountain = await svgLoader("/textures/mountains/medium.svg");
+    assets.medium_mountain.load(conf);
+
+    assets.big_mountain = await svgLoader("/textures/mountains/big.svg");
+    assets.big_mountain.load(conf);
+
+    assets.huge_mountain = await svgLoader("/textures/mountains/huge.svg");
+    assets.huge_mountain.load(conf);
+
+    assets.peak_mountain = await svgLoader("/textures/mountains/peak.svg");
+    assets.peak_mountain.load(conf);
+
+    assets.twins_mountain = await svgLoader("/textures/mountains/twins.svg");
+    assets.twins_mountain.load(conf);
+
+    assets.arch_mountain = await svgLoader("/textures/mountains/arch.svg");
+    assets.arch_mountain.load(conf);
+
+    assets.magic_mountain = await svgLoader("/textures/mountains/magic.svg");
+    assets.magic_mountain.load(conf);
 }
 
 export const stopDrawing = () => {

@@ -215,11 +215,12 @@ class Chunk {
             chunkY: this.y,
             size: ChunksCache.halfsize
         });
-        worker.onmessage = ({ data: { vertices, colors, stops } }) => {
+        worker.onmessage = ({ data: { vertices, colors, stops, assets } }) => {
             worker.terminate();
             this.vertices = vertices;
             this.colors = colors;
             this.stops = stops;
+            this.assets = assets;
             if (!waitingCache)
                 this.updateColors();
             this.loadBuffer(this, vertices, colors);
