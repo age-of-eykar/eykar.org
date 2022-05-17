@@ -20,7 +20,7 @@
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "starknet": "^3.5.1",
-    "svg-webgl-loader-opti": "^2.2.0",
+    "svg-webgl-loader-opti": "^2.3.1",
     "twgl.js": "^4.21.2"
   },
   "devDependencies": {

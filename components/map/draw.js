@@ -2,8 +2,12 @@ import { ChunksCache } from "../../utils/map/cache";
 import fragmentShader from '../../shaders/background/fragment.glsl'
 import vertexShader from '../../shaders/background/vertex.glsl'
 import { createProgramInfo, setUniforms, setBuffersAndAttributes, drawBufferInfo } from "twgl.js";
+import svgLoader from "svg-webgl-loader-opti";
+import vectorFragmentShader from '../../shaders/vectors/fragment.glsl'
+import vectorVertexShader from '../../shaders/vectors/vertex.glsl'
 
 let frameRequest;
+let loader;
 
 function animateScene(gl, cache, center, scale, selected, keyControlers, canvas, programInfo) {
     let previousTime = performance.now();
@@ -26,17 +30,27 @@ function animateScene(gl, cache, center, scale, selected, keyControlers, canvas,
             });
         else
             setUniforms(programInfo, {
-                selectedStart: Number.MAX_SAFE_INTEGER,
-                selectedEnd: Number.MAX_SAFE_INTEGER
+                selectedStart: 0,
+                selectedEnd: 0
             });
         setBuffersAndAttributes(gl, programInfo, chunk.bufferInfo);
         drawBufferInfo(gl, chunk.bufferInfo);
-
-        for (const { x, y, variant } of chunk.mountains) {
-
-        }
-
     }, canvas.height / canvas.width)
+
+    if (loader)
+        loader.draw({
+            uniforms: {
+                scale: 2 / scale.current,
+                zoom: 3.0,
+                location: [4.0, 3.0],
+                center: [center.current.x,
+                center.current.y],
+                ratio: canvas.width / canvas.height,
+            },
+            needFill: true,
+            needStroke: true,
+        });
+
 
     frameRequest = window.requestAnimationFrame(function (currentTime) {
         const deltaTime = currentTime - previousTime;
@@ -55,10 +69,26 @@ export const startDrawing = (canvas, center, scale, selected, keyControlers) => 
         depth: false,
         stencil: true,
         antialias: true,
-        preserveDrawingBuffer: true,
+        preserveDrawingBuffer: false,
         powerPreference: 'default',
     });
 
+    loader = false;
+    (async () => {
+        loader = await svgLoader("/textures/mountains/medium.svg");
+        loader.load({
+            gl,
+            shaders: {
+                vertex: vectorVertexShader,
+                fragment: vectorFragmentShader,
+            },
+            loc: {
+                width: 400,
+                height: 400,
+            },
+            needTrim: false,
+        });
+    })();
     const programInfo = createProgramInfo(gl, [vertexShader, fragmentShader]);
     const cache = new ChunksCache(256, gl);
     animateScene(gl, cache, center, scale, selected, keyControlers, canvas, programInfo);

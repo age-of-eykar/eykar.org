@@ -3,7 +3,6 @@ import { szudzik } from "../deterministic";
 import { getColonyColor } from "../colors";
 import { isInsideConvex } from '../polygon';
 import { getBiomeColors } from "./biomes";
-import { MOUNTAINS_ASSET } from "./assets";
 
 export class ChunksCache {
 
@@ -14,15 +13,6 @@ export class ChunksCache {
         this.capacity = capacity;
         this.webgl = webgl;
         this.cached = new Map();
-        // load assets
-        (async () => {
-            await MOUNTAINS_ASSET.load(webgl)
-            for (const chunk of this.cached.values()) {
-                // todo: update existing chunk assets
-                if (chunk.ready)
-                    console.log("already created chunk needs new mountains")
-            }
-        })()
     }
 
     /**
@@ -172,7 +162,6 @@ class Chunk {
         this.ready = false;
         this.loadBuffer = loadBuffer;
         this.updateColorBuffer = updateColorBuffer;
-        this.mountains = [];
         (async () => { this.prepare(); })();
     }
 
@@ -234,12 +223,6 @@ class Chunk {
             if (!waitingCache)
                 this.updateColors();
             this.loadBuffer(this, vertices, colors);
-
-            // to do: generate assets coordinates from a worker
-            if (MOUNTAINS_ASSET.loaded)
-                MOUNTAINS_ASSET.apply(this.getTopLeft(), ChunksCache.sideSize, (x, y, variant) => {
-                    this.mountains.push({ x, y, variant })
-                });
 
             this.ready = true;
         };
