@@ -14,7 +14,7 @@ out vec4 color;
 
 void main() {
   color = vec4(107.0/255.0, 87.0/255.0, 57.0/255.0, 1.0);
-  vec2 point = (position*zoom - location - center) * scale;
+  vec2 point = (position*zoom + location - center) * scale;
   point.y *= ratio;
   float w = 0.25 * point.y + 1.0; // slope = 0.25
   

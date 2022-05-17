@@ -1,11 +1,16 @@
 import { precalculate } from "modular-voronoi";
 import { getBiomeColors } from "./biomes";
+import { MOUNTAINS_ASSET } from "./assets";
 import { szudzik, lcg } from "../deterministic.js"
 
 self.onmessage = ({ data: { chunkX, chunkY, size } }) => {
     const sideLength = (2 * size + 1);
     const prefixX = -size + chunkX * sideLength;
     const prefixY = -size + chunkY * sideLength;
+    const assets = [];
+    MOUNTAINS_ASSET.apply(prefixX, prefixY, sideLength, (x, y, variant) => {
+        assets.push([x, y, variant]);
+    });
     const points = new Array(Math.pow((sideLength + 2), 2));
     const colors = new Array(Math.pow(sideLength, 2));
     for (let i = 0; i <= sideLength + 1; i++) {
@@ -25,7 +30,7 @@ self.onmessage = ({ data: { chunkX, chunkY, size } }) => {
             const x = prefixX + i - 1;
             const y = prefixY + j - 1;
             [0.1, 0.7, 0.8, 1.0]
-            colors[i + j * sideLength] = getBiomeColors(x, 2 * y);
+            colors[i + j * sideLength] = getBiomeColors(x, y);
         }
 
     const voronoi = precalculate(points, 2 * size + 3, 2 * size + 3);
@@ -44,6 +49,6 @@ self.onmessage = ({ data: { chunkX, chunkY, size } }) => {
     }
 
     self.postMessage({
-        vertices: shiftedPoints, colors: pointColors, stops: voronoi.stops
+        vertices: shiftedPoints, colors: pointColors, stops: voronoi.stops, assets
     }, null, [shiftedPoints, pointColors]);
 };

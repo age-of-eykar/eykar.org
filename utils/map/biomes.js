@@ -51,30 +51,3 @@ export function getBiomeColors(x, y) {
 
   return expectedColor;
 }
-
-// returns [elevation, temperature, biome]
-export function biomeData(x, y) {
-  const elevation = getElevation(x, y);
-  const temperature = getTemperature(x, y);
-  const e = (elevation + 0.15) * 1000;
-  const t = temperature * 100;
-
-  if (elevation < -0.15) {
-    return [e, t, "Sea"];
-  } else if (elevation < 0.16) {
-    if (temperature < -0.2) {
-      if (temperature < -0.35) return [e, t, "Ice desert"];
-      else if (elevation > 0.05) return [e, t, "Tundra forest"];
-      else return [e, t, "Continental plain"];
-    } else if (temperature < 0.2) {
-      if (elevation > 0.05) return [e, t, "Continental forest"];
-      else return [e, t, "Continental plain"];
-    } else {
-      if (temperature > 0.3) return [e, t, "Sand desert"];
-      else if (elevation > 0.05) return [e, t, "Jungle forest"];
-      else return [e, t, "Savanna plain"];
-    }
-  } else {
-    return [e, t, "Mountains"];
-  }
-}

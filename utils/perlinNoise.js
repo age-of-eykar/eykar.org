@@ -36,7 +36,7 @@ function cubicInterpolate(a, b, t) {
 // Main calculatory function for obtaining noise value at the given coordinates
 export function noise(x, y, s) {
   let x_int, y_int, x_frac, y_frac;
-  [x_int, x_frac] = intAndFrac(x*2);
+  [x_int, x_frac] = intAndFrac(x * 2);
   [y_int, y_frac] = intAndFrac(y);
 
   const g00 = fastDot(getGrad(x_int, y_int, s), x_frac, y_frac);
@@ -59,7 +59,7 @@ export function perlin(x, y, octaves, persistence, frequency, seed) {
     max = 0;
 
   for (let i = 0; i < octaves; i++) {
-    r += noise(x * f, y * f, seed) * amplitude;
+    r += noise(x * f, y * 2 * f, seed) * amplitude;
     f *= 2;
     amplitude *= persistence;
     max += amplitude;
