@@ -59,7 +59,7 @@ class Asset {
     }
 }
 
-export const MOUNTAINS_ASSET = new Asset(12, (x, y) => {
+export const MOUNTAINS_ASSET = new Asset(9.5, (x, y) => {
     const elevation = getElevation(x, y);
     const temperature = getTemperature(x, y);
     return elevation > 0.5 && temperature > -0.5;
@@ -71,7 +71,7 @@ export const MOUNTAINS_ASSET = new Asset(12, (x, y) => {
         { sprite: "huge_mountain", zoom: 4.0, frequency: 50 },
         { sprite: "peak_mountain", zoom: 5.0, frequency: 40 },
         { sprite: "twins_mountain", zoom: 4.0, frequency: 30 },
-        { sprite: "arch_mountain", zoom: 3.0, frequency: 20 },
+        { sprite: "arch_mountain", zoom: 4.0, frequency: 20 },
         { sprite: "magic_mountain", zoom: 5.0, frequency: 1 },
     ]
 );
