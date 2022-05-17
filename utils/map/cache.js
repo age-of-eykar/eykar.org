@@ -1,7 +1,7 @@
-import { szudzik } from "../../../utils/deterministic";
 import { createBufferInfoFromArrays, setAttribInfoBufferFromArray } from "twgl.js";
-import { getColonyColor } from "../../../utils/colors";
-import { isInsideConvex } from '../../../utils/polygon';
+import { szudzik } from "../deterministic";
+import { getColonyColor } from "../colors";
+import { isInsideConvex } from '../polygon';
 import { getBiomeColors } from "./biomes";
 
 export class ChunksCache {
@@ -65,7 +65,7 @@ export class ChunksCache {
 
     prepare(x, y) {
         let chunk = this.getChunk(x, y);
-        if (chunk === undefined)
+        if (chunk === undefined) {
             chunk = new Chunk(x, y, (chunk, vertices, colors) => {
                 chunk.bufferInfo = createBufferInfoFromArrays(this.webgl, {
                     position: { numComponents: 2, data: vertices },
@@ -76,6 +76,7 @@ export class ChunksCache {
                     setAttribInfoBufferFromArray(this.webgl, chunk.bufferInfo.attribs.fillColor, chunk.colors);
                 },
             );
+        }
         // should be added to the end of the map
         this.cached.set(szudzik(x, y), chunk);
         while (this.cached.size > this.capacity) {
@@ -205,6 +206,7 @@ class Chunk {
     }
 
     async prepare() {
+
         let waitingCache = true;
 
         const worker = new Worker(new URL('./world.worker.js', import.meta.url));
@@ -221,6 +223,7 @@ class Chunk {
             if (!waitingCache)
                 this.updateColors();
             this.loadBuffer(this, vertices, colors);
+
             this.ready = true;
         };
 
