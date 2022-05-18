@@ -7,16 +7,7 @@ import vectorFragmentShader from '../../shaders/vectors/fragment.glsl'
 import vectorVertexShader from '../../shaders/vectors/vertex.glsl'
 
 let frameRequest;
-let assets = {
-    "small_mountain": false,
-    "medium_mountain": false,
-    "big_mountain": false,
-    "huge_mountain": false,
-    "peak_mountain": false,
-    "twins_mountain": false,
-    "arch_mountain": false,
-    "magic_mountain": false,
-};
+let assets = {};
 
 function animateScene(gl, cache, center, scale, selected, keyControlers, canvas, programInfo) {
     let previousTime = performance.now();
@@ -107,6 +98,9 @@ async function loadAssets(gl) {
     assets.small_mountain = await svgLoader("/textures/mountains/small.svg");
     assets.small_mountain.load(conf);
 
+    assets.flat_mountain = await svgLoader("/textures/mountains/flat.svg");
+    assets.flat_mountain.load(conf);
+
     assets.medium_mountain = await svgLoader("/textures/mountains/medium.svg");
     assets.medium_mountain.load(conf);
 
@@ -124,6 +118,9 @@ async function loadAssets(gl) {
 
     assets.arch_mountain = await svgLoader("/textures/mountains/arch.svg");
     assets.arch_mountain.load(conf);
+
+    assets.sharp_mountain = await svgLoader("/textures/mountains/sharp.svg");
+    assets.sharp_mountain.load(conf);
 
     assets.magic_mountain = await svgLoader("/textures/mountains/magic.svg");
     assets.magic_mountain.load(conf);
