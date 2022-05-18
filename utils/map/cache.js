@@ -91,16 +91,6 @@ export class ChunksCache {
             return chunk;
     }
 
-    convertCoordinates(X, Y, center, scale, ratio) {
-        const Cx = center.x
-        const Cy = center.y
-        const s = 2 / scale
-        const p = 0.25
-        const y = Cy + Y / (s * ratio * (1 - p * Y))
-        const x = Cx + X / s + X * ratio * p * (y - Cy)
-        return [x, y];
-    }
-
     getPlotEdges(plot) {
         const coo = this.getChunkCoordinates(plot.x, plot.y);
         const chunk = this.getChunk(coo.x, coo.y);
@@ -115,8 +105,7 @@ export class ChunksCache {
         return [output, chunk];
     }
 
-    getPlotAt(X, Y, center, scale, ratio) {
-        const [x, y] = this.convertCoordinates(X, Y, center, scale, ratio);
+    getPlotAt(x, y) {
         const flooredX = Math.floor(x);
         const flooredY = Math.floor(y);
 
@@ -137,8 +126,8 @@ export class ChunksCache {
             }
     }
 
-    getVerticesStopsAt(X, Y, center, scale, ratio) {
-        const coo = this.getPlotAt(X, Y, center, scale, ratio);
+    getVerticesStopsAt(x, y) {
+        const coo = this.getPlotAt(x, y);
         if (!coo)
             return;
         const plot = { x: coo[0], y: coo[1] };

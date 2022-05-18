@@ -5,6 +5,7 @@ import { startDrawing, stopDrawing } from "./draw";
 import ZoomControler from './events/zoom';
 import PanningControler from './events/panning';
 import SpeedControler from "./events/speed";
+import { Selector } from "./selector";
 
 export let cache;
 export let speedControler;
@@ -18,7 +19,6 @@ export function MapCanvas({ onPlotClick }) {
   const scale = useRef(32.0);
 
   const canvasRef = useRef(null);
-  const selected = useRef([0, 0]);
 
   const pixelRatio = (typeof window === 'undefined') ? 1 : window.devicePixelRatio;
   const windowSize = useRef((typeof window === 'undefined') ? null : {
@@ -29,14 +29,18 @@ export function MapCanvas({ onPlotClick }) {
   useEffect(() => {
     canvasRef.current.width = windowSize.current.width;
     canvasRef.current.height = windowSize.current.height;
+    const selector = new Selector(windowSize, center, scale);
     speedControler = new SpeedControler(center, scale, windowSize);
 
     // handle canvas drawing
-    cache = startDrawing(canvasRef.current, center, scale, selected, speedControler)
+    cache = startDrawing(canvasRef.current, center, scale, selector, speedControler)
     cache.refresh(center.current, scale.current, windowSize.current.height / windowSize.current.width);
 
+    selector.setCache(cache);
+
     // handle listeners creation
-    const mouseControler = new PanningControler(center, scale, windowSize, canvasRef, selected, onPlotClick, cache);
+    const mouseControler = new PanningControler(center, scale, windowSize,
+      canvasRef, onPlotClick, cache, selector);
 
     const touchDown = mouseControler.handleTouchDown.bind(mouseControler);
     const touchMove = mouseControler.handleTouchMove.bind(mouseControler);
@@ -56,7 +60,7 @@ export function MapCanvas({ onPlotClick }) {
     window.addEventListener("keydown", listenKeyDown);
     window.addEventListener("keyup", listenKeyUp);
 
-    wheelControler = new ZoomControler(scale, (newScale) => {
+    wheelControler = new ZoomControler(center, scale, selector, (newScale) => {
       scale.current = newScale;
       cache.refresh(center.current, newScale, windowSize.current.height / windowSize.current.width);
     });
