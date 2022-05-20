@@ -1,31 +1,17 @@
+import { convertCoordinates } from "../../../utils/map/utils";
+
 export default class PanningControler {
     constructor(
-        center, scale, windowSize, canvasRef, selected, onPlotClick, cache
+        center, scale, windowSize, canvasRef, onPlotClick, cache, selector
     ) {
         this.center = center;
         this.scale = scale;
         this.windowSize = windowSize;
         this.canvasRef = canvasRef;
-        this.selected = selected;
         this.onPlotClick = onPlotClick;
         this.cache = cache;
+        this.selector = selector;
         this.isDown = false;
-        this.lastMove = performance.now();
-    }
-
-    select(x, y) {
-        const X = 2 * x * window.devicePixelRatio / this.windowSize.current.width - 1;
-        const Y = - (2 * y * window.devicePixelRatio / this.windowSize.current.height - 1);
-        const now = performance.now();
-        if (now - this.lastMove < 10)
-            return;
-        this.lastMove = now;
-
-        const ratio = this.windowSize.current.width / this.windowSize.current.height;
-        const output = this.cache.getVerticesStopsAt(X, Y,
-            this.center.current, this.scale.current, ratio);
-        if (output)
-            this.selected.current = output;
     }
 
     startPanning(x, y) {
@@ -34,26 +20,26 @@ export default class PanningControler {
         this.start = [x, y];
     }
 
-    movePanning(x, y) {
-        this.select(x, y);
+    movePanning(px, py) {
+        this.selector.select(px, py);
 
         // don't pan if mouse is not pressed
         if (!this.isDown) return;
         const norm = this.scale.current * window.devicePixelRatio / this.windowSize.current.width;
-        const xMap = (x - this.last[0]) * norm;
-        const yMap = (y - this.last[1]) * norm;
+        const xMap = (px - this.last[0]) * norm;
+        const yMap = (py - this.last[1]) * norm;
 
-        this.last = [x, y];
+        this.last = [px, py];
         this.center.current = { x: this.center.current.x - xMap, y: this.center.current.y + yMap };
     }
 
-    stopPanning(x, y) {
+    stopPanning(px, py) {
         if (!this.isDown)
             return;
         this.isDown = false;
         const stop = [
-            (this.scale.current / this.windowSize.current.width) * (x - this.start[0]) * window.devicePixelRatio,
-            (this.scale.current / this.windowSize.current.height) * (y - this.start[1]) * window.devicePixelRatio
+            (this.scale.current / this.windowSize.current.width) * (px - this.start[0]) * window.devicePixelRatio,
+            (this.scale.current / this.windowSize.current.height) * (py - this.start[1]) * window.devicePixelRatio
         ];
 
         const ratio = this.windowSize.current.width / this.windowSize.current.height;
@@ -64,10 +50,11 @@ export default class PanningControler {
             1 / ratio);
 
         if (stop[0] ** 2 + stop[1] ** 2 < 1.0) {
-            let X = 2 * x * window.devicePixelRatio / this.windowSize.current.width - 1;
-            let Y = - (2 * y * window.devicePixelRatio / this.windowSize.current.height - 1);
-            const result = this.cache.getPlotAt(X, Y,
-                this.center.current, this.scale.current, ratio);
+            let X = 2 * px * window.devicePixelRatio / this.windowSize.current.width - 1;
+            let Y = - (2 * py * window.devicePixelRatio / this.windowSize.current.height - 1);
+            const [x, y] = convertCoordinates(X, Y, this.center.current, this.scale.current, ratio);
+            console.log(x, y)
+            const result = this.cache.getPlotAt(x, y);
             if (result)
                 this.onPlotClick(result[0], result[1]);
         }

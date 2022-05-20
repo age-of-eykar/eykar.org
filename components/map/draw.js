@@ -7,18 +7,9 @@ import vectorFragmentShader from '../../shaders/vectors/fragment.glsl'
 import vectorVertexShader from '../../shaders/vectors/vertex.glsl'
 
 let frameRequest;
-let assets = {
-    "small_mountain": false,
-    "medium_mountain": false,
-    "big_mountain": false,
-    "huge_mountain": false,
-    "peak_mountain": false,
-    "twins_mountain": false,
-    "arch_mountain": false,
-    "magic_mountain": false,
-};
+let assets = {};
 
-function animateScene(gl, cache, center, scale, selected, keyControlers, canvas, programInfo) {
+function animateScene(gl, cache, center, scale, selector, keyControlers, canvas, programInfo) {
     let previousTime = performance.now();
     gl.viewport(0, 0, canvas.width, canvas.height);
 
@@ -33,10 +24,10 @@ function animateScene(gl, cache, center, scale, selected, keyControlers, canvas,
 
         if (!chunk.ready)
             return;
-        if (chunk.x == selected.current[2] && chunk.y == selected.current[3])
+        if (selector.selected && chunk.x == selector.selected[2] && chunk.y == selector.selected[3])
             setUniforms(programInfo, {
-                selectedStart: selected.current[0],
-                selectedEnd: selected.current[1]
+                selectedStart: selector.selected[0],
+                selectedEnd: selector.selected[1]
             });
         else
             setUniforms(programInfo, {
@@ -67,11 +58,11 @@ function animateScene(gl, cache, center, scale, selected, keyControlers, canvas,
         const speed = keyControlers.getSpeed();
         center.current.x += speed.x * deltaTime / 1000;
         center.current.y += speed.y * deltaTime / 1000;
-        animateScene(gl, cache, center, scale, selected, keyControlers, canvas, programInfo);
+        animateScene(gl, cache, center, scale, selector, keyControlers, canvas, programInfo);
     });
 }
 
-export const startDrawing = (canvas, center, scale, selected, keyControlers) => {
+export const startDrawing = (canvas, center, scale, selector, keyControlers) => {
     // canvas fixes
     canvas.focus();
     const gl = canvas.getContext('webgl2', {
@@ -90,7 +81,7 @@ export const startDrawing = (canvas, center, scale, selected, keyControlers) => 
 
     const programInfo = createProgramInfo(gl, [vertexShader, fragmentShader]);
     const cache = new ChunksCache(256, gl);
-    animateScene(gl, cache, center, scale, selected, keyControlers, canvas, programInfo);
+    animateScene(gl, cache, center, scale, selector, keyControlers, canvas, programInfo);
     return cache;
 }
 
@@ -106,6 +97,9 @@ async function loadAssets(gl) {
 
     assets.small_mountain = await svgLoader("/textures/mountains/small.svg");
     assets.small_mountain.load(conf);
+
+    assets.flat_mountain = await svgLoader("/textures/mountains/flat.svg");
+    assets.flat_mountain.load(conf);
 
     assets.medium_mountain = await svgLoader("/textures/mountains/medium.svg");
     assets.medium_mountain.load(conf);
@@ -124,6 +118,9 @@ async function loadAssets(gl) {
 
     assets.arch_mountain = await svgLoader("/textures/mountains/arch.svg");
     assets.arch_mountain.load(conf);
+
+    assets.sharp_mountain = await svgLoader("/textures/mountains/sharp.svg");
+    assets.sharp_mountain.load(conf);
 
     assets.magic_mountain = await svgLoader("/textures/mountains/magic.svg");
     assets.magic_mountain.load(conf);

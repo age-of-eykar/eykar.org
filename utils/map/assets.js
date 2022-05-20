@@ -65,13 +65,15 @@ export const MOUNTAINS_ASSET = new Asset(9.5, (x, y) => {
     return elevation > 0.5 && temperature > -0.5;
 },
     [
-        { sprite: "small_mountain", zoom: 3.0, frequency: 240 },
+        { sprite: "small_mountain", zoom: 2.5, frequency: 140 },
+        { sprite: "flat_mountain", zoom: 3.0, frequency: 240 },
         { sprite: "medium_mountain", zoom: 3.0, frequency: 480 },
         { sprite: "big_mountain", zoom: 4.0, frequency: 120 },
         { sprite: "huge_mountain", zoom: 4.0, frequency: 50 },
         { sprite: "peak_mountain", zoom: 5.0, frequency: 40 },
         { sprite: "twins_mountain", zoom: 4.0, frequency: 30 },
         { sprite: "arch_mountain", zoom: 4.0, frequency: 20 },
+        { sprite: "sharp_mountain", zoom: 4.5, frequency: 4 },
         { sprite: "magic_mountain", zoom: 5.0, frequency: 1 },
     ]
 );
