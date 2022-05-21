@@ -1,11 +1,11 @@
 import { simplexNoise } from "../simplexNoise";
 
 export function getElevation(x, y) {
-  return simplexNoise(x, y, 3, 0.5, 0.01, 0);
+  return simplexNoise(x, y, 3, 0.5, 0.01);
 }
 
 export function getTemperature(x, y) {
-  return simplexNoise(x, y, 1, 1, 0.015, 0);
+  return simplexNoise(x, y, 1, 1, 0.015);
 }
 
 

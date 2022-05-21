@@ -12,13 +12,6 @@ const grad2 = [
     [0, -1],
 ];
 
-// adapted szudzik calculation
-function adaptedLcg(seed, loop = 1) {
-    for (; loop > 0; loop--)
-        seed = seed * 7919 + 12345 // normally : seed = (1_103_515_245 * seed + 12345) % 999_999_937
-    return seed;
-}
-
 function fastFloor(x) {
     return (x ^ 0) - (x < 0 ? 1 : 0);
 }
@@ -83,14 +76,14 @@ export function test_range_noise() {
 }
 */
 
-export function simplexNoise(x, y, octaves, persistence, frequency, seed) {
+export function simplexNoise(x, y, octaves, persistence, frequency) {
     let r = 0,
       f = frequency,
       amplitude = 1,
       max = 0;
   
     for (let i = 0; i < octaves; i++) {
-      r += noise(x * f, y * f, seed) * amplitude;
+      r += noise(x * f, y * f) * amplitude;
       f *= 2;
       amplitude *= persistence;
       max += amplitude;
