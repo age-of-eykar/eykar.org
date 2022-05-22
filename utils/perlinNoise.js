@@ -54,13 +54,12 @@ export function noise(x, y, s) {
 // Main function
 export function perlin(x, y, octaves, persistence, frequency, seed) {
   let r = 0,
-    f = frequency,
     amplitude = 1,
     max = 0;
 
   for (let i = 0; i < octaves; i++) {
-    r += noise(x * f, y * 2 * f, seed) * amplitude;
-    f *= 2;
+    r += noise(x * frequency, y * 2 * frequency, seed) * amplitude;
+    frequency *= 2;
     amplitude *= persistence;
     max += amplitude;
   }

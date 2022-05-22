@@ -1,11 +1,11 @@
-import { perlin } from "../perlinNoise";
+import { simplexNoise } from "../simplexNoise";
 
 export function getElevation(x, y) {
-  return perlin(x, y, 3, 0.5, 0.01, 0);
+  return simplexNoise(x, y, 3, 0.5, 0.01);
 }
 
 export function getTemperature(x, y) {
-  return perlin(x, y, 1, 1, 0.015, 0);
+  return simplexNoise(x, y, 1, 1, 0.015);
 }
 
 
@@ -35,19 +35,15 @@ export function getBiomeColors(x, y) {
     expectedColor = gradient([0.01, 0.27, 0.01], sandColor, elevation / 2);
 
   // ice
-  if (temperature < -0.5)
-    return gradient([0.9, 0.94, 0.96], [0.73, 0.76, 0.78], (-0.25 - temperature) / 0.25);
+  if (temperature < -0.92)
+    return gradient([0.9, 0.94, 0.96], [0.73, 0.76, 0.78], (-0.75 - temperature) / 0.25);
   // icebergs
-  if (elevation < 0 && temperature < -0.48)
-    return gradient([0.83, 0.86, 0.88], expectedColor, (-0.45 - temperature) / 0.1);
-
-  // desert
-  if (elevation > 0 && temperature > 0.5)
-    return gradient(sandColor, expectedColor, (temperature - 0.5) / 0.5);
+  if (elevation < 0 && temperature < -0.88)
+    return gradient([0.83, 0.86, 0.88], expectedColor, (-0.85 - temperature) / 0.1);
 
   // mountains
-  if (elevation > 0.5)
-    return gradient([0.9, 0.9, 0.9], expectedColor, (elevation - 0.5) / 2);
+  if (elevation > 0.7)
+    return gradient([0.9, 0.9, 0.9], expectedColor, (elevation - 0.7) / 1.8);
 
   return expectedColor;
 }
