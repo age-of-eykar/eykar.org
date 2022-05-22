@@ -8,9 +8,6 @@ export default class ZoomControler {
         this.disabled = false;
     }
 
-
-
-
     handleMouseWheel(event) {
         if (this.disabled)
             return;
