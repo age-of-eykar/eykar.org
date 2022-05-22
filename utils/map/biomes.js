@@ -1,7 +1,7 @@
 import { simplexNoise } from "../simplexNoise";
 
 export function getElevation(x, y) {
-  return simplexNoise(x, y, 3, 0.5, 0.01);
+  return simplexNoise(x, y, 3, 0.5, 0.012);
 }
 
 export function getTemperature(x, y) {
@@ -32,7 +32,7 @@ export function getBiomeColors(x, y) {
     else
       expectedColor = gradient([0.14, 0.51, 0.51], [0.13, 0.37, 0.40], elevation);
   } else // ground
-    expectedColor = gradient([0.01, 0.27, 0.01], sandColor, elevation / 2);
+    expectedColor = gradient([0.05, 0.27, 0.01], sandColor, elevation / 3);
 
   // ice
   if (temperature < -0.92)
@@ -43,7 +43,7 @@ export function getBiomeColors(x, y) {
 
   // mountains
   if (elevation > 0.7)
-    return gradient([0.9, 0.9, 0.9], expectedColor, (elevation - 0.7) / 1.8);
+    return gradient([0.9, 0.9, 0.9], expectedColor, (elevation - 0.7) / 3);
 
   return expectedColor;
 }
