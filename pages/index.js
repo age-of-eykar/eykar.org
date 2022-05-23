@@ -22,7 +22,7 @@ export default function Home() {
           [styles.button, styles.play].join(" ")} onClick={() => {
             if (InjectedConnector.ready()) {
               connect(new InjectedConnector())
-              router.push('/game');
+              router.push('/game/loading');
             } else {
               setConnectMenuToggled(true)
             }
@@ -47,7 +47,7 @@ export default function Home() {
             </p>
           </div>
         </Link>
-        <Link href="/explore" passHref >
+        <Link href="/world" passHref >
           <div className={[styles.button, styles.normal].join(" ")} >
             <div className={styles.button_div}></div>
             <svg className={styles.icon} fill="none" viewBox="0 0 24 24" stroke="currentColor">

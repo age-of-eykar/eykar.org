@@ -11,10 +11,8 @@ export let cache;
 export let speedControler;
 export let wheelControler;
 
-export function MapCanvas({ onPlotClick }) {
+export function MapCanvas({ center, onPlotClick }) {
 
-  // center of the map (normal coordinates)
-  const center = useRef({ x: 0.0, y: 0.0 });
   // scale in cells displayed per width
   const scale = useRef(32.0);
 

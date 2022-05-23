@@ -6,13 +6,15 @@ import { useEykarContract } from '../../hooks/eykar'
 import { Spinner } from "../spinner"
 import { useStarknetTransactionManager } from '@starknet-react/core'
 import { stringToFelt } from '../../utils/felt';
+import { useRouter } from 'next/router'
 
-export default function Mint({ setPage }) {
+export default function Mint() {
     const [name, setName] = useState("")
     const { contract } = useEykarContract()
     const { data, loading, invoke } = useStarknetInvoke({ contract: contract, method: 'mint_plot_with_new_colony' })
     const { transactions } = useStarknetTransactionManager()
     const [minted, setMinted] = useState(false)
+    const router = useRouter()
 
     useEffect(() => {
         for (const transaction of transactions)
@@ -103,7 +105,7 @@ export default function Mint({ setPage }) {
 
                         <div className={styles.box_footer}>
                             <button className={[styles.footer_element, styles.button].join(" ")} onClick={() =>
-                                setPage("colonies")
+                                router.push("/game/colonies")
                             }>
                                 <svg className={styles.button_icon} fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd"></path></svg>
                                 <p className={styles.button_text}>show</p>

@@ -4,13 +4,14 @@ import { useStarknetCall } from '@starknet-react/core'
 import { feltToString, toNegativeNumber } from '../../../utils/felt'
 import { getColonyColor } from '../../../utils/colors'
 import WarehousesInfo from './icons/warehouses'
-import TroopsInfo  from './icons/troops'
+import TroopsInfo from './icons/troops'
+import { useRouter } from 'next/router'
 
 function Colony({ id }) {
 
     const { contract } = useEykarContract()
-
     const { data, loading } = useStarknetCall({ contract: contract, method: 'get_colony', args: [id] })
+    const router = useRouter()
 
     let name = 'Loading...'
     let x = "x";
@@ -26,7 +27,10 @@ function Colony({ id }) {
     }
 
     return (
-        <div style={{ 'backgroundColor': 'rgb(' + r + ',  ' + g + ', ' + b + ')' }} className={styles.box}>
+        <div onClick={() => {
+            if (!loading && data)
+            router.push("world?x=" + x + "&y=" + y)
+        }} style={{ 'backgroundColor': 'rgb(' + r + ',  ' + g + ', ' + b + ')' }} className={styles.box}>
             <h1 className={styles.title}>{name}</h1>
             <div>Place of Power: ({x}, {y})</div>
             <div>Territories: {plots}</div>

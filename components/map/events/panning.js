@@ -53,7 +53,6 @@ export default class PanningControler {
             let X = 2 * px * window.devicePixelRatio / this.windowSize.current.width - 1;
             let Y = - (2 * py * window.devicePixelRatio / this.windowSize.current.height - 1);
             const [x, y] = convertCoordinates(X, Y, this.center.current, this.scale.current, ratio);
-            console.log(x, y)
             const result = this.cache.getPlotAt(x, y);
             if (result)
                 this.onPlotClick(result[0], result[1]);

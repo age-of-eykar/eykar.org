@@ -2,7 +2,7 @@ import styles from '../../../styles/Game.module.css'
 import coloniesStyles from '../../../styles/components/Colonies.module.css'
 import Colony from "./colony";
 
-export default function Colonies({ setPage, colonyIds }) {
+export default function Colonies({ colonyIds }) {
 
     return (
         <div className={styles.box}>

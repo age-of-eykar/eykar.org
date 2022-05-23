@@ -63,10 +63,10 @@ export function getBiomeColors(x, y) {
 
   // ocean
   if (elevation < 0.05) {
-    if (elevation > 0)
-      expectedColor = gradient(sandColor, [0.14, 0.51, 0.51], elevation / 0.05);
+    if (elevation > -0.05)
+      expectedColor = gradient(sandColor, [0.13, 0.41, 0.45], (elevation + 0.05) / 0.1);
     else
-      expectedColor = gradient([0.14, 0.51, 0.51], [0.13, 0.37, 0.40], elevation / 1.3);
+      expectedColor = gradient([0.14, 0.51, 0.51], [0.13, 0.37, 0.40], elevation / 1.2);
   } else // ground
     expectedColor = gradient([0.05, 0.27, 0.01], sandColor, elevation / 3);
 

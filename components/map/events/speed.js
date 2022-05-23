@@ -18,6 +18,8 @@ export default class SpeedControler {
     }
 
     takeControl() {
+        if (this.controledSpeed)
+        return;
         const angle = Math.random() * 2 * Math.PI;
         const multiplier = this.scale.current / 16;
         this.controledSpeed = { x: Math.cos(angle) * multiplier, y: Math.sin(angle) * multiplier };

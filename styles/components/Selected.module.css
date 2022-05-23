@@ -70,6 +70,7 @@
     vertical-align: bottom;
     height        : fit-content;
     width         : fit-content;
+    user-select: none;
 }
 
 .title {
