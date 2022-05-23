@@ -18,7 +18,7 @@
     height: 24px;
     color : #F5F4F0F0;
     margin: 10px 10px auto auto;
-    filter: drop-shadow(1px 1px 6px #140b05f0);
+    filter: drop-shadow(1px 1px 12px #140b05);
 }
 
 .close:hover {
