@@ -10,7 +10,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@argent/get-starknet": "^3.0.1",
+    "get-starknet": "^1.0.0",
     "@starknet-react/core": "^0.6.2",
     "add": "^2.0.6",
     "bn.js": "^5.2.0",
