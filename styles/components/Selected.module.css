@@ -1,21 +1,62 @@
 .box {
-    width        : 280px;
-    height       : 400px;
-    bottom       : 30px;
-    left         : 30px;
-    position     : fixed;
-    border-radius: 16px;
-
-    background     : rgba(49, 44, 42, 0.7);
-    box-shadow     : 0px 0px 150px rgba(0, 0, 0, 0.25);
-    backdrop-filter: blur(16px);
+    width              : 280px;
+    height             : 400px;
+    bottom             : 30px;
+    left               : 30px;
+    position           : fixed;
+    border-radius      : 16px;
+    background-size    : cover;
+    background-position: center;
+    display            : flex;
+    flex-direction     : column-reverse;
+    box-shadow         : 0px 0px 32px 1px #140b057e;
 }
 
-.img {
-    width: 100%;
+.coast_bg {
+    background-image: linear-gradient(rgba(0, 0, 0, 0),
+            rgb(31, 20, 16)), url("/illustrations/coast.webp");
+}
 
-    border-radius: 16px 16px 0px 0px;
-    object-fit   : cover;
+.desert_bg {
+    background-image: linear-gradient(rgba(0, 0, 0, 0),
+            rgb(27, 20, 14)), url("/illustrations/desert.webp");
+}
+
+.forest_bg {
+    background-image: linear-gradient(rgba(0, 0, 0, 0),
+            rgb(27, 20, 14)), url("/illustrations/forest.webp");
+}
+
+.plain_bg {
+    background-image: linear-gradient(rgba(0, 0, 0, 0),
+            rgb(27, 20, 14)), url("/illustrations/plain.webp");
+}
+
+
+.jungle_bg {
+    background-image: linear-gradient(rgba(0, 0, 0, 0),
+            rgb(27, 20, 14)), url("/illustrations/jungle.webp");
+}
+
+.iceberg_bg {
+    background-image: linear-gradient(rgba(0, 0, 0, 0),
+            rgb(14, 23, 27)), url("/illustrations/iceberg.webp");
+}
+
+.mountain_bg {
+    background-image: linear-gradient(rgba(0, 0, 0, 0),
+            rgb(27, 20, 14)), url("/illustrations/mountain.webp");
+}
+
+.ocean_bg {
+    background-image: linear-gradient(rgba(0, 0, 0, 0),
+            rgb(14, 23, 27)), url("/illustrations/ocean.webp");
+}
+
+.box_content {
+    vertical-align: bottom;
+    height        : fit-content;
+    width         : fit-content;
 }
 
 .title {
@@ -52,12 +93,17 @@
 }
 
 .button {
-    color           : #ffe1a9;
-    background-color: #232020b7;
+    background-color: #ffe1a9;
+    color           : #232020;
     font-family     : 'Readex Pro', Verdana, sans-serif;
     font-size       : 14px;
     padding         : 10px;
     border-radius   : 12px;
-    margin          : 5px;
+    margin          : 7px;
     cursor          : pointer;
+}
+
+.button:hover {
+    background-color: #fae2b6;
+    color           : #524635;
 }

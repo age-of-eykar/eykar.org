@@ -17,6 +17,44 @@ function gradient(firstColor, secondColor, ratio) {
   ];
 }
 
+export function getBiomeName(elevation, temperature) {
+
+
+  if (elevation > -0.05 && elevation < 0.05)
+    return "Coast";
+
+  if (elevation < 0) {
+    if (elevation < 0 && temperature < -0.9)
+      return "Iceberg";
+    if (temperature < -0.85)
+      return "Frozen Ocean";
+
+    return "Ocean";
+  }
+
+  if (elevation > 0.7) {
+    if (temperature < -0.9)
+      return "Ice Mountain";
+    return "Mountain";
+  }
+
+  // ice
+  if (temperature < -0.9)
+    return "Frozen Land";
+
+  if (elevation > 0.2 && temperature > 0.1)
+    if (temperature < 0.4)
+      return "Forest";
+    else if (temperature < 0.7)
+      return "Jungle";
+
+  if (temperature > 0.7)
+    return "Desert";
+
+  return "Plain";
+}
+
+
 export function getBiomeColors(x, y) {
 
   const elevation = getElevation(x, y);
