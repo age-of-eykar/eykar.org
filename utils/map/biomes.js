@@ -72,7 +72,7 @@ export function getBiomeColors(x, y) {
 
   // ice
   if (temperature < -0.92)
-    return gradient([0.75, 0.79, 0.81], expectedColor, (-0.85 - temperature) / 0.11);
+    return gradient([0.75, 0.79, 0.81], gradient(expectedColor, [1, 1, 1], 0.5), (-0.85 - temperature) / 0.11);
   // icebergs
   if (elevation < 0 && temperature < -0.88)
     return gradient([0.83, 0.86, 0.88], expectedColor, (-0.85 - temperature) / 0.1);
