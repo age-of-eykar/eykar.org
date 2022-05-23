@@ -1,7 +1,7 @@
 import { simplexNoise } from "../simplexNoise";
 
 export function getElevation(x, y) {
-  return simplexNoise(x, y, 3, 0.5, 0.01);
+  return simplexNoise(x, y, 3, 0.5, 0.012);
 }
 
 export function getTemperature(x, y) {
@@ -17,6 +17,44 @@ function gradient(firstColor, secondColor, ratio) {
   ];
 }
 
+export function getBiomeName(elevation, temperature) {
+
+
+  if (elevation > -0.05 && elevation < 0.05)
+    return "Coast";
+
+  if (elevation < 0) {
+    if (elevation < 0 && temperature < -0.9)
+      return "Iceberg";
+    if (temperature < -0.85)
+      return "Frozen Ocean";
+
+    return "Ocean";
+  }
+
+  if (elevation > 0.7) {
+    if (temperature < -0.9)
+      return "Ice Mountain";
+    return "Mountain";
+  }
+
+  // ice
+  if (temperature < -0.9)
+    return "Frozen Land";
+
+  if (elevation > 0.2 && temperature > 0.1)
+    if (temperature < 0.4)
+      return "Forest";
+    else if (temperature < 0.7)
+      return "Jungle";
+
+  if (temperature > 0.7)
+    return "Desert";
+
+  return "Plain";
+}
+
+
 export function getBiomeColors(x, y) {
 
   const elevation = getElevation(x, y);
@@ -30,9 +68,9 @@ export function getBiomeColors(x, y) {
     if (elevation > 0)
       expectedColor = gradient(sandColor, [0.14, 0.51, 0.51], elevation / 0.05);
     else
-      expectedColor = gradient([0.14, 0.51, 0.51], [0.13, 0.37, 0.40], elevation);
+      expectedColor = gradient([0.14, 0.51, 0.51], [0.13, 0.37, 0.40], elevation / 1.3);
   } else // ground
-    expectedColor = gradient([0.01, 0.27, 0.01], sandColor, elevation / 2);
+    expectedColor = gradient([0.05, 0.27, 0.01], sandColor, elevation / 3);
 
   // ice
   if (temperature < -0.92)
@@ -43,7 +81,7 @@ export function getBiomeColors(x, y) {
 
   // mountains
   if (elevation > 0.7)
-    return gradient([0.9, 0.9, 0.9], expectedColor, (elevation - 0.7) / 1.8);
+    return gradient([0.9, 0.9, 0.9], expectedColor, (elevation - 0.7) / 3);
 
   return expectedColor;
 }
