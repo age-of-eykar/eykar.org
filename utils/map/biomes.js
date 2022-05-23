@@ -18,8 +18,6 @@ function gradient(firstColor, secondColor, ratio) {
 }
 
 export function getBiomeName(elevation, temperature) {
-
-
   if (elevation > -0.05 && elevation < 0.05)
     return "Coast";
 
@@ -74,7 +72,7 @@ export function getBiomeColors(x, y) {
 
   // ice
   if (temperature < -0.92)
-    return gradient([0.9, 0.94, 0.96], [0.73, 0.76, 0.78], (-0.75 - temperature) / 0.25);
+    return gradient([0.75, 0.79, 0.81], expectedColor, (-0.85 - temperature) / 0.11);
   // icebergs
   if (elevation < 0 && temperature < -0.88)
     return gradient([0.83, 0.86, 0.88], expectedColor, (-0.85 - temperature) / 0.1);
