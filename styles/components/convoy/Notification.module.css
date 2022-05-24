@@ -1,0 +1,14 @@
+.box {
+    bottom          : 30px;
+    right           : 30px;
+    position        : fixed;
+    border-radius   : 16px;
+    background-color: rgba(228, 228, 228, 0.404);
+    backdrop-filter : blur(5px);
+    padding         : 9px;
+    border          : rgba(228, 228, 228, 0.404) 1px solid;
+    font-family     : 'Readex Pro', Verdana, sans-serif;
+    font-size       : 14px;
+    color           : white;
+    margin-right    : 7px;
+}

@@ -2,6 +2,7 @@ import Selected from "../selected/game";
 import { useState, useEffect } from "react";
 import { useRouter } from 'next/router'
 import ViewConvoys from "../../components/game/convoys/view";
+import ConvoyNotif from "./convoys/notif";
 
 export default function World({ center, clicked, setClicked }) {
     const router = useRouter()
@@ -24,8 +25,15 @@ export default function World({ center, clicked, setClicked }) {
                 x={clicked[0]} y={clicked[1]} toggle={toggle}
                 selectedConvoy={selectedConvoy} setSelectedConvoy={setSelectedConvoy}
             /> : undefined}
-            <div>{clicked ? <Selected x={clicked[0]} y={clicked[1]}
-                setClicked={setClicked} viewConvoys={toggle} sendConvoys={() => { }} /> : undefined}</div>
+            <div>
+                {clicked ? <Selected x={clicked[0]} y={clicked[1]}
+                    setClicked={setClicked} viewConvoys={toggle} 
+                    sendConvoys={() => { }} selectedConvoy={selectedConvoy} />
+                    : undefined}
+            </div>
+            {
+                selectedConvoy ? <ConvoyNotif convoyId={selectedConvoy} /> : undefined
+            }
         </>
     );
 }

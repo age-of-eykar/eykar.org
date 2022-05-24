@@ -5,7 +5,7 @@ import { getTypeName } from '../../../utils/resources/convoyable';
 
 export default function ConvoyItem({ setSelectedConvoy, selectedConvoy, setSelectedConvoy }) {
 
-    const convoyId = 2;
+    const convoyId = 36858;
 
     const convoyables = [
         { type: 0, amount: 10 },
