@@ -10,6 +10,7 @@ import { Selector } from "./selector";
 export let cache;
 export let speedControler;
 export let wheelControler;
+export let mouseControler;
 
 export function MapCanvas({ center, onPlotClick }) {
 
@@ -37,7 +38,7 @@ export function MapCanvas({ center, onPlotClick }) {
     selector.setCache(cache);
 
     // handle listeners creation
-    const mouseControler = new PanningControler(center, scale, windowSize,
+    mouseControler = new PanningControler(center, scale, windowSize,
       canvasRef, onPlotClick, cache, selector);
 
     const touchDown = mouseControler.handleTouchDown.bind(mouseControler);

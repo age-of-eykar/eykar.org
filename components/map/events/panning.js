@@ -12,6 +12,7 @@ export default class PanningControler {
         this.cache = cache;
         this.selector = selector;
         this.isDown = false;
+        this.disabled = false;
     }
 
     startPanning(x, y) {
@@ -21,6 +22,8 @@ export default class PanningControler {
     }
 
     movePanning(px, py) {
+        if (this.disabled)
+            return;
         this.selector.select(px, py);
 
         // don't pan if mouse is not pressed
@@ -50,10 +53,12 @@ export default class PanningControler {
             1 / ratio);
 
         if (stop[0] ** 2 + stop[1] ** 2 < 1.0) {
+
             let X = 2 * px * window.devicePixelRatio / this.windowSize.current.width - 1;
             let Y = - (2 * py * window.devicePixelRatio / this.windowSize.current.height - 1);
             const [x, y] = convertCoordinates(X, Y, this.center.current, this.scale.current, ratio);
             const result = this.cache.getPlotAt(x, y);
+            console.log("ALOHA", X, Y, x, y, result)
             if (result)
                 this.onPlotClick(result[0], result[1]);
         }
@@ -88,6 +93,14 @@ export default class PanningControler {
     // also called on mobile
     handleMouseUp(event) {
         this.stopPanning(event.clientX, event.clientY);
+    }
+
+    releaseControl() {
+        this.disabled = false;
+    }
+
+    takeControl() {
+        this.disabled = true;
     }
 
 }

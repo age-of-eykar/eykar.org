@@ -3,7 +3,10 @@ import { useRef, useState, useEffect } from "react";
 import { useRouter } from 'next/router'
 import { useStarknet, useStarknetCall, InjectedConnector } from '@starknet-react/core'
 import { Spinner } from "../../components/spinner"
-import { speedControler, wheelControler, MapCanvas } from "../../components/map/canvas"
+import {
+    speedControler, wheelControler,
+    mouseControler, MapCanvas
+} from "../../components/map/canvas"
 import WalletMenu from '../../components/walletmenu'
 import Tutorial from "../../components/game/tutorial"
 import Colonies from "../../components/game/colony/colonies"
@@ -28,11 +31,13 @@ export default function Game() {
         if (page === 'world') {
             speedControler.releaseControl();
             wheelControler.releaseControl();
+            mouseControler.releaseControl();
             setInteractive(true);
             setComponent(<World center={center} clicked={clicked} setClicked={setClicked} />);
         } else {
             speedControler.takeControl();
             wheelControler.takeControl();
+            mouseControler.takeControl();
             setInteractive(false);
             if (page === 'tutorial')
                 setComponent(<Tutorial />);
@@ -66,15 +71,14 @@ export default function Game() {
         <div className={interactive ? undefined : styles.screen}>
             <div className={styles.interactive}>
                 <Header />
-                <MapCanvas center={center} onPlotClick={interactive
-                    ? (x, y) => {
+                <MapCanvas center={center} onPlotClick={
+                    (x, y) => {
                         console.log(x, y)
                         setClicked((currentState) => {
                             return (currentState && currentState[0] === x && currentState[1] === y)
                                 ? undefined : [x, y];
                         })
                     }
-                    : () => { }
                 } />
                 <div className={[interactive ? undefined : styles.overlay, styles.fadeIn].join(" ")}>
                     {InjectedConnector.ready()
