@@ -73,7 +73,6 @@ export default function Game() {
                 <Header />
                 <MapCanvas center={center} onPlotClick={
                     (x, y) => {
-                        console.log(x, y)
                         setClicked((currentState) => {
                             return (currentState && currentState[0] === x && currentState[1] === y)
                                 ? undefined : [x, y];
