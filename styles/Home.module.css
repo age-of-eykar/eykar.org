@@ -61,14 +61,6 @@
   }
 }
 
-.button.highlighted.toggled {
-  cursor: not-allowed;
-}
-
-.button.highlighted.toggled:hover .button_div {
-  border: 0px solid #887b5b;
-}
-
 .button.normal {
   color           : #F3F2ED;
   background-color: rgba(0, 0, 0, 0);
@@ -85,11 +77,6 @@
 
 .button.highlighted:hover .button_div {
   border: solid 1px #ffe1a9;
-}
-
-.button.highlighted.toggled {
-  color : #c2b697;
-  border: 1px solid #887b5b;
 }
 
 .button.play {
