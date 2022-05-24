@@ -20,12 +20,30 @@ export default function Game() {
     const { page } = router.query
     const center = useRef({ x: 0.0, y: 0.0 });
 
+    const [component, setComponent] = useState(<Spinner color={"white"} className={styles.loading} />);
+    const [interactive, setInteractive] = useState(false);
+    const [clicked, setClicked] = useState(undefined)
+
     useEffect(() => {
-        if (page === 'empire' || page === 'loading') {
+        if (page === 'world') {
+            speedControler.releaseControl();
+            wheelControler.releaseControl();
+            setInteractive(true);
+            setComponent(<World center={center} clicked={clicked} setClicked={setClicked} />);
+        } else {
             speedControler.takeControl();
             wheelControler.takeControl();
+            setInteractive(false);
+            if (page === 'tutorial')
+                setComponent(<Tutorial />);
+            else if (page === 'mint')
+                setComponent(<Mint />);
+            else if (page === 'empire')
+                setComponent(<Colonies colonyIds={data.colonies} />);
+            else
+                setComponent(<Spinner color={"white"} className={styles.loading} />);
         }
-    }, [page])
+    }, [clicked, page])
 
     useEffect(() => {
         if (!InjectedConnector.ready())
@@ -44,26 +62,21 @@ export default function Game() {
         }
     }, [account, data, loading, page, contract, connect])
 
-    let component;
-    if (page === 'tutorial')
-        component = <Tutorial />;
-    else if (page === 'mint')
-        component = <Mint />;
-    else if (page === 'empire')
-        component = <Colonies colonyIds={data.colonies} />;
-    else if (page === 'world') {
-        speedControler.releaseControl();
-        wheelControler.releaseControl();
-        component = <World center={center} clicked={true} />;
-    } else
-        component = <Spinner color={"white"} className={styles.loading} />;
-
     return (
-        <div className={styles.screen}>
+        <div className={interactive ? undefined : styles.screen}>
             <div className={styles.interactive}>
                 <Header />
-                <MapCanvas center={center} onPlotClick={() => { }} />
-                <div className={[styles.overlay, styles.fadeIn].join(" ")}>
+                <MapCanvas center={center} onPlotClick={interactive
+                    ? (x, y) => {
+                        console.log(x, y)
+                        setClicked((currentState) => {
+                            return (currentState && currentState[0] === x && currentState[1] === y)
+                                ? undefined : [x, y];
+                        })
+                    }
+                    : () => { }
+                } />
+                <div className={[interactive ? undefined : styles.overlay, styles.fadeIn].join(" ")}>
                     {InjectedConnector.ready()
                         ? component
                         : <WalletMenu />}

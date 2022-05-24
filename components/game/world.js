@@ -1,18 +1,22 @@
 import Selected from "../../components/selected";
-import { useState } from "react";
+import { useEffect } from "react";
 import { useRouter } from 'next/router'
 
-export default function World({ center, clicked }) {
+export default function World({ center, clicked, setClicked }) {
     const router = useRouter()
-    const x = parseInt(router.query.x);
-    const y = parseInt(router.query.y);
-    center.current = { x, y }
-    const [selected, setClicked] = useState(clicked
-        ? [x, y] : undefined)
+
+    useEffect(() => {
+        if (!router.query.x || !router.query.y)
+            return;
+        const x = parseInt(router.query.x);
+        const y = parseInt(router.query.y);
+        center.current = { x, y }
+        setClicked([x, y])
+    }, [router.query])
 
     return (
         <>
-            <div>{selected ? <Selected x={selected[0]} y={selected[1]} setClicked={setClicked} /> : undefined}</div>
+            <div>{clicked ? <Selected x={clicked[0]} y={clicked[1]} setClicked={setClicked} /> : undefined}</div>
         </>
     );
 }

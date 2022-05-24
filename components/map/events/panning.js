@@ -82,10 +82,6 @@ export default class PanningControler {
     }
 
     handleMouseMove(event) {
-        if (event.target !== this.canvasRef.current &&
-            event.target.tagName !== "HTML") {
-            return;
-        }
         this.movePanning(event.clientX, event.clientY);
     }
 
