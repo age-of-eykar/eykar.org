@@ -52,6 +52,31 @@ export function getBiomeName(elevation, temperature) {
   return "Plain";
 }
 
+export function getBiomeStyle(biome, styles) {
+  if (biome === "Coast")
+    return styles.coast_bg;
+  if (biome === "Desert")
+    return styles.desert_bg;
+  if (biome === "Forest")
+    return styles.forest_bg;
+  if (biome === "Jungle")
+    return styles.jungle_bg;
+  if (biome === "Plain")
+    return styles.plain_bg;
+  if (biome === "Frozen Ocean")
+    return styles.iceberg_bg;
+  if (biome === "Iceberg")
+    return styles.iceberg_bg;
+  if (biome === "Frozen Land")
+    return styles.iceberg_bg;
+  if (biome === "Mountain")
+    return styles.mountain_bg;
+  if (biome === "Ice Mountain")
+    return styles.mountain_bg;
+  if (biome === "Ocean")
+    return styles.ocean_bg;
+}
+
 
 export function getBiomeColors(x, y) {
 

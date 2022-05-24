@@ -70,7 +70,7 @@
     vertical-align: bottom;
     height        : fit-content;
     width         : fit-content;
-    user-select: none;
+    user-select   : none;
 }
 
 .title {
@@ -115,6 +115,10 @@
     border-radius   : 12px;
     margin          : 7px;
     cursor          : pointer;
+}
+
+.single {
+    margin-left: -1px;
 }
 
 .button:hover {

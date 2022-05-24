@@ -2,7 +2,7 @@ import Header from "../components/headers/normal";
 import { useRef, useState } from "react";
 import { useRouter } from "next/router";
 import { MapCanvas } from "../components/map/canvas";
-import Selected from "../components/selected";
+import Selected from "../components/selected/offline";
 
 export default function World() {
 

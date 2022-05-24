@@ -1,4 +1,4 @@
-import Selected from "../../components/selected";
+import Selected from "../selected/game";
 import { useEffect } from "react";
 import { useRouter } from 'next/router'
 
