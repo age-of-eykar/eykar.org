@@ -1,0 +1,17 @@
+.header {
+    display: flex;
+    flex-direction: row-reverse;
+    margin-top: -24px;
+    margin-right: -30px;
+}
+
+.close {
+    height: 24px;
+    color : #F5F4F0F0;
+    margin-right: 10px;
+    filter: drop-shadow(1px 1px 12px #140b05);
+}
+
+.close:hover {
+    cursor: pointer;
+}

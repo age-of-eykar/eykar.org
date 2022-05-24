@@ -113,7 +113,7 @@
     font-size       : 14px;
     padding         : 10px;
     border-radius   : 12px;
-    margin          : 7px;
+    margin          : 8px;
     cursor          : pointer;
 }
 
@@ -124,4 +124,17 @@
 .button:hover {
     background-color: #fae2b6;
     color           : #524635;
+}
+
+.disabled {
+    cursor          : not-allowed;
+    background-color: #f8eacf12;
+    backdrop-filter : blur(2px);
+    color           : #8d8181;
+}
+
+.disabled:hover {
+    background-color: #f8eacf12;
+    backdrop-filter : blur(2px);
+    color           : #8d8181;
 }
