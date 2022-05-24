@@ -7,6 +7,7 @@ export default function World({ center, clicked, setClicked }) {
     const router = useRouter()
     const [showConvoys, setShowConvoys] = useState(false);
     const toggle = () => setShowConvoys(!showConvoys);
+    const [selectedConvoy, setSelectedConvoy] = useState(undefined)
 
     useEffect(() => {
         if (!router.query.x || !router.query.y)
@@ -19,7 +20,10 @@ export default function World({ center, clicked, setClicked }) {
 
     return (
         <>
-            {showConvoys ? <ViewConvoys x={clicked[0]} y={clicked[1]} toggle={toggle} /> : undefined}
+            {showConvoys ? <ViewConvoys
+                x={clicked[0]} y={clicked[1]} toggle={toggle}
+                selectedConvoy={selectedConvoy} setSelectedConvoy={setSelectedConvoy}
+            /> : undefined}
             <div>{clicked ? <Selected x={clicked[0]} y={clicked[1]}
                 setClicked={setClicked} viewConvoys={toggle} sendConvoys={() => { }} /> : undefined}</div>
         </>

@@ -3,7 +3,9 @@ import { getColonyColor } from '../../../utils/colors'
 import Select from './icons/select';
 import { getTypeName } from '../../../utils/resources/convoyable';
 
-export default function ConvoyItem({ convoyId }) {
+export default function ConvoyItem({ setSelectedConvoy, selectedConvoy, setSelectedConvoy }) {
+
+    const convoyId = 2;
 
     const convoyables = [
         { type: 0, amount: 10 },
@@ -15,12 +17,11 @@ export default function ConvoyItem({ convoyId }) {
     let [r, g, b] = getColonyColor(owner);
     [r, g, b] = [r * 255, g * 255, b * 255];
 
-    const selectId = convoyId+1;
 
     if (convoyables) {
         const { type, amount } = convoyables[0];
         return (
-            <div className={styles.box + " " + (selectId === convoyId ? styles.selected_box : " ")}
+            <div className={styles.box + " " + (selectedConvoy === convoyId ? styles.selected_box : " ")}
                 style={{ 'backgroundColor': 'rgb(' + r + ', ' + g + ', ' + b + ')' }}>
 
                 <div className={styles.content}>
@@ -43,7 +44,10 @@ export default function ConvoyItem({ convoyId }) {
                     </div>
 
                     <div className={styles.items}>
-                        <Select color={[r, g, b]} />
+                        <Select color={[r, g, b]}
+                            select={() => {
+                                setSelectedConvoy(convoyId === selectedConvoy ? undefined : convoyId)
+                            }} />
                     </div>
                 </div>
 

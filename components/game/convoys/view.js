@@ -2,7 +2,7 @@ import gameStyles from '../../../styles/Game.module.css'
 import styles from '../../../styles/components/convoy/Convoys.module.css'
 import ConvoyItem from "./item"
 
-export default function ViewConvoys({ x, y, toggle }) {
+export default function ViewConvoys({ x, y, toggle, selectedConvoy, setSelectedConvoy }) {
 
     return (
         <div className={gameStyles.box}>
@@ -11,7 +11,7 @@ export default function ViewConvoys({ x, y, toggle }) {
             </div>
 
             <h1 className={gameStyles.bigtitle}>Convoys in ({x}, {y})</h1>
-            <ConvoyItem convoyId={1} />
+            <ConvoyItem convoyId={1} selectedConvoy={selectedConvoy} setSelectedConvoy={setSelectedConvoy} />
         </div>
     );
 }
