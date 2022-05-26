@@ -66,16 +66,6 @@ function noise(x, y) {
     return 70.0 * (n0 + n1 + n2);
 }
 
-/*
-export function test_range_noise() {
-    for (let i = -100; i < 100; i++) {
-        for (let j = -100; j < 100; j++) {
-            console.log(noise(i, j));
-        }
-    }
-}
-*/
-
 export function simplexNoise(x, y, octaves, persistence, frequency) {
     let r = 0,
       f = frequency,
@@ -85,8 +75,8 @@ export function simplexNoise(x, y, octaves, persistence, frequency) {
     for (let i = 0; i < octaves; i++) {
       r += noise(x * f, y * f) * amplitude;
       f *= 2;
-      amplitude *= persistence;
       max += amplitude;
+      amplitude *= persistence;
     }
     return r / max;
 }
