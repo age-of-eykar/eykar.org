@@ -62,7 +62,7 @@ class Asset {
 export const MOUNTAINS_ASSET = new Asset(9.5, (x, y) => {
     const elevation = getElevation(x, y);
     const temperature = getTemperature(x, y);
-    return elevation > 0.8 && temperature > -0.5;
+    return elevation > 0.4 && temperature > -0.5;
 },
     [
         { sprite: "small_mountain", zoom: 2.5, frequency: 140 },
