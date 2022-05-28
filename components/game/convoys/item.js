@@ -3,9 +3,7 @@ import { getColonyColor } from '../../../utils/colors'
 import Select from './icons/select';
 import { getTypeName } from '../../../utils/resources/convoyable';
 
-export default function ConvoyItem({ setSelectedConvoy, selectedConvoy, setSelectedConvoy }) {
-
-    const convoyId = 36858;
+export default function ConvoyItem({ convoyId, selectedConvoy, setSelectedConvoy }) {
 
     const convoyables = [
         { type: 0, amount: 10 },
