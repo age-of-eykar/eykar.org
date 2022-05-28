@@ -6,6 +6,7 @@ uniform vec2 center;
 //range
 uniform int selectedStart;
 uniform int selectedEnd;
+uniform vec3 selectedColor;
 
 in vec3 fillColor;
 in vec2 position;
@@ -17,7 +18,18 @@ bool isInRange(int rangeStart, int rangeEnd, int value) {
 }
 
 void main() {
-  color = isInRange(selectedStart, selectedEnd, gl_VertexID) ? fillColor + vec3(0.15, 0.15, 0.15) : fillColor;
+
+  if(isInRange(selectedStart, selectedEnd, gl_VertexID)) {
+    if(fillColor.x + fillColor.y + fillColor.y > 1.5) {
+      // light background
+      color = (fillColor / 2.0 + selectedColor) * 1.25;
+    } else {
+      // dark background
+      color = fillColor / 1.2 + selectedColor;
+    }
+  } else {
+    color = fillColor;
+  }
   vec2 point = (position - center) * scale;
   point.y *= ratio;
   float w = 0.25 * point.y + 1.0; // slope = 0.25

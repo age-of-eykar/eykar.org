@@ -2,6 +2,8 @@ import styles from '../../../styles/components/convoy/Item.module.css'
 import { getColonyColor } from '../../../utils/colors'
 import Select from './icons/select';
 import { getTypeName } from '../../../utils/resources/convoyable';
+import { setConquerMode } from "../../../components/map/canvas"
+
 
 export default function ConvoyItem({ convoyId, selectedConvoy, setSelectedConvoy }) {
 
@@ -44,7 +46,9 @@ export default function ConvoyItem({ convoyId, selectedConvoy, setSelectedConvoy
                     <div className={styles.items}>
                         <Select color={[r, g, b]}
                             select={() => {
-                                setSelectedConvoy(convoyId === selectedConvoy ? undefined : convoyId)
+                                const selected = convoyId === selectedConvoy ? false : convoyId;
+                                setConquerMode(selected != false);
+                                setSelectedConvoy(selected)
                             }} />
                     </div>
                 </div>

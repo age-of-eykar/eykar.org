@@ -126,8 +126,26 @@ export class ChunksCache {
             }
     }
 
-    getVerticesStopsAt(x, y) {
-        const coo = this.getPlotAt(x, y);
+    getNearColonyColor(coo) {
+        if (!coo)
+            return;
+        const chunkCoo = this.getChunkCoordinates(coo[0], coo[1]);
+        const chunk = this.getChunk(chunkCoo.x, chunkCoo.y);
+        if (chunk && chunk.colonies)
+            for (const plot of chunk.colonies) {
+                const w = coo[0] - plot.x;
+                const h = coo[1] - plot.y;
+                const distance = w * w + h * h;
+                if (distance > 0 && distance <= 2) {
+                    const [r, g, b] = getColonyColor(plot.colony_id);
+                    const norm = 2 * Math.sqrt(r * r + g * g + b * b);
+                    return [r / norm, g / norm, b / norm];
+                }
+            }
+        return [0.15, 0.15, 0.15];
+    }
+
+    getVerticesStopsAt(coo) {
         if (!coo)
             return;
         const plot = { x: coo[0], y: coo[1] };

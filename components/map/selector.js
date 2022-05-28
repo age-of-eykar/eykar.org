@@ -1,4 +1,5 @@
 import { convertCoordinates } from "../../utils/map/utils";
+import { isConquerMode } from "./canvas";
 
 export class Selector {
 
@@ -7,6 +8,7 @@ export class Selector {
         this.center = center;
         this.scale = scale;
         this.lastMove = performance.now();
+        this.selectedColor = [0.15, 0.15, 0.15];
         this.selected = undefined;
     }
 
@@ -30,7 +32,12 @@ export class Selector {
         if (now - this.lastMove < 10)
             return;
         this.lastMove = now;
-        const output = this.cache.getVerticesStopsAt(this.cursor[0], this.cursor[1]);
+        const coo = this.cache.getPlotAt(this.cursor[0], this.cursor[1]);
+
+        if (isConquerMode())
+            this.selectedColor = this.cache.getNearColonyColor(coo);
+
+        const output = this.cache.getVerticesStopsAt(coo);
         this.selected = output;
     }
 

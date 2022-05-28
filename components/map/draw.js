@@ -27,7 +27,8 @@ function animateScene(gl, cache, center, scale, selector, keyControlers, canvas,
         if (selector.selected && chunk.x == selector.selected[2] && chunk.y == selector.selected[3])
             setUniforms(programInfo, {
                 selectedStart: selector.selected[0],
-                selectedEnd: selector.selected[1]
+                selectedEnd: selector.selected[1],
+                selectedColor: selector.selectedColor,
             });
         else
             setUniforms(programInfo, {

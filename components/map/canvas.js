@@ -11,12 +11,12 @@ export let cache;
 export let speedControler;
 export let wheelControler;
 export let mouseControler;
+let conquerMode;
 
 export function MapCanvas({ center, onPlotClick }) {
 
   // scale in cells displayed per width
   const scale = useRef(32.0);
-
   const canvasRef = useRef(null);
 
   const pixelRatio = (typeof window === 'undefined') ? 1 : window.devicePixelRatio;
@@ -28,6 +28,7 @@ export function MapCanvas({ center, onPlotClick }) {
   useEffect(() => {
     canvasRef.current.width = windowSize.current.width;
     canvasRef.current.height = windowSize.current.height;
+    setConquerMode(false);
     const selector = new Selector(windowSize, center, scale);
     speedControler = new SpeedControler(center, scale, windowSize);
 
@@ -98,4 +99,12 @@ export function MapCanvas({ center, onPlotClick }) {
       tabIndex={1}
     />
   );
+}
+
+export function isConquerMode() {
+  return conquerMode;
+}
+
+export function setConquerMode(mode) {
+  conquerMode = mode;
 }
