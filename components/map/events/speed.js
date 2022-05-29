@@ -1,3 +1,5 @@
+import { getCache } from "../../../utils/models/game";
+
 export default class SpeedControler {
     constructor(
         center, scale, windowSize
@@ -27,10 +29,6 @@ export default class SpeedControler {
 
     releaseControl() {
         this.controledSpeed = false;
-    }
-
-    setCache(cache) {
-        this.cache = cache;
     }
 
     // plots per second
@@ -70,7 +68,7 @@ export default class SpeedControler {
     }
 
     refresh(expectedCenter) {
-        this.cache.refresh(expectedCenter, this.scale.current,
+        getCache().refresh(expectedCenter, this.scale.current,
             this.windowSize.current.height / this.windowSize.current.width);
     }
 

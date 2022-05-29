@@ -1,5 +1,6 @@
 import { convertCoordinates } from "../../utils/map/utils";
-import { isConquerMode } from "./canvas";
+import { isConquerMode } from "../../utils/models/game";
+import { getCache } from "../../utils/models/game";
 
 export class Selector {
 
@@ -10,10 +11,6 @@ export class Selector {
         this.lastMove = performance.now();
         this.selectedColor = [0.15, 0.15, 0.15];
         this.selected = undefined;
-    }
-
-    setCache(cache) {
-        this.cache = cache;
     }
 
     select(px, py) {
@@ -32,12 +29,12 @@ export class Selector {
         if (now - this.lastMove < 10)
             return;
         this.lastMove = now;
-        const coo = this.cache.getPlotAt(this.cursor[0], this.cursor[1]);
+        const coo = getCache().getPlotAt(this.cursor[0], this.cursor[1]);
 
         if (isConquerMode())
-            this.selectedColor = this.cache.getNearColonyColor(coo);
+            this.selectedColor = getCache().getNearColonyColor(coo);
 
-        const output = this.cache.getVerticesStopsAt(coo);
+        const output = getCache().getVerticesStopsAt(coo);
         this.selected = output;
     }
 

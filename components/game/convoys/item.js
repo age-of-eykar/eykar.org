@@ -2,8 +2,7 @@ import styles from '../../../styles/components/convoy/Item.module.css'
 import { getColonyColor } from '../../../utils/colors'
 import Select from './icons/select';
 import { getTypeName } from '../../../utils/resources/convoyable';
-import { setConquerMode } from "../../../components/map/canvas"
-
+import { setConquerMode } from "../../../utils/models/game"
 
 export default function ConvoyItem({ convoyId, selectedConvoy, setSelectedConvoy }) {
 

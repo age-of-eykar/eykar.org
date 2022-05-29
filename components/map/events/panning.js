@@ -1,15 +1,15 @@
 import { convertCoordinates } from "../../../utils/map/utils";
+import { getCache } from "../../../utils/models/game";
 
 export default class PanningControler {
     constructor(
-        center, scale, windowSize, canvasRef, onPlotClick, cache, selector
+        center, scale, windowSize, canvasRef, onPlotClick, selector
     ) {
         this.center = center;
         this.scale = scale;
         this.windowSize = windowSize;
         this.canvasRef = canvasRef;
         this.onPlotClick = onPlotClick;
-        this.cache = cache;
         this.selector = selector;
         this.isDown = false;
         this.disabled = false;
@@ -46,7 +46,7 @@ export default class PanningControler {
         ];
 
         const ratio = this.windowSize.current.width / this.windowSize.current.height;
-        this.cache.refresh({
+        getCache().refresh({
             x: this.center.current.x,
             y: this.center.current.y
         }, this.scale.current * 2,
@@ -57,7 +57,7 @@ export default class PanningControler {
             let X = 2 * px * window.devicePixelRatio / this.windowSize.current.width - 1;
             let Y = - (2 * py * window.devicePixelRatio / this.windowSize.current.height - 1);
             const [x, y] = convertCoordinates(X, Y, this.center.current, this.scale.current, ratio);
-            const result = this.cache.getPlotAt(x, y);
+            const result = getCache().getPlotAt(x, y);
             if (result)
                 this.onPlotClick(result[0], result[1]);
         }

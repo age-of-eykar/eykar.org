@@ -1,5 +1,5 @@
 import { createBufferInfoFromArrays, setAttribInfoBufferFromArray } from "twgl.js";
-import { szudzik } from "../deterministic";
+import { szudzik, reversedSzudzik } from "../deterministic";
 import { getColonyColor } from "../colors";
 import { isInsideConvex } from '../polygon';
 import { getBiomeColors } from "./biomes";
@@ -126,25 +126,6 @@ export class ChunksCache {
             }
     }
 
-    getNearColonyColor(coo) {
-        if (!coo)
-            return;
-        const chunkCoo = this.getChunkCoordinates(coo[0], coo[1]);
-        const chunk = this.getChunk(chunkCoo.x, chunkCoo.y);
-        if (chunk && chunk.colonies)
-            for (const plot of chunk.colonies) {
-                const w = coo[0] - plot.x;
-                const h = coo[1] - plot.y;
-                const distance = w * w + h * h;
-                if (distance > 0 && distance <= 2) {
-                    const [r, g, b] = getColonyColor(plot.colony_id);
-                    const norm = 2 * Math.sqrt(r * r + g * g + b * b);
-                    return [r / norm, g / norm, b / norm];
-                }
-            }
-        return [0.15, 0.15, 0.15];
-    }
-
     getVerticesStopsAt(coo) {
         if (!coo)
             return;
@@ -160,6 +141,32 @@ export class ChunksCache {
             return [stops[0], stops[1], chunk.x, chunk.y];
     }
 
+    getNearColonyColor(coo) {
+        if (!coo)
+            return;
+        const chunkCoo = this.getChunkCoordinates(coo[0], coo[1]);
+        const chunk = this.getChunk(chunkCoo.x, chunkCoo.y);
+        if (chunk)
+            for (let i = -1; i <= 1; i++)
+                for (let j = -1; j <= 1; j++) {
+                    if (i == j && i == 0)
+                        continue;
+                    const colonyId = chunk.colonized.get(szudzik(coo[0] + i, coo[1] + j), false);
+                    if (colonyId) {
+                        const [r, g, b] = getColonyColor(colonyId);
+                        const norm = 2 * Math.sqrt(r * r + g * g + b * b);
+                        return [r / norm, g / norm, b / norm];
+                    }
+                }
+        return [0.15, 0.15, 0.15];
+    }
+
+    getCachedColonyId(coo) {
+        const chunkCoo = this.getChunkCoordinates(coo[0], coo[1]);
+        const chunk = this.getChunk(chunkCoo.x, chunkCoo.y);
+        return chunk.colonized.get(szudzik(coo[0], coo[1]), 0);
+    }
+
 }
 
 class Chunk {
@@ -169,6 +176,7 @@ class Chunk {
         this.ready = false;
         this.loadBuffer = loadBuffer;
         this.updateColorBuffer = updateColorBuffer;
+        this.colonized = new Map();
         (async () => { this.prepare(); })();
     }
 
@@ -200,10 +208,11 @@ class Chunk {
     }
 
     updateColors() {
-        for (const plot of this.colonies) {
-            let [start, stop] = this.getStops(plot)
-            const [br, bg, bb] = getBiomeColors(plot.x, plot.y * 2);
-            const [r, g, b] = getColonyColor(plot.colony_id);
+        for (const [szudziked, colony_id] of this.colonized) {
+            const [x, y] = reversedSzudzik(szudziked)
+            let [start, stop] = this.getStops({ x, y })
+            const [br, bg, bb] = getBiomeColors(x, y * 2);
+            const [r, g, b] = getColonyColor(colony_id);
             for (let i = start; i < stop; i++) {
                 this.colors[i * 3] = 0.5 * br + 0.5 * r;
                 this.colors[i * 3 + 1] = 0.5 * bg + 0.5 * g;
@@ -236,13 +245,16 @@ class Chunk {
         };
 
         const topLeft = this.getTopLeft();
-        this.colonies = await (await fetch("https://cache.eykar.org/colonies",
+        const coloniesResp = await (await fetch("https://cache.eykar.org/colonies",
             {
                 method: 'POST', body: JSON.stringify({
                     "xmin": topLeft.x, "ymin": topLeft.y,
                     "xmax": topLeft.x + ChunksCache.sideSize, "ymax": topLeft.y + ChunksCache.sideSize
                 })
             })).json();
+
+        for (const colony of coloniesResp)
+            this.colonized.set(szudzik(colony.x, colony.y), colony.colony_id);
 
         waitingCache = false;
         if (this.ready) {

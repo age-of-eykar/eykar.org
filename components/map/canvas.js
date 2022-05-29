@@ -6,12 +6,11 @@ import ZoomControler from './events/zoom';
 import PanningControler from './events/panning';
 import SpeedControler from "./events/speed";
 import { Selector } from "./selector";
-
-export let cache;
+import { setConquerMode } from "../../utils/models/game";
+import { getCache } from "../../utils/models/game";
 export let speedControler;
 export let wheelControler;
 export let mouseControler;
-let conquerMode;
 
 export function MapCanvas({ center, onPlotClick }) {
 
@@ -33,14 +32,12 @@ export function MapCanvas({ center, onPlotClick }) {
     speedControler = new SpeedControler(center, scale, windowSize);
 
     // handle canvas drawing
-    cache = startDrawing(canvasRef.current, center, scale, selector, speedControler)
-    cache.refresh(center.current, scale.current, windowSize.current.height / windowSize.current.width);
-
-    selector.setCache(cache);
+    startDrawing(canvasRef.current, center, scale, selector, speedControler)
+    getCache().refresh(center.current, scale.current, windowSize.current.height / windowSize.current.width);
 
     // handle listeners creation
     mouseControler = new PanningControler(center, scale, windowSize,
-      canvasRef, onPlotClick, cache, selector);
+      canvasRef, onPlotClick, selector);
 
     const touchDown = mouseControler.handleTouchDown.bind(mouseControler);
     const touchMove = mouseControler.handleTouchMove.bind(mouseControler);
@@ -54,7 +51,6 @@ export function MapCanvas({ center, onPlotClick }) {
     window.addEventListener("mousemove", mouseMove);
     window.addEventListener("mouseup", mouseStop);
 
-    speedControler.setCache(cache);
     const listenKeyDown = speedControler.onKeyDown.bind(speedControler);
     const listenKeyUp = speedControler.onKeyUp.bind(speedControler);
     window.addEventListener("keydown", listenKeyDown);
@@ -62,7 +58,7 @@ export function MapCanvas({ center, onPlotClick }) {
 
     wheelControler = new ZoomControler(center, scale, selector, (newScale) => {
       scale.current = newScale;
-      cache.refresh(center.current, newScale, windowSize.current.height / windowSize.current.width);
+      getCache().refresh(center.current, newScale, windowSize.current.height / windowSize.current.width);
     });
     const listenMouseWheel = wheelControler.handleMouseWheel.bind(wheelControler);
     window.addEventListener("wheel", listenMouseWheel);
@@ -99,12 +95,4 @@ export function MapCanvas({ center, onPlotClick }) {
       tabIndex={1}
     />
   );
-}
-
-export function isConquerMode() {
-  return conquerMode;
-}
-
-export function setConquerMode(mode) {
-  conquerMode = mode;
 }

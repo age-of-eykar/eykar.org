@@ -5,15 +5,16 @@ import { createProgramInfo, setUniforms, setBuffersAndAttributes, drawBufferInfo
 import svgLoader from "svg-webgl-loader-opti";
 import vectorFragmentShader from '../../shaders/vectors/fragment.glsl'
 import vectorVertexShader from '../../shaders/vectors/vertex.glsl'
+import { setCache, getCache } from "../../utils/models/game";
 
 let frameRequest;
 let assets = {};
 
-function animateScene(gl, cache, center, scale, selector, keyControlers, canvas, programInfo) {
+function animateScene(gl, center, scale, selector, keyControlers, canvas, programInfo) {
     let previousTime = performance.now();
     gl.viewport(0, 0, canvas.width, canvas.height);
 
-    cache.forEachChunk(center.current, scale.current, (chunk) => {
+    getCache().forEachChunk(center.current, scale.current, (chunk) => {
         gl.useProgram(programInfo.program);
         setUniforms(programInfo, {
             scale: 2 / scale.current,
@@ -59,7 +60,7 @@ function animateScene(gl, cache, center, scale, selector, keyControlers, canvas,
         const speed = keyControlers.getSpeed();
         center.current.x += speed.x * deltaTime / 1000;
         center.current.y += speed.y * deltaTime / 1000;
-        animateScene(gl, cache, center, scale, selector, keyControlers, canvas, programInfo);
+        animateScene(gl, center, scale, selector, keyControlers, canvas, programInfo);
     });
 }
 
@@ -81,9 +82,8 @@ export const startDrawing = (canvas, center, scale, selector, keyControlers) => 
 
 
     const programInfo = createProgramInfo(gl, [vertexShader, fragmentShader]);
-    const cache = new ChunksCache(256, gl);
-    animateScene(gl, cache, center, scale, selector, keyControlers, canvas, programInfo);
-    return cache;
+    setCache(new ChunksCache(256, gl));
+    animateScene(gl, center, scale, selector, keyControlers, canvas, programInfo);
 }
 
 async function loadAssets(gl) {

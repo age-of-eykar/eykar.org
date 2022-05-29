@@ -3,7 +3,7 @@
     right           : 30px;
     position        : fixed;
     border-radius   : 16px;
-    background-color: rgba(228, 228, 228, 0.404);
+    background-color: rgba(173, 166, 166, 0.514);
     backdrop-filter : blur(5px);
     padding         : 9px;
     border          : rgba(228, 228, 228, 0.404) 1px solid;

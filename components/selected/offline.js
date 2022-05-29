@@ -8,13 +8,14 @@ function Selected({ x, y, setClicked }) {
     const temperature = getTemperature(x, y);
     const biome = getBiomeName(elevation, temperature);
     const bg = getBiomeStyle(biome, styles);
+    
 
     return (
         <div className={styles.box + " " + bg}>
             <div className={styles.box_content}>
                 <h1 className={styles.title}>{biome}</h1>
                 <ul>
-                    <li className={styles.item}><span className={styles.item_title}>Owner</span>: <span className={styles.fg_text}>Wilderness</span></li>
+                    <li className={styles.item}><span className={styles.item_title}>Status</span>: <span className={styles.fg_text}>Wilderness</span></li>
                     <li className={styles.item}><span className={styles.item_title}>Location</span>: <span className={styles.bg_text}>(</span><span className={styles.fg_text}>{x}</span><span className={styles.bg_text}>,</span> <span className={styles.fg_text}>{y}</span><span className={styles.bg_text}>)</span></li>
                     <li className={styles.item}><span className={styles.item_title}>Temperature</span>: <span className={styles.fg_text}>{Math.floor((temperature + 0.6) * 20)}</span><span className={styles.bg_text}>ºC</span></li>
                     <li className={styles.item}><span className={styles.item_title}>Altitude</span>: <span className={styles.fg_text}>{Math.floor((elevation) * 1000)}</span><span className={styles.bg_text}>m</span></li>
