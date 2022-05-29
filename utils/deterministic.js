@@ -14,7 +14,7 @@ export function reversedSzudzik(z) {
 };
 
 export function lcg(seed, loop = 1) {
-    seed = BigInt(seed)
+    seed = BigInt(Math.floor(seed))
     for (; loop > 0; loop--)
         seed = (1103515245n * seed + 12345n) % 999999937n
     return Number(seed);
