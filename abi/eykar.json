@@ -125,31 +125,6 @@
             {
                 "name": "convoy_id",
                 "type": "felt"
-            },
-            {
-                "name": "x",
-                "type": "felt"
-            },
-            {
-                "name": "y",
-                "type": "felt"
-            }
-        ],
-        "name": "convoy_can_access",
-        "outputs": [
-            {
-                "name": "bool",
-                "type": "felt"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "name": "convoy_id",
-                "type": "felt"
             }
         ],
         "name": "get_convoy_strength",
@@ -211,91 +186,6 @@
         "type": "function"
     },
     {
-        "inputs": [
-            {
-                "name": "conveyable_type",
-                "type": "felt"
-            }
-        ],
-        "name": "_is_fungible",
-        "outputs": [
-            {
-                "name": "fungible",
-                "type": "felt"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "name": "conveyable_type",
-                "type": "felt"
-            }
-        ],
-        "name": "_get_movability",
-        "outputs": [
-            {
-                "name": "movability",
-                "type": "felt"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "name": "conveyable_type",
-                "type": "felt"
-            }
-        ],
-        "name": "_get_speed",
-        "outputs": [
-            {
-                "name": "movability",
-                "type": "felt"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "name": "conveyable_type",
-                "type": "felt"
-            }
-        ],
-        "name": "_get_strength",
-        "outputs": [
-            {
-                "name": "movability",
-                "type": "felt"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "name": "conveyable_type",
-                "type": "felt"
-            }
-        ],
-        "name": "_get_protection",
-        "outputs": [
-            {
-                "name": "movability",
-                "type": "felt"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
         "data": [
             {
                 "name": "x",
@@ -328,30 +218,6 @@
                 "type": "Plot"
             }
         ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "name": "x1",
-                "type": "felt"
-            },
-            {
-                "name": "y1",
-                "type": "felt"
-            },
-            {
-                "name": "x2",
-                "type": "felt"
-            },
-            {
-                "name": "y2",
-                "type": "felt"
-            }
-        ],
-        "name": "assert_in_contact",
-        "outputs": [],
         "stateMutability": "view",
         "type": "function"
     },

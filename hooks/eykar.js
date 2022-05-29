@@ -5,6 +5,6 @@ import EykarAbi from '../abi/eykar.json'
 export function useEykarContract() {
   return useContract({
     abi: EykarAbi,
-    address: '0x0673c3bbb7037cc37ef0ce25998abcdfa0546588d96ab1819dfb08c79ee9a21b',
+    address: '0x01d84e236e0dc1c006ce49c7e443ec144bff502dadb45a2425b055062aa9750c',
   })
 }
