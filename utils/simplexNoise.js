@@ -62,7 +62,6 @@ function noise(x, y) {
     const n0 = computeContributions(x0, y0, gi0);
     const n1 = computeContributions(x1, y1, gi1);
     const n2 = computeContributions(x2, y2, gi2);
-    console.log('n0 ' + n0 + ' n1 ' + n1 + ' n2 ' + n2)
     return 70.0 * (n0 + n1 + n2);
 }
 
