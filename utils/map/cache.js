@@ -161,10 +161,13 @@ export class ChunksCache {
         return [0.15, 0.15, 0.15];
     }
 
-    getCachedColonyId(coo) {
-        const chunkCoo = this.getChunkCoordinates(coo[0], coo[1]);
+    getCachedColonyId(x, y) {
+        const chunkCoo = this.getChunkCoordinates(x, y);
         const chunk = this.getChunk(chunkCoo.x, chunkCoo.y);
-        return chunk.colonized.get(szudzik(coo[0], coo[1]), 0);
+        const key = szudzik(x, y);
+        if (chunk)
+            return chunk.colonized.get(key) || 0;
+        return 0;
     }
 
 }

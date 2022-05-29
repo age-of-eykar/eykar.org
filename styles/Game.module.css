@@ -183,8 +183,27 @@
     align-items    : center;
     border-radius  : 45px;
     width          : fit-content;
+    cursor         : default;
 }
 
+.subfooter_element {
+    display        : flex;
+    flex-direction : row;
+    align-items    : center;
+    justify-content: center;
+}
+
+.footer_element:hover .footer_elt_base {
+    display: none;
+}
+
+.footer_elt_hidden {
+    display: none;
+}
+
+.footer_element:hover .footer_elt_hidden {
+    display: flex;
+}
 
 .button {
     color           : #ffe1a9;

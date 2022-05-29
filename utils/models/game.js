@@ -1,3 +1,5 @@
+import { feltToString } from "../felt";
+
 let conquerMode;
 
 export function isConquerMode() {
@@ -10,11 +12,14 @@ export function setConquerMode(mode) {
 
 let colonyMeta = new Map();
 export function getColonyMeta(colonyId) {
-    return colonyMeta.get(colonyId, false);
+    return colonyMeta.get(colonyId);
 }
 
-export function setColonyMeta(colonyId, meta) {
-    return colonyMeta.set(colonyId, meta);
+export function updateColonyMeta(colonyId, resp) {
+    if (!resp || !resp.colony)
+        return;
+    const name = feltToString(resp.colony.name)
+    return colonyMeta.set(colonyId, { name });
 }
 
 let cache;

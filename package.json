@@ -10,11 +10,11 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "get-starknet": "^1.0.0",
     "@starknet-react/core": "^0.6.2",
     "add": "^2.0.6",
     "bn.js": "^5.2.0",
     "debounce": "^1.2.1",
+    "get-starknet": "^1.0.0",
     "modular-voronoi": "^1.5.0",
     "next": "12.1.0",
     "react": "17.0.2",

@@ -17,3 +17,10 @@ export function toNegativeNumber(felt) {
         ? added
         : felt;
 }
+
+export function toFelt(number) {
+    const output = new BN(number);
+    if (output.isNeg())
+        return output.add(P);
+    return output;
+}
