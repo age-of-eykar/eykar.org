@@ -3,6 +3,7 @@ import { szudzik, reversedSzudzik } from "../deterministic";
 import { getColonyColor } from "../colors";
 import { isInsideConvex } from '../polygon';
 import { getBiomeColors } from "./biomes";
+import { ownsColony } from "../models/game";
 
 export class ChunksCache {
 
@@ -151,8 +152,8 @@ export class ChunksCache {
                 for (let j = -1; j <= 1; j++) {
                     if (i == j && i == 0)
                         continue;
-                    const colonyId = chunk.colonized.get(szudzik(coo[0] + i, coo[1] + j), false);
-                    if (colonyId) {
+                    const colonyId = chunk.colonized.get(szudzik(coo[0] + i, coo[1] + j));
+                    if (ownsColony(colonyId)) {
                         const [r, g, b] = getColonyColor(colonyId);
                         const norm = 2 * Math.sqrt(r * r + g * g + b * b);
                         return [r / norm, g / norm, b / norm];

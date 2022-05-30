@@ -30,3 +30,15 @@ export function getCache() {
 export function setCache(newCache) {
     cache = newCache;
 }
+
+let playerColonies = new Set();
+
+export function updateColonies(colonies) {
+    playerColonies = new Set();
+    for (let colony of colonies)
+        playerColonies.add(colony.toNumber())
+}
+
+export function ownsColony(colonyId) {
+    return playerColonies.has(colonyId);
+}

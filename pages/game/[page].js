@@ -14,6 +14,7 @@ import Mint from "../../components/game/mint"
 import World from "../../components/game/world"
 import { useEykarContract } from '../../hooks/eykar'
 import Header from "../../components/headers/game";
+import { updateColonies } from '../../utils/models/game';
 
 export default function Game() {
     const { account, connect } = useStarknet()
@@ -60,6 +61,7 @@ export default function Game() {
         if (!contract || loading)
             return;
         if (data && page === "loading") {
+            updateColonies(data.colonies)
             if (data.colonies.length > 0) {
                 router.push(`/game/empire`)
             } else
