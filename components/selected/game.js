@@ -1,10 +1,11 @@
 import styles from '../../styles/components/Selected.module.css'
 import { getElevation, getTemperature, getBiomeName, getBiomeStyle } from '../../utils/map/biomes.js'
 import { getCache, getColonyMeta, updateColonyMeta } from "../../utils/models/game";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { useEykarContract } from '../../hooks/eykar'
+import { useStarknetInvoke, useStarknetTransactionManager } from '@starknet-react/core'
 import { toFelt } from "../../utils/felt"
-
+import { getSelectedConvoyLoc } from "../../utils/models/convoys";
 function Selected({ x, y, setClicked, viewConvoys, sendConvoys, selectedConvoy }) {
 
     const elevation = getElevation(x, y);
@@ -14,11 +15,21 @@ function Selected({ x, y, setClicked, viewConvoys, sendConvoys, selectedConvoy }
 
     const [colonyId, setColonyId] = useState(undefined);
     const { contract } = useEykarContract()
-    const abortController = useRef(undefined);
+    const { data, loading, invoke } = useStarknetInvoke({ contract: contract, method: 'expand' })
+    const { transactions } = useStarknetTransactionManager()
+    const [waiting, setWaiting] = useState(false)
 
     useEffect(() => {
-        if (abortController.current)
-            abortController.current.abort();
+        for (const transaction of transactions)
+            if (transaction.transactionHash === data) {
+                if (transaction.status === 'ACCEPTED_ON_L2'
+                    || transaction.status === 'ACCEPTED_ON_L1')
+                    setWaiting(false);
+            }
+    }, [data, transactions])
+
+
+    useEffect(() => {
 
         // Displays an expected value
         const cachedId = getCache().getCachedColonyId(x, y);
@@ -36,8 +47,12 @@ function Selected({ x, y, setClicked, viewConvoys, sendConvoys, selectedConvoy }
 
         // Displays the exact value (async)
         contract.get_plot(toFelt(x), toFelt(y)).then((resp) => {
-            if (!cancelled)
-                setColonyId(() => resp.plot.owner.toNumber());
+            if (!cancelled) {
+                const id = resp.plot.owner.toNumber()
+                if (id != 0)
+                    getCache().updateCachedColonyId(x, y, id);
+                setColonyId(id);
+            }
         })
 
         return () => {
@@ -61,6 +76,15 @@ function Selected({ x, y, setClicked, viewConvoys, sendConvoys, selectedConvoy }
         })();
     }, [colonyId])
 
+    let expandShortcut = false;
+    if (getCache().getExtendOfColony([x, y]) && selectedConvoy) {
+        const [sx, sy] = getSelectedConvoyLoc(selectedConvoy)
+        const d1 = sx - x;
+        const d2 = sy - y;
+        if (d1 * d1 + d2 * d2 <= 2)
+            expandShortcut = true;
+    }
+
     return (
         <div className={styles.box + " " + bg}>
             <div className={styles.box_content}>
@@ -73,7 +97,20 @@ function Selected({ x, y, setClicked, viewConvoys, sendConvoys, selectedConvoy }
                 </ul>
                 <div className={styles.buttons}>
                     <div onClick={viewConvoys} className={styles.button}>View convoys</div>
-                    <div onClick={selectedConvoy ? sendConvoys : () => { }} className={styles.button + " " + (selectedConvoy ? "" : styles.disabled)}>Send convoy</div>
+                    <div onClick={
+                        expandShortcut ? () => {
+                            if (loading)
+                                return;
+                            const [sx, sy] = getSelectedConvoyLoc(selectedConvoy)
+                            invoke({ args: [selectedConvoy, toFelt(sx), toFelt(sy), toFelt(x), toFelt(y)] })
+                            setWaiting(true);
+                        } : sendConvoys
+                    } className={styles.button + " " + (selectedConvoy && !waiting ? "" : styles.disabled)}>{
+                            waiting ? "Waiting..."
+                                : (expandShortcut)
+                                    ? "Expand colony"
+                                    : "Send convoy"
+                        }</div>
                 </div>
             </div>
             <svg className={styles.close} onClick={() => setClicked(false)} fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd"></path></svg>

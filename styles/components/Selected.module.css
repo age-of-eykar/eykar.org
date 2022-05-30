@@ -69,7 +69,7 @@
 .box_content {
     vertical-align: bottom;
     height        : fit-content;
-    width         : fit-content;
+    width         : 100%;
     user-select   : none;
 }
 
@@ -103,7 +103,8 @@
 .buttons {
     display        : flex;
     justify-content: center;
-    margin         : 12px;
+    width          : 100%;
+    margin         : 12px 0px;
 }
 
 .button {
@@ -113,7 +114,7 @@
     font-size       : 14px;
     padding         : 10px;
     border-radius   : 12px;
-    margin          : 8px;
+    margin          : 6px;
     cursor          : pointer;
 }
 

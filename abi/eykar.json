@@ -276,7 +276,7 @@
                 "type": "felt"
             }
         ],
-        "name": "extend",
+        "name": "expand",
         "outputs": [],
         "type": "function"
     },
@@ -299,7 +299,7 @@
                 "type": "felt"
             }
         ],
-        "name": "settle",
+        "name": "conquer",
         "outputs": [],
         "type": "function"
     }

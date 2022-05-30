@@ -142,7 +142,7 @@ export class ChunksCache {
             return [stops[0], stops[1], chunk.x, chunk.y];
     }
 
-    getNearColonyColor(coo) {
+    getExtendOfColony(coo) {
         if (!coo)
             return;
         const chunkCoo = this.getChunkCoordinates(coo[0], coo[1]);
@@ -153,13 +153,31 @@ export class ChunksCache {
                     if (i == j && i == 0)
                         continue;
                     const colonyId = chunk.colonized.get(szudzik(coo[0] + i, coo[1] + j));
-                    if (ownsColony(colonyId)) {
-                        const [r, g, b] = getColonyColor(colonyId);
-                        const norm = 2 * Math.sqrt(r * r + g * g + b * b);
-                        return [r / norm, g / norm, b / norm];
-                    }
+                    if (ownsColony(colonyId))
+                        return colonyId;
                 }
+        return false;
+    }
+
+    getNearColonyColor(coo) {
+        const colonyId = this.getExtendOfColony(coo);
+        if (colonyId) {
+            const [r, g, b] = getColonyColor(colonyId);
+            const norm = 2 * Math.sqrt(r * r + g * g + b * b);
+            return [r / norm, g / norm, b / norm];
+        }
         return [0.15, 0.15, 0.15];
+    }
+
+    updateCachedColonyId(x, y, colonyId) {
+        const chunkCoo = this.getChunkCoordinates(x, y);
+        const chunk = this.getChunk(chunkCoo.x, chunkCoo.y);
+        const key = szudzik(x, y);
+        if (chunk) {
+            chunk.colonized.set(key, colonyId);
+            chunk.updateColors();
+            chunk.updateColorBuffer(chunk);
+        }
     }
 
     getCachedColonyId(x, y) {

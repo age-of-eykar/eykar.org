@@ -1,10 +1,11 @@
 import styles from '../../../styles/components/convoy/Item.module.css'
-import { getColonyColor } from '../../../utils/colors'
 import Select from './icons/select';
+import { getColonyColor } from '../../../utils/colors'
 import { getTypeName } from '../../../utils/resources/convoyable';
 import { setConquerMode } from "../../../utils/models/game"
+import { setSelectedConvoyLoc } from "../../../utils/models/convoys"
 
-export default function ConvoyItem({ convoyId, selectedConvoy, setSelectedConvoy }) {
+export default function ConvoyItem({ convoyId, selectedConvoy, setSelectedConvoy, loc }) {
 
     const convoyables = [
         { type: 0, amount: 10 },
@@ -47,7 +48,9 @@ export default function ConvoyItem({ convoyId, selectedConvoy, setSelectedConvoy
                             select={() => {
                                 const selected = convoyId === selectedConvoy ? false : convoyId;
                                 setConquerMode(selected != false);
-                                setSelectedConvoy(selected)
+                                setSelectedConvoy(selected);
+                                if (selected)
+                                    setSelectedConvoyLoc(loc)
                             }} />
                     </div>
                 </div>

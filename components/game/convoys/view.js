@@ -11,7 +11,7 @@ export default function ViewConvoys({ x, y, toggle, selectedConvoy, setSelectedC
             </div>
 
             <h1 className={gameStyles.bigtitle}>Convoys in ({x}, {y})</h1>
-            <ConvoyItem convoyId={1} selectedConvoy={selectedConvoy} setSelectedConvoy={setSelectedConvoy} />
+            <ConvoyItem convoyId={1} selectedConvoy={selectedConvoy} setSelectedConvoy={setSelectedConvoy} loc={[x,y]} />
         </div>
     );
 }
