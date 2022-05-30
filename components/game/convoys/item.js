@@ -1,5 +1,6 @@
 import styles from '../../../styles/components/convoy/Item.module.css'
 import Select from './icons/select';
+import { useStarknetCall } from '@starknet-react/core'
 import { getColonyColor } from '../../../utils/colors'
 import { getTypeName } from '../../../utils/resources/convoyable';
 import { setConquerMode } from "../../../utils/models/game"
@@ -7,6 +8,8 @@ import { setSelectedConvoyLoc } from "../../../utils/models/convoys"
 
 export default function ConvoyItem({ convoyId, selectedConvoy, setSelectedConvoy, loc }) {
 
+    // const { data, loading } = useStarknetCall({ contract: contract, method: 'get_convoys', args: [toFelt(x), toFelt(y)] })
+    //todo: load convoyables
     const convoyables = [
         { type: 0, amount: 10 },
         { type: 1, amount: 5 },

@@ -1,9 +1,14 @@
+import { useEykarContract } from '../../../hooks/eykar'
+import { toFelt } from '../../../utils/felt'
+import { useStarknetCall } from '@starknet-react/core'
 import gameStyles from '../../../styles/Game.module.css'
 import styles from '../../../styles/components/convoy/Convoys.module.css'
 import ConvoyItem from "./item"
 
 export default function ViewConvoys({ x, y, toggle, selectedConvoy, setSelectedConvoy }) {
-
+    const { contract } = useEykarContract()
+    const { data, loading } = useStarknetCall({ contract: contract, method: 'get_convoys', args: [toFelt(x), toFelt(y)] })
+    const colonies = data && !loading ? data.convoys_id.map((bn) => bn.toNumber()) : []
     return (
         <div className={gameStyles.box}>
             <div className={styles.header}>
@@ -11,7 +16,12 @@ export default function ViewConvoys({ x, y, toggle, selectedConvoy, setSelectedC
             </div>
 
             <h1 className={gameStyles.bigtitle}>Convoys in ({x}, {y})</h1>
-            <ConvoyItem convoyId={1} selectedConvoy={selectedConvoy} setSelectedConvoy={setSelectedConvoy} loc={[x,y]} />
+            {
+                colonies.map((colonyId) =>
+                    <ConvoyItem key={colonyId} convoyId={colonyId} selectedConvoy={selectedConvoy} setSelectedConvoy={setSelectedConvoy} loc={[x, y]} />
+                )
+            }
+
         </div>
     );
 }
