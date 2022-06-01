@@ -39,6 +39,23 @@
     {
         "members": [
             {
+                "name": "type",
+                "offset": 0,
+                "type": "felt"
+            },
+            {
+                "name": "data",
+                "offset": 1,
+                "type": "felt"
+            }
+        ],
+        "name": "Conveyable",
+        "size": 2,
+        "type": "struct"
+    },
+    {
+        "members": [
+            {
                 "name": "owner",
                 "offset": 0,
                 "type": "felt"
@@ -152,7 +169,7 @@
             },
             {
                 "name": "conveyables",
-                "type": "felt*"
+                "type": "Conveyable*"
             }
         ],
         "stateMutability": "view",
