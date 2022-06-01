@@ -6,7 +6,7 @@ import { useEykarContract } from '../../hooks/eykar'
 import { useStarknetInvoke, useStarknetTransactionManager } from '@starknet-react/core'
 import { toFelt } from "../../utils/felt"
 import { getSelectedConvoyLoc } from "../../utils/models/convoys";
-function Selected({ x, y, setClicked, viewConvoys, sendConvoys, selectedConvoy }) {
+function Selected({ x, y, setClicked, viewConvoys, selectedConvoy }) {
 
     const elevation = getElevation(x, y);
     const temperature = getTemperature(x, y);
@@ -15,18 +15,20 @@ function Selected({ x, y, setClicked, viewConvoys, sendConvoys, selectedConvoy }
 
     const [colonyId, setColonyId] = useState(undefined);
     const { contract } = useEykarContract()
-    const { data, loading, invoke } = useStarknetInvoke({ contract: contract, method: 'expand' })
+    const { data: dataExpand, loading: loadingExpand, invoke: invokeloading } = useStarknetInvoke({ contract: contract, method: 'expand' })
+    const { data: dataMove, loading: loadingMove, invoke: invokeMove } = useStarknetInvoke({ contract: contract, method: 'move_convoy' })
     const { transactions } = useStarknetTransactionManager()
     const [waiting, setWaiting] = useState(false)
 
     useEffect(() => {
         for (const transaction of transactions)
-            if (transaction.transactionHash === data) {
+            if (transaction.transactionHash === dataExpand
+                || transaction.transactionHash === dataMove) {
                 if (transaction.status === 'ACCEPTED_ON_L2'
                     || transaction.status === 'ACCEPTED_ON_L1')
                     setWaiting(false);
             }
-    }, [data, transactions])
+    }, [dataExpand, dataMove, transactions])
 
 
     useEffect(() => {
@@ -37,7 +39,7 @@ function Selected({ x, y, setClicked, viewConvoys, sendConvoys, selectedConvoy }
             setOwnerName("Wilderness");
         else {
             const meta = getColonyMeta(cachedId);
-            setOwnerName(meta ? meta.name : "Loading...");
+            setOwnerName(meta ? meta.name : "loading...");
         }
 
         if (!contract)
@@ -60,7 +62,7 @@ function Selected({ x, y, setClicked, viewConvoys, sendConvoys, selectedConvoy }
         }
     }, [contract, x, y])
 
-    const [owner, setOwnerName] = useState("Loading...");
+    const [owner, setOwnerName] = useState("loading...");
 
     useEffect(() => {
         if (!colonyId)
@@ -99,12 +101,17 @@ function Selected({ x, y, setClicked, viewConvoys, sendConvoys, selectedConvoy }
                     <div onClick={viewConvoys} className={styles.button}>View convoys</div>
                     <div onClick={
                         expandShortcut ? () => {
-                            if (loading)
+                            if (loadingExpand)
                                 return;
                             const [sx, sy] = getSelectedConvoyLoc(selectedConvoy)
-                            invoke({ args: [selectedConvoy, toFelt(sx), toFelt(sy), toFelt(x), toFelt(y)] })
+                            invokeloading({ args: [selectedConvoy, toFelt(sx), toFelt(sy), toFelt(x), toFelt(y)] })
                             setWaiting(true);
-                        } : sendConvoys
+                        } : () => {
+                            if (loadingMove)
+                                return;
+                            const [sx, sy] = getSelectedConvoyLoc(selectedConvoy)
+                            invokeMove({ args: [selectedConvoy, toFelt(sx), toFelt(sy), toFelt(x), toFelt(y)] })
+                        }
                     } className={styles.button + " " + (selectedConvoy && !waiting ? "" : styles.disabled)}>{
                             waiting ? "Waiting..."
                                 : (expandShortcut)

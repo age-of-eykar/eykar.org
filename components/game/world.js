@@ -27,8 +27,8 @@ export default function World({ center, clicked, setClicked }) {
             /> : undefined}
             <div>
                 {clicked ? <Selected x={clicked[0]} y={clicked[1]}
-                    setClicked={setClicked} viewConvoys={toggle} 
-                    sendConvoys={() => { }} selectedConvoy={selectedConvoy} />
+                    setClicked={setClicked} viewConvoys={toggle}
+                    selectedConvoy={selectedConvoy} />
                     : undefined}
             </div>
             {
