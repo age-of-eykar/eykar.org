@@ -18,7 +18,7 @@ function gradient(firstColor, secondColor, ratio) {
 }
 
 export function getBiomeName(elevation, temperature) {
-  if (elevation > -0.025 && elevation <= 0.05)
+  if (elevation > 0 && elevation <= 0.05)
     return "Coast";
 
   if (elevation < 0) {
@@ -86,14 +86,17 @@ export function getBiomeColors(x, y) {
   const sandColor = [0.9, 0.89, 0.73];
   let expectedColor;
 
+  const oceanColor = gradient([0.14, 0.51, 0.51], [0.13, 0.37, 0.40], elevation * 1.25);
+  const groundColor = gradient([0.05, 0.27, 0.01], sandColor, elevation / 1.8);
+
   // ocean
-  if (elevation < 0.05) {
-    if (elevation > -0.025)
-      expectedColor = gradient(sandColor, [0.13, 0.4, 0.43], (elevation + 0.025) / 0.075);
+  if (elevation <= 0.05) {
+    if (elevation > 0)
+      expectedColor = gradient(groundColor, gradient(oceanColor, sandColor, 0.85), elevation / 0.05)
     else
-      expectedColor = gradient([0.14, 0.51, 0.51], [0.13, 0.37, 0.40], elevation * 1.25);
+      expectedColor = oceanColor;
   } else // ground
-    expectedColor = gradient([0.05, 0.27, 0.01], sandColor, elevation / 1.8);
+    expectedColor = groundColor;
 
   // ice
   if (temperature < -0.92)

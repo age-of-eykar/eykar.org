@@ -211,7 +211,7 @@ class Chunk {
 
     getStops(plot) {
         const topLeft = this.getTopLeft();
-        const [x, y] = [plot.x - topLeft.x, plot.y - topLeft.y];
+        const [x, y] = [plot.x - topLeft.x + 1, plot.y - topLeft.y + 1];
         let [start, stop] = [0, this.stops[0]];
         if (x != 0 || y != 0) {
             const index = ChunksCache.halfsize + x + (y - 1) * ChunksCache.sideSize;
@@ -233,7 +233,7 @@ class Chunk {
         for (const [szudziked, colony_id] of this.colonized) {
             const [x, y] = reversedSzudzik(szudziked)
             let [start, stop] = this.getStops({ x, y })
-            const [br, bg, bb] = getBiomeColors(x, y * 2);
+            const [br, bg, bb] = getBiomeColors(x, y);
             const [r, g, b] = getColonyColor(colony_id);
             for (let i = start; i < stop; i++) {
                 this.colors[i * 3] = 0.5 * br + 0.5 * r;
