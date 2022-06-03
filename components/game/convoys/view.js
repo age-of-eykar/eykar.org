@@ -3,12 +3,22 @@ import { useEykarContract } from '../../../hooks/eykar'
 import { useStarknetCall } from '@starknet-react/core'
 import gameStyles from '../../../styles/Game.module.css'
 import styles from '../../../styles/components/convoy/Convoys.module.css'
+import { useState, useEffect } from "react";
 import ConvoyItem from "./item"
 
 export default function ViewConvoys({ x, y, toggle, selectedConvoy, setSelectedConvoy }) {
     const { contract } = useEykarContract()
-    const { data, loading } = useStarknetCall({ contract: contract, method: 'get_convoys', args: [toFelt(x), toFelt(y)] })
-    const convoys = data && !loading ? data.convoys_id.map((bn) => bn.toNumber()) : []
+    const { data } = useStarknetCall({ contract: contract, method: 'get_convoys', args: [toFelt(x), toFelt(y)] })
+    const [convoys, setConvoys] = useState(false);
+
+    useEffect(() => {
+        setConvoys(false);
+    }, [x, y])
+
+    useEffect(() => {
+        setConvoys(data ? data.convoys_id.map((bn) => bn.toNumber()) : false)
+    }, [data])
+
     return (
         <div className={gameStyles.box}>
             <div className={styles.header}>
@@ -16,10 +26,17 @@ export default function ViewConvoys({ x, y, toggle, selectedConvoy, setSelectedC
             </div>
 
             <h1 className={gameStyles.bigtitle}>Convoys in ({x}, {y})</h1>
-            {
-                convoys.map((convoyId) =>
-                    <ConvoyItem key={convoyId} convoyId={convoyId} selectedConvoy={selectedConvoy} setSelectedConvoy={setSelectedConvoy} loc={[x, y]} />
-                )
+            {convoys === false
+                ? <p className={styles.text}>
+                    Loading convoys...
+                </p>
+                : convoys.length === 0
+                    ? <p className={styles.text}>
+                        There is no convoys here
+                    </p>
+                    : convoys.map((convoyId) =>
+                        <ConvoyItem key={convoyId} convoyId={convoyId} selectedConvoy={selectedConvoy} setSelectedConvoy={setSelectedConvoy} loc={[x, y]} />
+                    )
             }
         </div>
     );

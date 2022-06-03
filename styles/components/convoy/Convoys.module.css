@@ -15,3 +15,10 @@
 .close:hover {
     cursor: pointer;
 }
+
+.text {
+    font-family: 'Readex Pro', Verdana, sans-serif;
+    font-style : normal;
+    font-size  : 16px;
+    color      : #e7e6df;
+}
