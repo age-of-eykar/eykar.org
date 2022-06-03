@@ -55,7 +55,7 @@ function Header() {
 
                 </div>
             </nav>
-  
+            <Notifs />
         </>
     );
 
