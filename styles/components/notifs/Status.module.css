@@ -1,0 +1,36 @@
+.box {
+    height       : 26px;
+    width        : fit-content;
+    border-radius: 12px;
+    display      : flex;
+    align-items  : center;
+    cursor       : default;
+}
+
+.msg {
+    display    : none;
+    font-family: 'Readex Pro', Verdana, sans-serif;
+    font-size  : 14px;
+    color      : #2f302b;
+}
+
+.icon {
+    color      : #7BCE83;
+    margin-left: -4px;
+    width      : 26px;
+    height     : 26px;
+}
+
+.box:hover {
+    padding      : 13px 5px 13px 4px;
+    background-color: #7BCE83;
+}
+
+.box:hover .icon {
+    color : #2f302b;
+    height: 22px;
+}
+
+.box:hover .msg {
+    display: block;
+}

@@ -12,3 +12,12 @@
     color           : white;
     margin-right    : 7px;
 }
+
+@media (max-width: 600px) {
+    .box {
+
+        left     : 50%;
+        transform: translateX(-50%);
+        bottom   : 18px;
+    }
+}

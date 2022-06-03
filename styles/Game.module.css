@@ -135,9 +135,16 @@
     }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 700px) {
     .box {
         max-width: 100%;
+        min-width: 70%;
+    }
+}
+
+@media (max-width: 400px) {
+    .box {
+        min-width: 95%;
     }
 }
 
@@ -257,7 +264,6 @@
     height: 20px;
     margin: 6px 5px;
 }
-
 
 .loading_text {
     font-family : 'Readex Pro', Verdana, sans-serif;

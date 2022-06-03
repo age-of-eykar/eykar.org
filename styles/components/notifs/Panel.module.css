@@ -1,0 +1,19 @@
+.box {
+    z-index        : 2;
+    position       : fixed;
+    top            : 100px;
+    left           : calc(50% - 290px);
+    padding        : 0px 26px;
+    width          : 580px;
+    border-radius  : 24px;
+    background     : rgba(49, 44, 42, 0.3);
+    box-shadow     : 0px 0px 150px rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(16px);
+}
+
+@media (max-width: 600px) {
+    .box {
+        max-width: 100%;
+        left     : 0;
+    }
+}
