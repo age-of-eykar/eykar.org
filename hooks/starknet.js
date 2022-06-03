@@ -1,5 +1,3 @@
-import { useEffect } from 'react';
-
 export function useDisplayName(account) {
     if (account === undefined)
         return "unknown";

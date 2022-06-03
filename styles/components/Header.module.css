@@ -14,7 +14,7 @@
     z-index        : 1;
     position       : fixed;
     left           : calc(50% - 330px);
-    width          : 640px;
+    width          : 660px;
     height         : 60px;
     border-radius  : 0px 0px 16px 16px;
     background     : rgba(49, 44, 42, 0.6);

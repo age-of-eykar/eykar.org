@@ -6,7 +6,7 @@ import { useEykarContract } from '../../hooks/eykar'
 import { useStarknetInvoke, useStarknetTransactionManager } from '@starknet-react/core'
 import { toFelt } from "../../utils/felt"
 import { getSelectedConvoyLoc } from "../../utils/models/convoys";
-function Selected({ x, y, setClicked, viewConvoys, selectedConvoy }) {
+function Selected({ x, y, setClicked, viewConvoys, selectedConvoy, colonyIds }) {
 
     const elevation = getElevation(x, y);
     const temperature = getTemperature(x, y);
@@ -18,17 +18,8 @@ function Selected({ x, y, setClicked, viewConvoys, selectedConvoy }) {
     const { data: dataExpand, loading: loadingExpand, invoke: invokeloading } = useStarknetInvoke({ contract: contract, method: 'expand' })
     const { data: dataMove, loading: loadingMove, invoke: invokeMove } = useStarknetInvoke({ contract: contract, method: 'move_convoy' })
     const { transactions } = useStarknetTransactionManager()
-    const [waiting, setWaiting] = useState(false)
 
-    useEffect(() => {
-        for (const transaction of transactions)
-            if (transaction.transactionHash === dataExpand
-                || transaction.transactionHash === dataMove) {
-                if (transaction.status === 'ACCEPTED_ON_L2'
-                    || transaction.status === 'ACCEPTED_ON_L1')
-                    setWaiting(false);
-            }
-    }, [dataExpand, dataMove, transactions])
+    const busy = loadingExpand || loadingMove;
 
 
     useEffect(() => {
@@ -78,9 +69,16 @@ function Selected({ x, y, setClicked, viewConvoys, selectedConvoy }) {
         })();
     }, [colonyId])
 
+
+    let sx;
+    let sy;
+    const selectedConvoyLoc = getSelectedConvoyLoc(selectedConvoy)
+    if (selectedConvoyLoc)
+        [sx, sy] = selectedConvoyLoc;
     let expandShortcut = false;
-    if (getCache().getExtendOfColony([x, y]) && selectedConvoy) {
-        const [sx, sy] = getSelectedConvoyLoc(selectedConvoy)
+    const extendOf = getCache().getExtendOfColony([x, y]);
+
+    if (extendOf && selectedConvoy && colonyIds.includes(extendOf)) {
         const d1 = sx - x;
         const d2 = sy - y;
         if (d1 * d1 + d2 * d2 <= 2)
@@ -103,17 +101,17 @@ function Selected({ x, y, setClicked, viewConvoys, selectedConvoy }) {
                         expandShortcut ? () => {
                             if (loadingExpand)
                                 return;
-                            const [sx, sy] = getSelectedConvoyLoc(selectedConvoy)
+
                             invokeloading({ args: [selectedConvoy, toFelt(sx), toFelt(sy), toFelt(x), toFelt(y)] })
-                            setWaiting(true);
                         } : () => {
                             if (loadingMove)
                                 return;
-                            const [sx, sy] = getSelectedConvoyLoc(selectedConvoy)
+
                             invokeMove({ args: [selectedConvoy, toFelt(sx), toFelt(sy), toFelt(x), toFelt(y)] })
                         }
-                    } className={styles.button + " " + (selectedConvoy && !waiting ? "" : styles.disabled)}>{
-                            waiting ? "Waiting..."
+                    } className={styles.button + " " + (selectedConvoy && !busy
+                        && (x != sx || y != sy) ? "" : styles.disabled)}>{
+                            busy ? "Waiting..."
                                 : (expandShortcut)
                                     ? "Expand colony"
                                     : "Send convoy"

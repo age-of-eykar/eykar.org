@@ -27,6 +27,16 @@ export default function Game() {
     const [component, setComponent] = useState(<Spinner color={"white"} className={styles.loading} />);
     const [interactive, setInteractive] = useState(false);
     const [clicked, setClicked] = useState(undefined)
+    const [colonies, setColonies] = useState(undefined)
+
+    useEffect(() => {
+        if (data) {
+            const newColonies = []
+            for (const colony of data.colonies)
+                newColonies.push(colony.toNumber());
+            setColonies(newColonies)
+        }
+    }, [data])
 
     useEffect(() => {
         if (page === 'world') {
@@ -34,7 +44,7 @@ export default function Game() {
             wheelControler.releaseControl();
             mouseControler.releaseControl();
             setInteractive(true);
-            setComponent(<World center={center} clicked={clicked} setClicked={setClicked} />);
+            setComponent(<World center={center} colonyIds={colonies} clicked={clicked} setClicked={setClicked} />);
         } else {
             speedControler.takeControl();
             wheelControler.takeControl();
@@ -45,11 +55,11 @@ export default function Game() {
             else if (page === 'mint')
                 setComponent(<Mint />);
             else if (page === 'empire')
-                setComponent(<Colonies colonyIds={data.colonies} />);
+                setComponent(<Colonies colonyIds={colonies} />);
             else
                 setComponent(<Spinner color={"white"} className={styles.loading} />);
         }
-    }, [clicked, page])
+    }, [clicked, page, colonies])
 
     useEffect(() => {
         if (!InjectedConnector.ready())

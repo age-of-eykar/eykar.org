@@ -46,7 +46,7 @@ export default function ConvoyItem({ convoyId, selectedConvoy, setSelectedConvoy
                 </div>
 
                 <div className={styles.content_hidden}>
-                    {conveyables.map((conveyable) => <div>{conveyables.length === 1 ? "" : "-"} {getDisplay(conveyable)}</div>)}
+                    {conveyables.map((conveyable, id) => <div key={id}>{conveyables.length === 1 ? "" : "-"} {getDisplay(conveyable)}</div>)}
                 </div>
 
                 <div className={styles.items}>

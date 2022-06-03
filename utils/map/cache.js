@@ -143,6 +143,7 @@ export class ChunksCache {
     }
 
     getExtendOfColony(coo) {
+        // returns true if coo is adjacent to a colony plot
         if (!coo)
             return;
         const chunkCoo = this.getChunkCoordinates(coo[0], coo[1]);

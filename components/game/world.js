@@ -4,7 +4,7 @@ import { useRouter } from 'next/router'
 import ViewConvoys from "../../components/game/convoys/view";
 import ConvoyNotif from "./convoys/notif";
 
-export default function World({ center, clicked, setClicked }) {
+export default function World({ center, colonyIds, clicked, setClicked }) {
     const router = useRouter()
     const [showConvoys, setShowConvoys] = useState(false);
     const toggle = () => setShowConvoys(!showConvoys);
@@ -21,14 +21,14 @@ export default function World({ center, clicked, setClicked }) {
 
     return (
         <>
-            {showConvoys ? <ViewConvoys
+            {showConvoys && clicked ? <ViewConvoys
                 x={clicked[0]} y={clicked[1]} toggle={toggle}
                 selectedConvoy={selectedConvoy} setSelectedConvoy={setSelectedConvoy}
             /> : undefined}
             <div>
                 {clicked ? <Selected x={clicked[0]} y={clicked[1]}
                     setClicked={setClicked} viewConvoys={toggle}
-                    selectedConvoy={selectedConvoy} />
+                    selectedConvoy={selectedConvoy} colonyIds={colonyIds} />
                     : undefined}
             </div>
             {
