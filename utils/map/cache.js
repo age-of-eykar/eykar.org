@@ -142,6 +142,20 @@ export class ChunksCache {
             return [stops[0], stops[1], chunk.x, chunk.y];
     }
 
+    isColonized(coo) {
+        // returns true if coo is adjacent to a colony plot
+        if (!coo)
+            return;
+        const chunkCoo = this.getChunkCoordinates(coo[0], coo[1]);
+        const chunk = this.getChunk(chunkCoo.x, chunkCoo.y);
+        if (chunk) {
+            const colonyId = chunk.colonized.get(szudzik(coo[0], coo[1]));
+            if (colonyId)
+                return true;
+        }
+        return false;
+    }
+
     isOwnedColony(coo) {
         // returns true if coo is adjacent to a colony plot
         if (!coo)

@@ -18,11 +18,11 @@
 }
 
 .content {
-    width: 100%;
-    align-items      : center;
-    display: flex;
-    justify-content  : space-between;
-    cursor: default;
+    width          : 100%;
+    align-items    : center;
+    display        : flex;
+    justify-content: space-between;
+    cursor         : default;
 }
 
 .content_base {
@@ -37,16 +37,12 @@
     display: flex;
 }
 
-.content:hover {
-
-}
-
 .content:hover .items {
     flex-direction: column;
 }
 
 .content:hover .content_base {
-   display: none;
+    display: none;
 }
 
 .content:hover .content_hidden {
@@ -54,15 +50,19 @@
 }
 
 .icon_container {
-    height     : 26px;
-    display    : flex;
-    align-items: center;
-    cursor     : pointer;
+    margin         : auto 0px auto auto;
+    justify-content: flex-end;
+    align-content  : flex-end;
+    width          : fit-content;
+    height         : 26px;
+    display        : flex;
+    align-items    : center;
+    cursor         : pointer;
 }
 
 .icon_text {
-    display     : none;
-    margin-right: 8px;
+    display    : none;
+    margin-left: 8px;
 }
 
 .icon_container:hover .icon_text {

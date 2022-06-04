@@ -1,5 +1,6 @@
 import styles from '../../../styles/components/convoy/Item.module.css'
 import Select from './icons/select';
+import Conquer from "./icons/conquer";
 import { feltToString } from '../../../utils/felt';
 import { useEykarContract } from '../../../hooks/eykar'
 import { useStarknetCall } from '@starknet-react/core'
@@ -7,6 +8,7 @@ import { getColonyColor } from '../../../utils/colors'
 import { getDisplay } from '../../../utils/resources/convoyable';
 import { setConquerMode } from "../../../utils/models/game"
 import { setSelectedConvoyLoc } from "../../../utils/models/convoys"
+import { getCache } from '../../../utils/models/game';
 
 export default function ConvoyItem({ convoyId, selectedConvoy, setSelectedConvoy, loc }) {
 
@@ -58,6 +60,11 @@ export default function ConvoyItem({ convoyId, selectedConvoy, setSelectedConvoy
                             if (selected)
                                 setSelectedConvoyLoc(loc)
                         }} />
+                    {
+                        getCache().isColonized(loc)
+                            ? null
+                            : <Conquer color={[r, g, b]} />
+                    }
                 </div>
             </div>
 
