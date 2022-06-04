@@ -15,9 +15,8 @@ function Selected({ x, y, setClicked, viewConvoys, selectedConvoy, colonyIds }) 
 
     const [colonyId, setColonyId] = useState(undefined);
     const { contract } = useEykarContract()
-    const { data: dataExpand, loading: loadingExpand, invoke: invokeloading } = useStarknetInvoke({ contract: contract, method: 'expand' })
-    const { data: dataMove, loading: loadingMove, invoke: invokeMove } = useStarknetInvoke({ contract: contract, method: 'move_convoy' })
-    const { transactions } = useStarknetTransactionManager()
+    const { loading: loadingExpand, invoke: invokeloading } = useStarknetInvoke({ contract: contract, method: 'expand' })
+    const { loading: loadingMove, invoke: invokeMove } = useStarknetInvoke({ contract: contract, method: 'move_convoy' })
 
     const busy = loadingExpand || loadingMove;
 
@@ -76,11 +75,9 @@ function Selected({ x, y, setClicked, viewConvoys, selectedConvoy, colonyIds }) 
     if (selectedConvoyLoc)
         [sx, sy] = selectedConvoyLoc;
     let expandShortcut = false;
-    const extendOf = getCache().getExtendOfColony([x, y]);
-
-    if (extendOf && selectedConvoy && colonyIds.includes(extendOf)) {
-        const d1 = sx - x;
-        const d2 = sy - y;
+    if (getCache().isOwnedColony([sx, sy]) && !getCache().isOwnedColony([x, y])) {
+        const d1 = x - sx;
+        const d2 = y - sy;
         if (d1 * d1 + d2 * d2 <= 2)
             expandShortcut = true;
     }
@@ -102,12 +99,26 @@ function Selected({ x, y, setClicked, viewConvoys, selectedConvoy, colonyIds }) 
                             if (loadingExpand)
                                 return;
 
-                            invokeloading({ args: [selectedConvoy, toFelt(sx), toFelt(sy), toFelt(x), toFelt(y)] })
+                            invokeloading({
+                                args: [selectedConvoy, toFelt(sx), toFelt(sy), toFelt(x), toFelt(y)],
+                                metadata: {
+                                    type: 'expand',
+                                    source: [sx, sy],
+                                    target: [x, y]
+                                }
+                            })
                         } : () => {
                             if (loadingMove)
                                 return;
 
-                            invokeMove({ args: [selectedConvoy, toFelt(sx), toFelt(sy), toFelt(x), toFelt(y)] })
+                            invokeMove({
+                                args: [selectedConvoy, toFelt(sx), toFelt(sy), toFelt(x), toFelt(y)],
+                                metadata: {
+                                    type: 'move_convoy',
+                                    source: [sx, sy],
+                                    target: [x, y]
+                                }
+                            })
                         }
                     } className={styles.button + " " + (selectedConvoy && !busy
                         && (x != sx || y != sy) ? "" : styles.disabled)}>{

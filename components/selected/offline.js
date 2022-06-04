@@ -10,7 +10,6 @@ function Selected({ x, y, setClicked }) {
     const biome = getBiomeName(elevation, temperature);
     const bg = getBiomeStyle(biome, styles);
     const status = getCache().getCachedColonyId(x, y) ? "Colonized" : "Unsettled";
-    console.log(x, y, elevation)
 
     return (
         <div className={styles.box + " " + bg}>

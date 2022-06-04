@@ -1,11 +1,13 @@
 import styles from '../../../styles/components/notifs/Notif.module.css'
 import { Accepted, Rejected, Pending } from './status';
 import { useStarknetTransactionManager } from '@starknet-react/core'
+import { useTxMessage } from '../../../hooks/transactions'
 
 export default function Notif({ transaction }) {
 
     const { removeTransaction } = useStarknetTransactionManager()
-
+    console.log(transaction)
+    
     let status;
     if (transaction.status === "TRANSACTION_RECEIVED"
         || transaction.status === "RECEIVED" || transaction.status === "PENDING")
