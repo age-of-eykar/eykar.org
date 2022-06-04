@@ -1,7 +1,7 @@
 import styles from '../../styles/Game.module.css'
 import { useRef, useState, useEffect } from "react";
 import { useRouter } from 'next/router'
-import { useStarknet, useStarknetCall, InjectedConnector } from '@starknet-react/core'
+import { useStarknet, useStarknetCall } from '@starknet-react/core'
 import { Spinner } from "../../components/spinner"
 import {
     speedControler, wheelControler,
@@ -62,12 +62,7 @@ export default function Game() {
     }, [clicked, page, colonies])
 
     useEffect(() => {
-        if (!InjectedConnector.ready())
-            return;
-        if (!account) {
-            connect(new InjectedConnector())
-            return;
-        }
+        
         if (!contract || loading)
             return;
         if (data && page === "loading") {
@@ -92,9 +87,10 @@ export default function Game() {
                     }
                 } />
                 <div className={[interactive ? undefined : styles.overlay, styles.fadeIn].join(" ")}>
-                    {InjectedConnector.ready()
-                        ? component
-                        : <WalletMenu />}
+                    {//InjectedConnector.ready() ?
+                        component
+                        //: <WalletMenu />
+                    }
                 </div>
             </div>
         </div>

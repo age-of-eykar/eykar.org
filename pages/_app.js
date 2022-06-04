@@ -1,8 +1,10 @@
 import '../styles/globals.css'
-import { StarknetProvider } from '@starknet-react/core'
+import { StarknetProvider, InjectedConnector } from '@starknet-react/core'
 
 function MyApp({ Component, pageProps }) {
-  return <StarknetProvider><Component {...pageProps} /></StarknetProvider>
+  return <StarknetProvider connectors={[new InjectedConnector()]}>
+    <Component {...pageProps} />
+  </StarknetProvider>
 }
 
 export default MyApp

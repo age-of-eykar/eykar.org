@@ -3,13 +3,16 @@ import React from 'react'
 import Powered from '../components/powered'
 import WalletMenu from '../components/walletmenu'
 import Link from 'next/link'
-import { useStarknet, InjectedConnector } from '@starknet-react/core'
+import { useStarknet } from '@starknet-react/core'
 import { useRouter } from 'next/router'
+import { useAvailableConnectors } from '../hooks/wallet'
 
 export default function Home() {
-  const { account, connect } = useStarknet()
+  const { account, connect, connectors } = useStarknet()
+  const availableConnectors = useAvailableConnectors(connectors)
   const [connectMenuToggled, setConnectMenuToggled] = React.useState(false);
   const router = useRouter()
+  console.log(availableConnectors)
 
   return (
     <div className="default_background">
@@ -20,11 +23,13 @@ export default function Home() {
 
         <button className={
           [styles.button, styles.play].join(" ")} onClick={() => {
-            if (InjectedConnector.ready()) {
-              connect(new InjectedConnector())
+            if (availableConnectors.length === 1) {
+              connect(availableConnectors[0])
               router.push('/game/loading');
-            } else {
+            } else if (availableConnectors.length === 0) {
               setConnectMenuToggled(true)
+            } else {
+
             }
           }} >
           <div className={styles.button_div}></div>
