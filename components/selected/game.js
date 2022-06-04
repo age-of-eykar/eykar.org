@@ -3,7 +3,7 @@ import { getElevation, getTemperature, getBiomeName, getBiomeStyle } from '../..
 import { getCache, getColonyMeta, updateColonyMeta } from "../../utils/models/game";
 import { useState, useEffect } from "react";
 import { useEykarContract } from '../../hooks/eykar'
-import { useStarknetInvoke, useStarknetTransactionManager } from '@starknet-react/core'
+import { useStarknetInvoke } from '@starknet-react/core'
 import { toFelt } from "../../utils/felt"
 import { getSelectedConvoyLoc } from "../../utils/models/convoys";
 function Selected({ x, y, setClicked, viewConvoys, selectedConvoy, colonyIds }) {

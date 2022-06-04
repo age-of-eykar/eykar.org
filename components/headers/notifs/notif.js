@@ -6,7 +6,6 @@ import { useTxMessage } from '../../../hooks/transactions'
 export default function Notif({ transaction }) {
 
     const { removeTransaction } = useStarknetTransactionManager()
-    console.log(transaction)
     
     let status;
     if (transaction.status === "TRANSACTION_RECEIVED"

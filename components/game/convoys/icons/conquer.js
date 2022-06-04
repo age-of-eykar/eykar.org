@@ -1,9 +1,9 @@
 import styles from '../../../../styles/components/convoy/Item.module.css'
 
-export default function Conquer({ color }) {
+export default function Conquer({ conquer, color }) {
     const [r, g, b] = color;
     return (
-        <div onClick={() => { }} className={styles.icon_container + " info_container"} >
+        <div onClick={conquer} className={styles.icon_container + " info_container"} >
             <style jsx>{`
             .info_container:hover {
                 color: ${'rgb(' + r + ',' + g + ',' + b + ')'}

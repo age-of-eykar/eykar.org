@@ -12,7 +12,6 @@ export default function Home() {
   const availableConnectors = useAvailableConnectors(connectors)
   const [connectMenuToggled, setConnectMenuToggled] = React.useState(false);
   const router = useRouter()
-  console.log(availableConnectors)
 
   return (
     <div className="default_background">

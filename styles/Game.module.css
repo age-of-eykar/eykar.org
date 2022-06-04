@@ -233,6 +233,13 @@
     color          : inherit;
 }
 
+.back_icon {
+    color : #F5F4F0F0;
+    cursor: pointer;
+    height: 24px;
+    margin: 4px 5px;
+}
+
 .box_icon {
     background-color: green;
 }

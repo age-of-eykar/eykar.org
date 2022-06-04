@@ -10,7 +10,7 @@ import { setConquerMode } from "../../../utils/models/game"
 import { setSelectedConvoyLoc } from "../../../utils/models/convoys"
 import { getCache } from '../../../utils/models/game';
 
-export default function ConvoyItem({ convoyId, selectedConvoy, setSelectedConvoy, loc }) {
+export default function ConvoyItem({ convoyId, setConquering, selectedConvoy, setSelectedConvoy, loc }) {
 
     const { contract } = useEykarContract()
     const { data, loading } = useStarknetCall({ contract: contract, method: 'get_conveyables', args: [convoyId] })
@@ -63,7 +63,7 @@ export default function ConvoyItem({ convoyId, selectedConvoy, setSelectedConvoy
                     {
                         getCache().isColonized(loc)
                             ? null
-                            : <Conquer color={[r, g, b]} />
+                            : <Conquer conquer={() => setConquering(convoyId)} color={[r, g, b]} />
                     }
                 </div>
             </div>
