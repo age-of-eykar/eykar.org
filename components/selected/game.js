@@ -6,7 +6,7 @@ import { useEykarContract } from '../../hooks/eykar'
 import { useStarknetInvoke } from '@starknet-react/core'
 import { toFelt } from "../../utils/felt"
 import { getSelectedConvoyLoc } from "../../utils/models/convoys";
-function Selected({ x, y, setClicked, viewConvoys, selectedConvoy, colonyIds }) {
+function Selected({ x, y, setClicked, viewConvoys, selectedConvoy, setSelectedConvoy }) {
 
     const elevation = getElevation(x, y);
     const temperature = getTemperature(x, y);
@@ -15,11 +15,15 @@ function Selected({ x, y, setClicked, viewConvoys, selectedConvoy, colonyIds }) 
 
     const [colonyId, setColonyId] = useState(undefined);
     const { contract } = useEykarContract()
-    const { loading: loadingExpand, invoke: invokeloading } = useStarknetInvoke({ contract: contract, method: 'expand' })
-    const { loading: loadingMove, invoke: invokeMove } = useStarknetInvoke({ contract: contract, method: 'move_convoy' })
+    const { data: dataExpand, loading: loadingExpand, invoke: invokeExpand } = useStarknetInvoke({ contract: contract, method: 'expand' })
+    const { data: dataMove, loading: loadingMove, invoke: invokeMove } = useStarknetInvoke({ contract: contract, method: 'move_convoy' })
 
     const busy = loadingExpand || loadingMove;
 
+    useEffect(() => {
+        if ((dataExpand && !loadingExpand) || (dataMove && !loadingMove))
+            setSelectedConvoy(false)
+    }, [dataExpand, loadingExpand, dataMove, loadingMove])
 
     useEffect(() => {
 
@@ -99,7 +103,7 @@ function Selected({ x, y, setClicked, viewConvoys, selectedConvoy, colonyIds }) 
                             if (loadingExpand)
                                 return;
 
-                            invokeloading({
+                            invokeExpand({
                                 args: [selectedConvoy, toFelt(sx), toFelt(sy), toFelt(x), toFelt(y)],
                                 metadata: {
                                     type: 'expand',

@@ -28,7 +28,7 @@ export default function World({ center, colonyIds, clicked, setClicked }) {
             <div>
                 {clicked ? <Selected x={clicked[0]} y={clicked[1]}
                     setClicked={setClicked} viewConvoys={toggle}
-                    selectedConvoy={selectedConvoy} colonyIds={colonyIds} />
+                    selectedConvoy={selectedConvoy} setSelectedConvoy={setSelectedConvoy} />
                     : undefined}
             </div>
             {
