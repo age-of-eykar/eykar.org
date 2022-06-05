@@ -17,7 +17,7 @@ export default function World({ center, colonyIds, clicked, setClicked }) {
         const y = parseInt(router.query.y);
         center.current = { x, y }
         setClicked([x, y])
-    }, [router.query])
+    }, [router.query, center, setClicked])
 
     return (
         <>

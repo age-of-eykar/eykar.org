@@ -66,7 +66,7 @@ function Selected({ x, y, setClicked, viewConvoys, selectedConvoy, colonyIds }) 
             if (meta)
                 setOwnerName(meta.name);
         })();
-    }, [colonyId])
+    }, [contract, colonyId])
 
 
     let sx;
