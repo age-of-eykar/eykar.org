@@ -1,6 +1,7 @@
 import styles from '../../../styles/components/convoy/Item.module.css'
 import Select from './icons/select';
 import Conquer from "./icons/conquer";
+import { useState, useEffect } from "react";
 import { feltToString, toFelt } from '../../../utils/felt';
 import { useEykarContract } from '../../../hooks/eykar'
 import { useStarknetCall, useStarknetInvoke } from '@starknet-react/core'
@@ -20,10 +21,15 @@ export default function ConvoyItem({ convoyId, setConquering, selectedConvoy, se
     let [r, g, b] = getColonyColor(owner);
     [r, g, b] = [r * 255, g * 255, b * 255];
 
-    let conveyables = [];
-    if (data && !loading)
-        for (const conveyable of data.conveyables)
-            conveyables.push({ type: feltToString(conveyable.type), data: conveyable.data })
+    const [conveyables, setConveyables] = useState([]);
+    useEffect(() => {
+        if (data && !loading) {
+            const newConveyables = [];
+            for (const conveyable of data.conveyables)
+                newConveyables.push({ type: feltToString(conveyable.type), data: conveyable.data })
+            setConveyables(newConveyables);
+        }
+    }, [data, loading])
 
     return (
         <div className={styles.box + " " + (selectedConvoy === convoyId ? styles.selected_box : " ")}
@@ -68,7 +74,8 @@ export default function ConvoyItem({ convoyId, setConquering, selectedConvoy, se
                                 getCache().getExtendOfColony(loc)
                                     ? () => invoke({ args: [convoyId, toFelt(loc[0]), toFelt(loc[1]), 0] })
                                     : () => setConquering(convoyId)
-                            } color={[r, g, b]} />
+                            }
+                                color={[r, g, b]} />
                     }
                 </div>
             </div>

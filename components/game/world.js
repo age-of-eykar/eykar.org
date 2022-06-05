@@ -8,7 +8,7 @@ export default function World({ center, colonyIds, clicked, setClicked }) {
     const router = useRouter()
     const [showConvoys, setShowConvoys] = useState(false);
     const toggle = () => setShowConvoys(!showConvoys);
-    const [selectedConvoy, setSelectedConvoy] = useState(undefined)
+    const [selectedConvoy, setSelectedConvoy] = useState(false)
 
     useEffect(() => {
         if (!router.query.x || !router.query.y)
