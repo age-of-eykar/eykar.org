@@ -1,9 +1,9 @@
 import styles from '../../../styles/components/convoy/Item.module.css'
 import Select from './icons/select';
 import Conquer from "./icons/conquer";
-import { feltToString } from '../../../utils/felt';
+import { feltToString, toFelt } from '../../../utils/felt';
 import { useEykarContract } from '../../../hooks/eykar'
-import { useStarknetCall } from '@starknet-react/core'
+import { useStarknetCall, useStarknetInvoke } from '@starknet-react/core'
 import { getColonyColor } from '../../../utils/colors'
 import { getDisplay } from '../../../utils/resources/convoyable';
 import { setConquerMode } from "../../../utils/models/game"
@@ -14,6 +14,7 @@ export default function ConvoyItem({ convoyId, setConquering, selectedConvoy, se
 
     const { contract } = useEykarContract()
     const { data, loading } = useStarknetCall({ contract: contract, method: 'get_conveyables', args: [convoyId] })
+    const { invoke } = useStarknetInvoke({ contract: contract, method: 'conquer' })
 
     const owner = 2;
     let [r, g, b] = getColonyColor(owner);
@@ -63,12 +64,14 @@ export default function ConvoyItem({ convoyId, setConquering, selectedConvoy, se
                     {
                         getCache().isColonized(loc)
                             ? null
-                            : <Conquer conquer={() => setConquering(convoyId)} color={[r, g, b]} />
+                            : <Conquer conquer={
+                                getCache().getExtendOfColony(loc)
+                                    ? () => invoke({ args: [convoyId, toFelt(loc[0]), toFelt(loc[1]), 0] })
+                                    : () => setConquering(convoyId)
+                            } color={[r, g, b]} />
                     }
                 </div>
             </div>
-
-
         </div>
     );
 }
