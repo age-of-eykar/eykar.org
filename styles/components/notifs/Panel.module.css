@@ -2,9 +2,9 @@
     z-index        : 2;
     position       : fixed;
     top            : 100px;
-    left           : calc(50% - 290px);
+    left           : calc(50% - 240px);
     padding        : 0px 26px;
-    width          : 580px;
+    width          : 480px;
     max-height     : 400px;
     overflow       : auto;
     border-radius  : 14px;
@@ -27,7 +27,7 @@
     border-radius   : 8px;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 480px) {
     .box {
         max-width: 100%;
         left     : 0;
