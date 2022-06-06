@@ -107,6 +107,7 @@ function Selected({ x, y, setClicked, viewConvoys, selectedConvoy, setSelectedCo
                                 args: [selectedConvoy, toFelt(sx), toFelt(sy), toFelt(x), toFelt(y)],
                                 metadata: {
                                     type: 'expand',
+                                    convoyId: selectedConvoy,
                                     source: [sx, sy],
                                     target: [x, y]
                                 }
@@ -119,6 +120,7 @@ function Selected({ x, y, setClicked, viewConvoys, selectedConvoy, setSelectedCo
                                 args: [selectedConvoy, toFelt(sx), toFelt(sy), toFelt(x), toFelt(y)],
                                 metadata: {
                                     type: 'move_convoy',
+                                    convoyId: selectedConvoy,
                                     source: [sx, sy],
                                     target: [x, y]
                                 }

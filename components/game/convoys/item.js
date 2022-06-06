@@ -72,7 +72,15 @@ export default function ConvoyItem({ convoyId, setConquering, selectedConvoy, se
                             ? null
                             : <Conquer conquer={
                                 getCache().getExtendOfColony(loc)
-                                    ? () => invoke({ args: [convoyId, toFelt(loc[0]), toFelt(loc[1]), 0] })
+                                    ? () => invoke({
+                                        args: [convoyId, toFelt(loc[0]), toFelt(loc[1]), 0],
+                                        metadata: {
+                                            type: 'conquer',
+                                            name: undefined,
+                                            convoyId: convoyId,
+                                            target: [loc[0], loc[1]]
+                                        }
+                                    })
                                     : () => setConquering(convoyId)
                             }
                                 color={[r, g, b]} />

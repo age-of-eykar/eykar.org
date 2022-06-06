@@ -6,7 +6,8 @@ import { useTxMessage } from '../../../hooks/transactions'
 export default function Notif({ transaction }) {
 
     const { removeTransaction } = useStarknetTransactionManager()
-    
+    const [title, message] = useTxMessage(transaction.metadata)
+
     let status;
     if (transaction.status === "TRANSACTION_RECEIVED"
         || transaction.status === "RECEIVED" || transaction.status === "PENDING")
@@ -21,9 +22,9 @@ export default function Notif({ transaction }) {
             <div >
                 <div className={styles.header}>
                     {status}
-                    <h1 className={styles.title}>Moving convoy</h1>
+                    <h1 className={styles.title}>{title}</h1>
                 </div>
-                <p className={styles.text}>Convoy of 10 humans from (-4, 3) to (5, 6). Travel time estimated to 5 hours.</p>
+                <p className={styles.text}>{message}</p>
             </div>
             <div className={styles.side}>
                 <svg onClick={() => removeTransaction(transaction.transactionHash)} className={styles.close} fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd"></path></svg>

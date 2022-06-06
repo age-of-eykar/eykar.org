@@ -9,6 +9,8 @@
 }
 
 .side {
+    margin-left    : auto;
+    margin-right   : 0px;
     display        : flex;
     flex-direction : column;
     width          : fit-content;

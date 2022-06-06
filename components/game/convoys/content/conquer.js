@@ -28,7 +28,15 @@ export default function Conquer({ convoyId, x, y, setConquering }) {
                 <svg onClick={() => setConquering(false)} className={[styles.footer_element, styles.back_icon].join(" ")} fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clipRule="evenodd"></path></svg>
 
                 <button className={[styles.footer_element, styles.button].join(" ")} onClick={() => {
-                    invoke({ args: [convoyId, toFelt(x), toFelt(y), stringToFelt(name)] })
+                    invoke({
+                        args: [convoyId, toFelt(x), toFelt(y), stringToFelt(name)],
+                        metadata: {
+                            type: 'conquer',
+                            name: name,
+                            convoyId: convoyId,
+                            target: [x, y]
+                        }
+                    })
                 }}>
                     <svg className={styles.button_icon} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                     <p className={styles.button_text}>Send an expedition</p>
