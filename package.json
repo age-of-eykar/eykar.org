@@ -10,7 +10,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@starknet-react/core": "^0.10.2",
+    "@starknet-react/core": "^0.11.1",
     "add": "^2.0.6",
     "bn.js": "^5.2.0",
     "debounce": "^1.2.1",
