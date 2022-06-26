@@ -1,6 +1,7 @@
 import styles from '../../../styles/components/convoy/Item.module.css'
 import Select from './icons/select';
 import Conquer from "./icons/conquer";
+import BN from "bn.js"
 import { useState, useEffect } from "react";
 import { feltToString, toFelt } from '../../../utils/felt';
 import { useEykarContract } from '../../../hooks/eykar'
@@ -15,11 +16,41 @@ export default function ConvoyItem({ convoyId, setConquering, selectedConvoy, se
 
     const { contract } = useEykarContract()
     const { data, loading } = useStarknetCall({ contract: contract, method: 'get_conveyables', args: [convoyId] })
+    const { data: metaData } = useStarknetCall({ contract: contract, method: 'get_convoy_meta', args: [convoyId] })
     const { invoke } = useStarknetInvoke({ contract: contract, method: 'conquer' })
 
-    const owner = 2;
-    let [r, g, b] = getColonyColor(owner);
-    [r, g, b] = [r * 255, g * 255, b * 255];
+    const [color, setColor] = useState([52, 59, 64]);
+    const [owner, setOwmer] = useState(false);
+    const [available, setAvailable] = useState(false);
+
+    useEffect(() => {
+        if (metaData === undefined) {
+            setOwmer(false);
+            setAvailable(false)
+            return;
+        }
+        const meta = metaData.meta;
+        setOwmer(meta.owner);
+        if (Date.now() / 1000 > meta.availability.toNumber())
+            setAvailable(true);
+    }, [metaData, setOwmer, setAvailable])
+
+    useEffect(() => {
+        let baseColor;
+
+        if (!owner)
+            baseColor = [0.2, 0.23, 0.25];
+        else
+            baseColor = getColonyColor(owner.umod(new BN(272899064295427)).toNumber())
+
+        if (available)
+            setColor([baseColor[0] * 255, baseColor[1] * 255, baseColor[2] * 255]);
+        else
+            setColor([baseColor[0] * 200, baseColor[1] * 200, baseColor[2] * 200]);
+
+    }, [owner, available, setColor])
+
+    let [r, g, b] = color;
 
     const [conveyables, setConveyables] = useState([]);
     useEffect(() => {
