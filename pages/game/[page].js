@@ -44,7 +44,7 @@ export default function Game() {
             wheelControler.releaseControl();
             mouseControler.releaseControl();
             setInteractive(true);
-            setComponent(<World center={center} colonyIds={colonies} clicked={clicked} setClicked={setClicked} />);
+            setComponent(<World center={center} clicked={clicked} setClicked={setClicked} />);
         } else {
             speedControler.takeControl();
             wheelControler.takeControl();

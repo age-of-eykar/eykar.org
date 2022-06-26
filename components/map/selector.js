@@ -30,7 +30,6 @@ export class Selector {
             return;
         this.lastMove = now;
         const coo = getCache().getPlotAt(this.cursor[0], this.cursor[1]);
-
         if (isConquerMode())
             this.selectedColor = getCache().getNearColonyColor(coo);
 
