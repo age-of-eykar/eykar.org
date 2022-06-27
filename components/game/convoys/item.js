@@ -5,7 +5,7 @@ import BN from "bn.js"
 import { useState, useEffect } from "react";
 import { feltToString, toFelt } from '../../../utils/felt';
 import { useEykarContract } from '../../../hooks/eykar'
-import { useStarknetCall, useStarknetInvoke } from '@starknet-react/core'
+import { useStarknet, useStarknetCall, useStarknetInvoke } from '@starknet-react/core'
 import { getColonyColor } from '../../../utils/colors'
 import { getDisplay } from '../../../utils/resources/convoyable';
 import { setConquerMode } from "../../../utils/models/game"
@@ -15,10 +15,12 @@ import { getCache } from '../../../utils/models/game';
 export default function ConvoyItem({ convoyId, setConquering, selectedConvoy, setSelectedConvoy, loc }) {
 
     const { contract } = useEykarContract()
+    const { account } = useStarknet()
     const { data, loading } = useStarknetCall({ contract: contract, method: 'get_conveyables', args: [convoyId] })
     const { data: metaData } = useStarknetCall({ contract: contract, method: 'get_convoy_meta', args: [convoyId] })
     const { invoke } = useStarknetInvoke({ contract: contract, method: 'conquer' })
 
+    const [colorSeed, setColorSeed] = useState(0);
     const [color, setColor] = useState([52, 59, 64]);
     const [owner, setOwmer] = useState(false);
     const [available, setAvailable] = useState(false);
@@ -30,7 +32,8 @@ export default function ConvoyItem({ convoyId, setConquering, selectedConvoy, se
             return;
         }
         const meta = metaData.meta;
-        setOwmer(meta.owner);
+        setOwmer("0x" + meta.owner.toString(16));
+        setColorSeed(getColonyColor(meta.owner.umod(new BN(272899064295427)).toNumber()))
         if (Date.now() / 1000 > meta.availability.toNumber())
             setAvailable(true);
     }, [metaData, setOwmer, setAvailable])
@@ -41,14 +44,14 @@ export default function ConvoyItem({ convoyId, setConquering, selectedConvoy, se
         if (!owner)
             baseColor = [0.2, 0.23, 0.25];
         else
-            baseColor = getColonyColor(owner.umod(new BN(272899064295427)).toNumber())
-
+            baseColor = colorSeed
+    
         if (available)
             setColor([baseColor[0] * 255, baseColor[1] * 255, baseColor[2] * 255]);
         else
             setColor([baseColor[0] * 200, baseColor[1] * 200, baseColor[2] * 200]);
 
-    }, [owner, available, setColor])
+    }, [owner, colorSeed, available, setColor])
 
     let [r, g, b] = color;
 
@@ -90,6 +93,7 @@ export default function ConvoyItem({ convoyId, setConquering, selectedConvoy, se
                 </div>
 
                 <div className={styles.items}>
+                    { available && owner === account ?
                     <Select color={[r, g, b]}
                         select={() => {
                             const selected = convoyId === selectedConvoy ? false : convoyId;
@@ -97,9 +101,11 @@ export default function ConvoyItem({ convoyId, setConquering, selectedConvoy, se
                             setSelectedConvoy(selected);
                             if (selected)
                                 setSelectedConvoyLoc(loc)
-                        }} />
+                        }} /> : null
+                    }
                     {
                         getCache().isColonized(loc)
+                        || !available || owner !== account
                             ? null
                             : <Conquer conquer={
                                 getCache().getExtendOfColony(loc)
