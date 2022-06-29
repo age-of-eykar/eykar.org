@@ -350,6 +350,29 @@
     {
         "inputs": [
             {
+                "name": "attacker",
+                "type": "felt"
+            },
+            {
+                "name": "target",
+                "type": "felt"
+            },
+            {
+                "name": "x",
+                "type": "felt"
+            },
+            {
+                "name": "y",
+                "type": "felt"
+            }
+        ],
+        "name": "attack",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
                 "name": "player",
                 "type": "felt"
             }

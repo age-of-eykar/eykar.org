@@ -1,6 +1,7 @@
 import styles from '../../../styles/components/convoy/Item.module.css'
 import Select from './icons/select';
 import Conquer from "./icons/conquer";
+import Attack from './icons/attack';
 import BN from "bn.js"
 import { useState, useEffect } from "react";
 import { feltToString, toFelt } from '../../../utils/felt';
@@ -16,9 +17,10 @@ export default function ConvoyItem({ convoyId, setConquering, selectedConvoy, se
 
     const { contract } = useEykarContract()
     const { account } = useStarknet()
-    const { data, loading } = useStarknetCall({ contract: contract, method: 'get_conveyables', args: [convoyId] })
+    const { data: conveyablesData, loading } = useStarknetCall({ contract: contract, method: 'get_conveyables', args: [convoyId] })
     const { data: metaData } = useStarknetCall({ contract: contract, method: 'get_convoy_meta', args: [convoyId] })
-    const { invoke } = useStarknetInvoke({ contract: contract, method: 'conquer' })
+    const { invoke: conquerInvoke } = useStarknetInvoke({ contract: contract, method: 'conquer' })
+    const { invoke: attackInvoke } = useStarknetInvoke({ contract: contract, method: 'attack' })
 
     const [colorSeed, setColorSeed] = useState(0);
     const [color, setColor] = useState([52, 59, 64]);
@@ -45,7 +47,7 @@ export default function ConvoyItem({ convoyId, setConquering, selectedConvoy, se
             baseColor = [0.2, 0.23, 0.25];
         else
             baseColor = colorSeed
-    
+
         if (available)
             setColor([baseColor[0] * 255, baseColor[1] * 255, baseColor[2] * 255]);
         else
@@ -57,13 +59,13 @@ export default function ConvoyItem({ convoyId, setConquering, selectedConvoy, se
 
     const [conveyables, setConveyables] = useState([]);
     useEffect(() => {
-        if (data && !loading) {
+        if (conveyablesData && !loading) {
             const newConveyables = [];
-            for (const conveyable of data.conveyables)
+            for (const conveyable of conveyablesData.conveyables)
                 newConveyables.push({ type: feltToString(conveyable.type), data: conveyable.data })
             setConveyables(newConveyables);
         }
-    }, [data, loading])
+    }, [conveyablesData, loading])
 
     return (
         <div className={styles.box + " " + (selectedConvoy === convoyId ? styles.selected_box : " ")}
@@ -93,23 +95,35 @@ export default function ConvoyItem({ convoyId, setConquering, selectedConvoy, se
                 </div>
 
                 <div className={styles.items}>
-                    { available && owner === account ?
-                    <Select color={[r, g, b]}
-                        select={() => {
-                            const selected = convoyId === selectedConvoy ? false : convoyId;
-                            setConquerMode(selected != false);
-                            setSelectedConvoy(selected);
-                            if (selected)
-                                setSelectedConvoyLoc(loc)
-                        }} /> : null
+                    {available && owner !== account && selectedConvoy
+                        ? <Attack
+                            color={[r, g, b]}
+                            attack={() => {
+                                console.log("aloha", convoyId, selectedConvoy, toFelt(loc[0]), toFelt(loc[1]))
+                                attackInvoke({
+                                    args: [toFelt(selectedConvoy), toFelt(convoyId), toFelt(loc[0]), toFelt(loc[1])],
+                                })
+                            }}
+                        />
+                        : null
+                    }
+                    {available && owner === account ?
+                        <Select color={[r, g, b]}
+                            select={() => {
+                                const selected = convoyId === selectedConvoy ? false : convoyId;
+                                setConquerMode(selected != false);
+                                setSelectedConvoy(selected);
+                                if (selected)
+                                    setSelectedConvoyLoc(loc)
+                            }} /> : null
                     }
                     {
                         getCache().isColonized(loc)
-                        || !available || owner !== account
+                            || !available || owner !== account
                             ? null
                             : <Conquer conquer={
                                 getCache().getExtendOfColony(loc)
-                                    ? () => invoke({
+                                    ? () => conquerInvoke({
                                         args: [convoyId, toFelt(loc[0]), toFelt(loc[1]), 0],
                                         metadata: {
                                             type: 'conquer',
