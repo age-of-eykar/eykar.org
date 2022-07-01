@@ -13,7 +13,7 @@ import { setConquerMode } from "../../../utils/models/game"
 import { setSelectedConvoyLoc } from "../../../utils/models/convoys"
 import { getCache } from '../../../utils/models/game';
 
-export default function ConvoyItem({ convoyId, setConquering, selectedConvoy, setSelectedConvoy, loc }) {
+export default function ConvoyItem({ convoys, convoyId, setConquering, selectedConvoy, setSelectedConvoy, loc }) {
 
     const { contract } = useEykarContract()
     const { account } = useStarknet()
@@ -96,7 +96,7 @@ export default function ConvoyItem({ convoyId, setConquering, selectedConvoy, se
                 </div>
 
                 <div className={styles.items}>
-                    {available && owner !== account && selectedConvoy
+                    {available && owner !== account && selectedConvoy && convoys.includes(selectedConvoy)
                         ? <Attack
                             color={[r, g, b]}
                             attack={() => {

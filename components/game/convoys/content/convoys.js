@@ -16,7 +16,7 @@ export default function ConvoysList({ x, y, convoys, setConquering, selectedConv
                         There is no convoys here
                     </p>
                     : convoys.map((convoyId) =>
-                        <ConvoyItem key={convoyId} convoyId={convoyId} setConquering={setConquering} selectedConvoy={selectedConvoy} setSelectedConvoy={setSelectedConvoy} loc={[x, y]} />
+                        <ConvoyItem convoys={convoys} key={convoyId} convoyId={convoyId} setConquering={setConquering} selectedConvoy={selectedConvoy} setSelectedConvoy={setSelectedConvoy} loc={[x, y]} />
                     )
             }
         </>
