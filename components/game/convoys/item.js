@@ -34,7 +34,10 @@ export default function ConvoyItem({ convoyId, setConquering, selectedConvoy, se
             return;
         }
         const meta = metaData.meta;
-        setOwmer("0x" + meta.owner.toString(16));
+        const newOwner = "0x" + meta.owner.toString(16);
+        if (newOwner !== "0x0") {
+            setOwmer(newOwner);
+        }
         setColorSeed(getColonyColor(meta.owner.umod(new BN(272899064295427)).toNumber()))
         if (Date.now() / 1000 > meta.availability.toNumber())
             setAvailable(true);
@@ -42,11 +45,9 @@ export default function ConvoyItem({ convoyId, setConquering, selectedConvoy, se
 
     useEffect(() => {
         let baseColor;
-
         if (!owner)
-            baseColor = [0.2, 0.23, 0.25];
-        else
-            baseColor = colorSeed
+            return;
+        baseColor = colorSeed
 
         if (available)
             setColor([baseColor[0] * 255, baseColor[1] * 255, baseColor[2] * 255]);
@@ -67,7 +68,7 @@ export default function ConvoyItem({ convoyId, setConquering, selectedConvoy, se
         }
     }, [conveyablesData, loading])
 
-    return (
+    return (owner ?
         <div className={styles.box + " " + (selectedConvoy === convoyId ? styles.selected_box : " ")}
             style={{ 'backgroundColor': 'rgb(' + r + ', ' + g + ', ' + b + ')' }}>
 
@@ -99,7 +100,6 @@ export default function ConvoyItem({ convoyId, setConquering, selectedConvoy, se
                         ? <Attack
                             color={[r, g, b]}
                             attack={() => {
-                                console.log("aloha", convoyId, selectedConvoy, toFelt(loc[0]), toFelt(loc[1]))
                                 attackInvoke({
                                     args: [toFelt(selectedConvoy), toFelt(convoyId), toFelt(loc[0]), toFelt(loc[1])],
                                 })
@@ -139,5 +139,6 @@ export default function ConvoyItem({ convoyId, setConquering, selectedConvoy, se
                 </div>
             </div>
         </div>
+        : <></>
     );
 }
