@@ -1,0 +1,26 @@
+.footer {
+    width        : 100%;
+    height       : fit-content;
+    margin-top   : 24px;
+    margin-left  : -14px;
+    margin-bottom: -14px;
+    display      : flex;
+}
+
+.button {
+    cursor          : pointer;
+    background-color: #353A3F;
+    color           : #E6EBF2;
+    font-family     : 'Readex Pro', Verdana, sans-serif;
+    font-style      : normal;
+    font-size       : 16px;
+    display         : flex;
+    padding         : 5px;
+    border-radius   : 12px;
+}
+
+.button_left_icon {
+    color       : #E6EBF2;
+    margin-right: 4px;
+    height      : 22px;
+}

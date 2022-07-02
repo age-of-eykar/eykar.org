@@ -13,7 +13,7 @@ import { setConquerMode } from "../../../utils/models/game"
 import { setSelectedConvoyLoc } from "../../../utils/models/convoys"
 import { getCache } from '../../../utils/models/game';
 
-export default function ConvoyItem({ convoys, convoyId, setConquering, selectedConvoy, setSelectedConvoy, loc }) {
+export default function ConvoyItem({ convoys, convoyId, setConquering, selectedConvoy, setSelectedConvoy, loc, toggleEditor }) {
 
     const { contract } = useEykarContract()
     const { account } = useStarknet()
@@ -55,6 +55,11 @@ export default function ConvoyItem({ convoys, convoyId, setConquering, selectedC
             setColor([baseColor[0] * 200, baseColor[1] * 200, baseColor[2] * 200]);
 
     }, [owner, colorSeed, available, setColor])
+
+    useEffect(() => {
+        if (owner === account)
+            toggleEditor()
+    }, [owner, account])
 
     let [r, g, b] = color;
 

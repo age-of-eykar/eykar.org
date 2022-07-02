@@ -5,6 +5,7 @@ import { useEykarContract } from '../../../hooks/eykar'
 import { useStarknetCall } from '@starknet-react/core'
 import { useState, useEffect } from "react";
 import ConvoysList from "./content/convoys";
+import ConvoysEditor from "./content/editor";
 import Conquer from "./content/conquer";
 
 export default function ViewConvoys({ x, y, toggle, selectedConvoy, setSelectedConvoy }) {
@@ -12,6 +13,7 @@ export default function ViewConvoys({ x, y, toggle, selectedConvoy, setSelectedC
     const { data } = useStarknetCall({ contract: contract, method: 'get_convoys', args: [toFelt(x), toFelt(y)] })
     const [convoys, setConvoys] = useState(false);
     const [conquering, setConquering] = useState(false)
+    const [editing, setEditing] = useState(false)
 
     useEffect(() => {
         setConvoys(false);
@@ -29,7 +31,8 @@ export default function ViewConvoys({ x, y, toggle, selectedConvoy, setSelectedC
             </div>
             {
                 conquering ? <Conquer convoyId={conquering} x={x} y={y} setConquering={setConquering} />
-                    : <ConvoysList x={x} y={y} convoys={convoys} setConquering={setConquering} selectedConvoy={selectedConvoy} setSelectedConvoy={setSelectedConvoy} />
+                    : editing ? <ConvoysEditor x={x} y={y} />
+                        : <ConvoysList x={x} y={y} convoys={convoys} setConquering={setConquering} selectedConvoy={selectedConvoy} setSelectedConvoy={setSelectedConvoy} setEditing={setEditing} />
             }
 
 
