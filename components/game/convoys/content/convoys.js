@@ -1,15 +1,12 @@
 import gameStyles from '../../../../styles/Game.module.css'
 import styles from '../../../../styles/components/convoy/Convoys.module.css'
 import footerStyles from '../../../../styles/components/convoy/Footer.module.css'
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import ConvoyItem from "../item"
 
 export default function ConvoysList({ x, y, convoys, setConquering, selectedConvoy, setSelectedConvoy }) {
 
     const [ownConvoys, setOwnConvoys] = useState(false);
-    useEffect(() => {
-        setOwnConvoys(false);
-    }, [convoys])
 
     return (
         <>

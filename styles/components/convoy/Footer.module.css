@@ -13,14 +13,14 @@
     color           : #E6EBF2;
     font-family     : 'Readex Pro', Verdana, sans-serif;
     font-style      : normal;
-    font-size       : 16px;
+    font-size       : 14px;
     display         : flex;
-    padding         : 5px;
+    padding         : 6px;
     border-radius   : 12px;
 }
 
 .button_left_icon {
     color       : #E6EBF2;
     margin-right: 4px;
-    height      : 22px;
+    height      : 18px;
 }
