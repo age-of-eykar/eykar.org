@@ -47,14 +47,15 @@
 }
 
 .button {
+    cursor          : pointer;
     text-decoration : none;
     color           : white;
     background-color: #9e7231;
     display         : flex;
     align-items     : center;
+    border          : none;
     border-radius   : 15px;
     height          : 40px;
-    margin-left     : 7.5px;
 }
 
 .button_text {
