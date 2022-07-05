@@ -1,16 +1,40 @@
 import gameStyles from '../../../../styles/Game.module.css'
-import styles from '../../../../styles/components/convoy/Editor.module.css'
+//import styles from '../../../../styles/components/convoy/Editor.module.css'
 import footerStyles from '../../../../styles/components/convoy/Footer.module.css'
 import EditorItem from './editor_item'
+import { useEffect, useState } from "react";
+import BN from "bn.js"
 
 export default function ConvoysEditor({ convoys, x, y, setEditing }) {
+
+    const [total, setTotal] = useState(new Map());
+
+    function addToTotal(contents) {
+        for (const content of contents) {
+            const value = total.get(content.type) || new BN(0);
+            total.set(content.type, content.data.add(value));
+        }
+        setTotal(new Map(total))
+    }
+
+    function removeFromTotal(contents) {
+        for (const content of contents) {
+            const value = total.get(content.type);
+            total.set(content.type, value.sub(content.data));
+        }
+        setTotal(new Map(total))
+    }
+
+    useEffect(() => {
+        console.log(total)
+    }, [total])
 
     return (
         <>
             <h1 className={gameStyles.bigtitle}>Selecting inputs</h1>
 
             {convoys.map((convoyId) =>
-                <EditorItem convoyId={convoyId} />
+                <EditorItem convoyId={convoyId} addToTotal={addToTotal} removeFromTotal={removeFromTotal} />
             )}
 
             <div className={footerStyles.footer} >

@@ -5,7 +5,7 @@ import { feltToString } from '../../../../utils/felt';
 import { useState, useEffect } from "react";
 import { getDisplay } from '../../../../utils/resources/convoyable';
 
-export default function EditorItem({ convoyId }) {
+export default function EditorItem({ convoyId, addToTotal, removeFromTotal }) {
 
     const { contract } = useEykarContract()
     const { account } = useStarknet()
@@ -41,7 +41,13 @@ export default function EditorItem({ convoyId }) {
     }, [conveyablesData])
 
     return (account === owner && available) ?
-        <div onClick={() => setToggled(!toggled)} className={
+        <div onClick={() => {
+            if (toggled)
+                removeFromTotal(conveyables)
+            else
+                addToTotal(conveyables)
+            setToggled(!toggled);
+        }} className={
             [styles.box, styles.clickable, (toggled ? styles.selected_box_light : " ")].join(" ")}
             style={{ 'backgroundColor': 'rgb(' + r + ', ' + g + ', ' + b + ')' }}>
 
