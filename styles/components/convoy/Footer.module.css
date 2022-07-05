@@ -1,10 +1,12 @@
 .footer {
-    width        : 100%;
-    height       : fit-content;
-    margin-top   : 24px;
-    margin-left  : -14px;
-    margin-bottom: -14px;
-    display      : flex;
+    width     : 100%;
+    height    : fit-content;
+    margin-top: 24px;
+
+    margin-bottom  : -14px;
+    display        : flex;
+    align-content  : space-between;
+    justify-content: space-between;
 }
 
 .button {
@@ -23,4 +25,10 @@
     color       : #E6EBF2;
     margin-right: 4px;
     height      : 18px;
+}
+
+.button_right_icon {
+    color      : #E6EBF2;
+    margin-left: 4px;
+    height     : 18px;
 }

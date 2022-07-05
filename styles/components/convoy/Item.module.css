@@ -17,12 +17,20 @@
     outline: #434452 solid 4px;
 }
 
+.selected_box_light {
+    outline: #b6b7c4 solid 2px;
+}
+
 .content {
     width          : 100%;
     align-items    : center;
     display        : flex;
     justify-content: space-between;
     cursor         : default;
+}
+
+.clickable {
+    cursor: pointer;
 }
 
 .content_base {

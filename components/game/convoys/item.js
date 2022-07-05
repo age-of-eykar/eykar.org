@@ -24,24 +24,24 @@ export default function ConvoyItem({ convoys, convoyId, setConquering, selectedC
 
     const [colorSeed, setColorSeed] = useState(0);
     const [color, setColor] = useState([52, 59, 64]);
-    const [owner, setOwmer] = useState(false);
+    const [owner, setOwner] = useState(false);
     const [available, setAvailable] = useState(false);
 
     useEffect(() => {
         if (metaData === undefined) {
-            setOwmer(false);
+            setOwner(false);
             setAvailable(false)
             return;
         }
         const meta = metaData.meta;
         const newOwner = "0x" + meta.owner.toString(16);
         if (newOwner !== "0x0") {
-            setOwmer(newOwner);
+            setOwner(newOwner);
         }
         setColorSeed(getColonyColor(meta.owner.umod(new BN(272899064295427)).toNumber()))
         if (Date.now() / 1000 > meta.availability.toNumber())
             setAvailable(true);
-    }, [metaData, setOwmer, setAvailable])
+    }, [metaData, setOwner, setAvailable])
 
     useEffect(() => {
         let baseColor;

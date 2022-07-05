@@ -31,11 +31,9 @@ export default function ViewConvoys({ x, y, toggle, selectedConvoy, setSelectedC
             </div>
             {
                 conquering ? <Conquer convoyId={conquering} x={x} y={y} setConquering={setConquering} />
-                    : editing ? <ConvoysEditor x={x} y={y} />
-                        : <ConvoysList x={x} y={y} convoys={convoys} setConquering={setConquering} selectedConvoy={selectedConvoy} setSelectedConvoy={setSelectedConvoy} setEditing={setEditing} />
+                    : editing ? <ConvoysEditor convoys={convoys} x={x} y={y} setEditing={setEditing} />
+                        : <ConvoysList x={x} y={y} convoys={convoys} setConquering={setConquering} selectedConvoy={selectedConvoy} setSelectedConvoy={setSelectedConvoy} setEditing={() => setEditing(true)} />
             }
-
-
         </div>
     );
 }
