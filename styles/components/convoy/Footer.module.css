@@ -21,14 +21,19 @@
     border-radius   : 12px;
 }
 
+.disabled {
+    background-color: #353A3F;
+    color           : #e6ebf285;
+    cursor          : not-allowed;
+}
+
 .button_left_icon {
-    color       : #E6EBF2;
+
     margin-right: 4px;
     height      : 18px;
 }
 
 .button_right_icon {
-    color      : #E6EBF2;
     margin-left: 4px;
     height     : 18px;
 }

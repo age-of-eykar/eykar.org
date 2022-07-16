@@ -7,7 +7,7 @@ export default function Tutorial({ }) {
     const { account } = useStarknet()
     const displayName = useDisplayName(account)
     const router = useRouter()
-    
+
     return (
         <div className={[styles.box, styles.fadeIn].join(" ")}>
             <h1 className={styles.title}>Welcome, serial number {displayName}</h1>
