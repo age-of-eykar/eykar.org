@@ -68,7 +68,7 @@ export default function ConvoyItem({ convoys, convoyId, setConquering, selectedC
         if (conveyablesData && !loading) {
             const newConveyables = [];
             for (const conveyable of conveyablesData.conveyables)
-                newConveyables.push({ type: feltToString(conveyable.type), data: conveyable.data })
+                newConveyables.push({ type: feltToString(conveyable.type), amount: conveyable.data })
             setConveyables(newConveyables);
         }
     }, [conveyablesData, loading])

@@ -13,6 +13,15 @@
     margin-top       : 20px
 }
 
+.dark_bg {
+    background-color: rgb(52, 59, 64);
+}
+
+.dark_bg_disabled {
+    background-color: rgba(52, 59, 64, 0.516);
+    color           : #ecebe584;
+}
+
 .selected_box {
     outline: #434452 solid 4px;
 }
@@ -90,4 +99,68 @@
 .icon_container:hover {
     background-color: #ecebe5;
     border-radius   : 12px;
+}
+
+.conveyable_line {
+    display    : flex;
+    align-items: center;
+}
+
+.conveyable_line_shown {
+    display    : flex;
+    align-items: center;
+}
+
+.conveyable_line:hover .conveyable_line_shown {
+    display: none;
+}
+
+.conveyable_line_hidden {
+    display: none;
+}
+
+.conveyable_line:hover .conveyable_line_hidden {
+    display    : flex;
+    align-items: center;
+}
+
+.editable_field {
+    display         : flex;
+    align-items     : center;
+    background-color: #1f1f26;
+    width           : fit-content;
+    padding         : 4px;
+    border-radius   : 5px;
+    margin-right    : 7px;
+}
+
+.field_input {
+    background-color: #1f1f26;
+    color           : #ecebe5;
+    width           : 100px;
+    border          : none;
+}
+
+.field_input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+}
+
+.field_input:focus {
+    outline: none;
+}
+
+.highlighted_icon {
+    color: #ecebe5;
+}
+
+.validate_icon {
+    width       : 22px;
+    height      : 22px;
+    margin-right: 4px;
+    color       : #ecebe5dc;
+    cursor      : pointer;
+}
+
+.validate_icon:hover {
+    color: #ecebe5;
 }

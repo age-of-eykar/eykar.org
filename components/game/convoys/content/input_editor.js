@@ -8,7 +8,7 @@ export default function InputEditor({ convoys, total, setTotal, setEditing, setO
     function addToTotal(contents) {
         for (const content of contents) {
             const value = (total.get(content.type)
-                || new BN(0)).add(content.data);
+                || new BN(0)).add(content.amount);
             total.set(content.type, value);
         }
         setTotal(new Map(total))
@@ -16,7 +16,7 @@ export default function InputEditor({ convoys, total, setTotal, setEditing, setO
 
     function removeFromTotal(contents) {
         for (const content of contents) {
-            const value = total.get(content.type).sub(content.data);
+            const value = total.get(content.type).sub(content.amount);
             if (value.isZero())
                 total.delete(content.type)
             else

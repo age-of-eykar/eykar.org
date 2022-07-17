@@ -9,7 +9,6 @@ export default function EditorItem({ convoyId, addToTotal, removeFromTotal }) {
 
     const { contract } = useEykarContract()
     const { account } = useStarknet()
-    let [r, g, b] = [52, 59, 64];
 
     const { data: metaData } = useStarknetCall({ contract: contract, method: 'get_convoy_meta', args: [convoyId] })
     const [owner, setOwner] = useState(false);
@@ -35,7 +34,7 @@ export default function EditorItem({ convoyId, addToTotal, removeFromTotal }) {
         if (conveyablesData) {
             const newConveyables = [];
             for (const conveyable of conveyablesData.conveyables)
-                newConveyables.push({ type: feltToString(conveyable.type), data: conveyable.data })
+                newConveyables.push({ type: feltToString(conveyable.type), amount: conveyable.data })
             setConveyables(newConveyables);
         }
     }, [conveyablesData])
@@ -48,8 +47,8 @@ export default function EditorItem({ convoyId, addToTotal, removeFromTotal }) {
                 addToTotal(conveyables)
             setToggled(!toggled);
         }} className={
-            [styles.box, styles.clickable, (toggled ? styles.selected_box_light : " ")].join(" ")}
-            style={{ 'backgroundColor': 'rgb(' + r + ', ' + g + ', ' + b + ')' }}>
+            [styles.box, styles.clickable, styles.dark_bg, (toggled ? styles.selected_box_light : " ")].join(" ")}
+            >
 
             <div className={[styles.content, styles.clickable].join(" ")}>
                 {
@@ -71,7 +70,7 @@ export default function EditorItem({ convoyId, addToTotal, removeFromTotal }) {
                 </div>
 
                 <div className={styles.content_hidden}>
-                    {conveyables.map((conveyable, id) => <div key={id}>{conveyables.length === 1 ? "" : "-"} {getDisplay(conveyable)}</div>)}
+                    {Array.from(conveyables).map((conveyable, id) => <div key={id}>{conveyables.length === 1 ? "" : "-"} {getDisplay(conveyable)}</div>)}
                 </div>
 
                 <div className={styles.items}>
