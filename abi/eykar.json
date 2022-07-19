@@ -350,6 +350,46 @@
     {
         "inputs": [
             {
+                "name": "convoy_ids_len",
+                "type": "felt"
+            },
+            {
+                "name": "convoy_ids",
+                "type": "felt*"
+            },
+            {
+                "name": "output_sizes_len",
+                "type": "felt"
+            },
+            {
+                "name": "output_sizes",
+                "type": "felt*"
+            },
+            {
+                "name": "output_len",
+                "type": "felt"
+            },
+            {
+                "name": "output",
+                "type": "Fungible*"
+            }
+        ],
+        "name": "transform",
+        "outputs": [
+            {
+                "name": "convoy_ids_len",
+                "type": "felt"
+            },
+            {
+                "name": "convoy_ids",
+                "type": "felt*"
+            }
+        ],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
                 "name": "attacker",
                 "type": "felt"
             },
