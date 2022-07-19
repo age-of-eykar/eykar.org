@@ -164,3 +164,11 @@
 .validate_icon:hover {
     color: #ecebe5;
 }
+
+.warning_icon {
+    width       : 22px;
+    height      : 22px;
+    margin-right: 4px;
+    color       : #e17055;
+    cursor      : not-allowed;
+}

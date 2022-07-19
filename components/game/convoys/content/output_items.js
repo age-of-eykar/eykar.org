@@ -1,3 +1,4 @@
+import { BN } from 'bn.js';
 import styles from '../../../../styles/components/convoy/Item.module.css'
 
 import { getDisplay, EditableDisplay } from '../../../../utils/resources/convoyable';
@@ -40,14 +41,19 @@ export function SpentItem({ params: { outputs, output_index, setOutputs, spendab
                         <div className={styles.conveyable_line} key={id}>{conveyables.size === 1 ? "" : "-"} {
                             <EditableDisplay conveyable={{ type, amount }}
                                 checkConveyableAmount={
-                                    () => { }
+                                    (newAmount) => {
+                                        const rest = amount.sub(newAmount);
+                                        const val1 = rest.add(spendable.has(type) ? spendable.get(type) : new BN(0))
+                                        const val2 = rest.neg().add(outputs[output_index].has(type) ? outputs[output_index].get(type) : new BN(0))
+                                        return !(val1.isNeg() || val2.isNeg())
+                                    }
                                 }
                                 updateConveyableAmount={(newAmount) => {
                                     const rest = amount.sub(newAmount);
 
                                     // 1) add rest to spendable[type]
                                     const newSpendable = new Map(spendable);
-                                    newSpendable.set(type, rest.add(newSpendable.get(type)))
+                                    newSpendable.set(type, rest.add(newSpendable.has(type) ? newSpendable.get(type) : new BN(0)))
                                     setSpendable(newSpendable)
 
                                     // 2) substract rest to conveyables[type]
