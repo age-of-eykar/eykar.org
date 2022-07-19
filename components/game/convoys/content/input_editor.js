@@ -3,9 +3,11 @@ import footerStyles from '../../../../styles/components/convoy/Footer.module.css
 import EditorItem from './editor_item'
 import BN from "bn.js"
 
-export default function InputEditor({ convoys, total, setTotal, setEditing, setOutputMenu }) {
+export default function InputEditor({ inputsIds, setInputsIds, convoys, total, setTotal, setEditing, setOutputMenu }) {
 
-    function addToTotal(contents) {
+    function addToTotal(convoyId, contents) {
+        inputsIds.push(convoyId)
+        setInputsIds(inputsIds)
         for (const content of contents) {
             const value = (total.get(content.type)
                 || new BN(0)).add(content.amount);
@@ -14,7 +16,8 @@ export default function InputEditor({ convoys, total, setTotal, setEditing, setO
         setTotal(new Map(total))
     }
 
-    function removeFromTotal(contents) {
+    function removeFromTotal(convoyId, contents) {
+        setInputsIds(inputsIds.filter(val => val !== convoyId))
         for (const content of contents) {
             const value = total.get(content.type).sub(content.amount);
             if (value.isZero())

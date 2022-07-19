@@ -19,6 +19,10 @@ export function useTxMessage(metadata) {
         case 'move_convoy':
             return [`Moving to (${metadata.target[0]}, ${metadata.target[1]})`, `Moving your convoy of identifier ${metadata.convoyId} is from (${metadata.source[0]}, ${metadata.source[1]}) to (${metadata.target[0]}, ${metadata.target[1]}).`];
 
+
+        case 'transform':
+            return ["Transforming", `Transforming ${metadata.input_size} source convoy${metadata.input_size > 1 ? "s" : ""} to ${metadata.output_size} new convoy${metadata.output_size > 1 ? "s" : ""}.`];
+
         default:
             return ["Moving convoy", "Convoy of 10 humans from (-4, 3) to (5, 6). Travel time estimated to 5 hours."];
     }

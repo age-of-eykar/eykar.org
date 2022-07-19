@@ -2,11 +2,16 @@ import gameStyles from '../../../../styles/Game.module.css'
 import footerStyles from '../../../../styles/components/convoy/Footer.module.css'
 import { useEffect, useState } from "react";
 import { SpentItem, ToSpendItem } from './output_items';
+import { useEykarContract } from '../../../../hooks/eykar'
+import { stringToFelt, toFelt } from '../../../../utils/felt';
+import { useStarknetInvoke } from '@starknet-react/core'
 
-export default function OutputEditor({ inputs, setInputsMenu, confirm }) {
+export default function OutputEditor({ inputs, inputsIds, setInputsMenu }) {
 
     const [spendable, setSpendable] = useState(new Map());
-    const [outputs, setOutputs] = useState([]);
+    const [outputs, setOutputs] = useState(new Array());
+    const { contract } = useEykarContract()
+    const { data, invoke } = useStarknetInvoke({ contract: contract, method: 'transform' })
 
     useEffect(() => {
         setSpendable(new Map(inputs))
@@ -18,7 +23,7 @@ export default function OutputEditor({ inputs, setInputsMenu, confirm }) {
             <h1 className={gameStyles.bigtitle}>Allocating outputs</h1>
 
             {outputs.map((conveyables, output_index) => {
-                return <SpentItem params={{outputs, output_index, setOutputs, spendable, setSpendable, conveyables}} />
+                return <SpentItem params={{ outputs, output_index, setOutputs, spendable, setSpendable, conveyables }} />
             }
             )}
 
@@ -38,8 +43,30 @@ export default function OutputEditor({ inputs, setInputsMenu, confirm }) {
 
                 <div onClick={
                     () => {
-                        if (spendable.size === 0)
-                            confirm()
+                        if (spendable.size === 0) {
+                            const feltInputsIds = new Array();
+                            for (const inputId of inputsIds)
+                                feltInputsIds.push(toFelt(inputId))
+
+                            const outputSizes = new Array();
+                            const output = new Array();
+                            for (const outputConvoy of outputs) {
+                                let size = 0;
+                                for (const [typeStr, amount] of outputConvoy.entries()) {
+                                    output.push([stringToFelt(typeStr), amount])
+                                    size += 1;
+                                }
+                                outputSizes.push(size)
+                            }
+                            invoke({
+                                args: [feltInputsIds, outputSizes, output],
+                                metadata: {
+                                    type: 'transform',
+                                    input_size: inputsIds.length,
+                                    output_size: outputs.length,
+                                }
+                            })
+                        }
                     }
                 } className={footerStyles.button + " " + (spendable.size !== 0 ? footerStyles.disabled : "")}>
                     confirm

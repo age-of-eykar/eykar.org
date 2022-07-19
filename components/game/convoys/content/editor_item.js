@@ -42,9 +42,9 @@ export default function EditorItem({ convoyId, addToTotal, removeFromTotal }) {
     return (account === owner && available) ?
         <div onClick={() => {
             if (toggled)
-                removeFromTotal(conveyables)
+                removeFromTotal(convoyId, conveyables)
             else
-                addToTotal(conveyables)
+                addToTotal(convoyId, conveyables)
             setToggled(!toggled);
         }} className={
             [styles.box, styles.clickable, styles.dark_bg, (toggled ? styles.selected_box_light : " ")].join(" ")}
