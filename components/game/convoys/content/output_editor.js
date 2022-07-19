@@ -6,7 +6,7 @@ import { useEykarContract } from '../../../../hooks/eykar'
 import { stringToFelt, toFelt } from '../../../../utils/felt';
 import { useStarknetInvoke } from '@starknet-react/core'
 
-export default function OutputEditor({ inputs, inputsIds, setInputsMenu }) {
+export default function OutputEditor({ x, y, inputs, inputsIds, setEditing, setInputsMenu }) {
 
     const [spendable, setSpendable] = useState(new Map());
     const [outputs, setOutputs] = useState(new Array());
@@ -17,6 +17,11 @@ export default function OutputEditor({ inputs, inputsIds, setInputsMenu }) {
         setSpendable(new Map(inputs))
         setOutputs(new Array())
     }, [inputs])
+
+    useEffect(() => {
+        if (data)
+            setEditing(false)
+    }, [data])
 
     return (
         <>
@@ -59,7 +64,7 @@ export default function OutputEditor({ inputs, inputsIds, setInputsMenu }) {
                                 outputSizes.push(size)
                             }
                             invoke({
-                                args: [feltInputsIds, outputSizes, output],
+                                args: [feltInputsIds, outputSizes, output, x, y],
                                 metadata: {
                                     type: 'transform',
                                     input_size: inputsIds.length,

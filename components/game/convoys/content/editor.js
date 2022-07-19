@@ -22,8 +22,11 @@ export default function ConvoysEditor({ convoys, x, y, setEditing }) {
             setOutputMenu={() => setMenu("output")} />
     else if (menu === "output")
         component = <OutputEditor
+            x={x}
+            y={y}
             inputs={inputs}
             inputsIds={inputsIds}
+            setEditing={setEditing}
             setInputsMenu={() => {
                 setMenu("input")
                 setInputs(new Map())

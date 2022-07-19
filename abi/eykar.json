@@ -372,6 +372,14 @@
             {
                 "name": "output",
                 "type": "Fungible*"
+            },
+            {
+                "name": "x",
+                "type": "felt"
+            },
+            {
+                "name": "y",
+                "type": "felt"
             }
         ],
         "name": "transform",
