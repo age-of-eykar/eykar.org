@@ -64,7 +64,7 @@ export default function OutputEditor({ x, y, inputs, inputsIds, setEditing, setI
                                 outputSizes.push(size)
                             }
                             invoke({
-                                args: [feltInputsIds, outputSizes, output, x, y],
+                                args: [feltInputsIds, outputSizes, output, toFelt(x), toFelt(y)],
                                 metadata: {
                                     type: 'transform',
                                     input_size: inputsIds.length,
