@@ -6,6 +6,8 @@ import { useEykarContract } from '../../hooks/eykar'
 import { useStarknetInvoke } from '@starknet-react/core'
 import { toFelt } from "../../utils/felt"
 import { getSelectedConvoyLoc } from "../../utils/models/convoys";
+import { setConquerMode } from "../../utils/models/game";
+
 function Selected({ x, y, setClicked, viewConvoys, selectedConvoy, setSelectedConvoy }) {
 
     const elevation = getElevation(x, y);
@@ -21,8 +23,10 @@ function Selected({ x, y, setClicked, viewConvoys, selectedConvoy, setSelectedCo
     const busy = loadingExpand || loadingMove;
 
     useEffect(() => {
-        if ((dataExpand && !loadingExpand) || (dataMove && !loadingMove))
+        if ((dataExpand && !loadingExpand) || (dataMove && !loadingMove)) {
             setSelectedConvoy(false)
+            setConquerMode(false)
+        }
     }, [dataExpand, loadingExpand, dataMove, loadingMove])
 
     useEffect(() => {
