@@ -13,7 +13,8 @@ export function stringToFelt(str) {
 
 export function toNegativeNumber(felt) {
     const added = felt.sub(P);
-    return (added.abs() < felt.abs())
+    console.log(added.abs().toString(), felt.abs().toString())
+    return (added.abs().cmp(felt.abs())) == -1
         ? added
         : felt;
 }
