@@ -12,8 +12,9 @@ import { getDisplay } from '../../../utils/resources/convoyable';
 import { setConquerMode } from "../../../utils/models/game"
 import { setSelectedConvoyLoc } from "../../../utils/models/convoys"
 import { getCache } from '../../../utils/models/game';
+import Harvest from './icons/harvest';
 
-export default function ConvoyItem({ convoys, convoyId, setConquering, selectedConvoy, setSelectedConvoy, loc, toggleEditor }) {
+export default function ConvoyItem({ plotColony, convoys, convoyId, setConquering, selectedConvoy, setSelectedConvoy, loc, toggleEditor }) {
 
     const { contract } = useEykarContract()
     const { account } = useStarknet()
@@ -21,11 +22,25 @@ export default function ConvoyItem({ convoys, convoyId, setConquering, selectedC
     const { data: metaData } = useStarknetCall({ contract: contract, method: 'get_convoy_meta', args: [convoyId] })
     const { invoke: conquerInvoke } = useStarknetInvoke({ contract: contract, method: 'conquer' })
     const { invoke: attackInvoke } = useStarknetInvoke({ contract: contract, method: 'attack' })
+    const { invoke: harvestInvoke } = useStarknetInvoke({ contract: contract, method: 'harvest' })
 
     const [colorSeed, setColorSeed] = useState(0);
     const [color, setColor] = useState([52, 59, 64]);
     const [owner, setOwner] = useState(false);
     const [available, setAvailable] = useState(false);
+    const [plotOwner, setPlotOwner] = useState(false);
+
+    useEffect(() => {
+        const colonyOwner = plotColony?.colony?.owner;
+        if (colonyOwner === undefined) {
+            setPlotOwner(false);
+            return;
+        }
+
+        const newOwner = "0x" + colonyOwner.toString(16);
+        if (newOwner !== "0x0")
+            setPlotOwner(newOwner);
+    }, [plotColony])
 
     useEffect(() => {
         if (metaData === undefined) {
@@ -140,6 +155,22 @@ export default function ConvoyItem({ convoys, convoyId, setConquering, selectedC
                                     : () => setConquering(convoyId)
                             }
                                 color={[r, g, b]} />
+                    }
+                    {
+                        !getCache().isColonized(loc)
+                            || !available || owner !== account || plotOwner != owner
+                            ? null
+                            : <Harvest color={[r, g, b]}
+                                harvest={() => {
+                                    harvestInvoke({
+                                        args: [convoyId, toFelt(loc[0]), toFelt(loc[1])],
+                                        metadata: {
+                                            type: 'harvest',
+                                            convoyId: convoyId,
+                                            target: [loc[0], loc[1]]
+                                        }
+                                    })
+                                }} />
                     }
                 </div>
             </div>

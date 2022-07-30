@@ -1,12 +1,26 @@
 import gameStyles from '../../../../styles/Game.module.css'
 import styles from '../../../../styles/components/convoy/Convoys.module.css'
 import footerStyles from '../../../../styles/components/convoy/Footer.module.css'
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import ConvoyItem from "../item"
+import { useStarknetCall } from '@starknet-react/core'
+import { useEykarContract } from '../../../../hooks/eykar'
 
 export default function ConvoysList({ x, y, convoys, setConquering, selectedConvoy, setSelectedConvoy, setEditing }) {
 
     const [ownConvoys, setOwnConvoys] = useState(false);
+
+    const { contract } = useEykarContract()
+    const { data: plotData } = useStarknetCall({ contract: contract, method: 'get_plot', args: [x, y] })
+
+    const [colonyId, setColonyId] = useState(0);
+    useEffect(() => {
+        if (plotData?.plot?.owner)
+            setColonyId(plotData?.plot?.owner)
+    }, plotData)
+
+
+    const { data: plotColony } = useStarknetCall({ contract: contract, method: 'get_colony', args: [colonyId] })
 
     return (
         <>
@@ -20,7 +34,7 @@ export default function ConvoysList({ x, y, convoys, setConquering, selectedConv
                         There is no convoys here
                     </p>
                     : convoys.map((convoyId) =>
-                        <ConvoyItem convoys={convoys} key={convoyId} convoyId={convoyId}
+                        <ConvoyItem plotColony={plotColony} convoys={convoys} key={convoyId} convoyId={convoyId}
                             setConquering={setConquering} selectedConvoy={selectedConvoy}
                             setSelectedConvoy={setSelectedConvoy} loc={[x, y]}
                             toggleEditor={() => setOwnConvoys(true)} />

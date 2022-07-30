@@ -2,28 +2,6 @@
     {
         "members": [
             {
-                "name": "owner",
-                "offset": 0,
-                "type": "felt"
-            },
-            {
-                "name": "structure",
-                "offset": 1,
-                "type": "felt"
-            },
-            {
-                "name": "availability",
-                "offset": 2,
-                "type": "felt"
-            }
-        ],
-        "name": "Plot",
-        "size": 3,
-        "type": "struct"
-    },
-    {
-        "members": [
-            {
                 "name": "name",
                 "offset": 0,
                 "type": "felt"
@@ -93,6 +71,28 @@
         "type": "struct"
     },
     {
+        "members": [
+            {
+                "name": "owner",
+                "offset": 0,
+                "type": "felt"
+            },
+            {
+                "name": "structure",
+                "offset": 1,
+                "type": "felt"
+            },
+            {
+                "name": "availability",
+                "offset": 2,
+                "type": "felt"
+            }
+        ],
+        "name": "Plot",
+        "size": 3,
+        "type": "struct"
+    },
+    {
         "data": [
             {
                 "name": "x",
@@ -110,27 +110,6 @@
     {
         "inputs": [
             {
-                "name": "x",
-                "type": "felt"
-            },
-            {
-                "name": "y",
-                "type": "felt"
-            }
-        ],
-        "name": "get_plot",
-        "outputs": [
-            {
-                "name": "plot",
-                "type": "Plot"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
                 "name": "id",
                 "type": "felt"
             }
@@ -140,6 +119,27 @@
             {
                 "name": "colony",
                 "type": "Colony"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "player",
+                "type": "felt"
+            }
+        ],
+        "name": "get_player_colonies",
+        "outputs": [
+            {
+                "name": "colonies_len",
+                "type": "felt"
+            },
+            {
+                "name": "colonies",
+                "type": "felt*"
             }
         ],
         "stateMutability": "view",
@@ -192,65 +192,6 @@
             {
                 "name": "convoy_id",
                 "type": "felt"
-            },
-            {
-                "name": "x",
-                "type": "felt"
-            },
-            {
-                "name": "y",
-                "type": "felt"
-            }
-        ],
-        "name": "contains_convoy",
-        "outputs": [
-            {
-                "name": "contained",
-                "type": "felt"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "name": "convoy_id",
-                "type": "felt"
-            }
-        ],
-        "name": "get_convoy_strength",
-        "outputs": [
-            {
-                "name": "strength",
-                "type": "felt"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "name": "convoy_id",
-                "type": "felt"
-            }
-        ],
-        "name": "get_convoy_protection",
-        "outputs": [
-            {
-                "name": "protection",
-                "type": "felt"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "name": "convoy_id",
-                "type": "felt"
             }
         ],
         "name": "get_conveyables",
@@ -274,14 +215,18 @@
                 "type": "felt"
             },
             {
-                "name": "spender",
+                "name": "x",
+                "type": "felt"
+            },
+            {
+                "name": "y",
                 "type": "felt"
             }
         ],
-        "name": "can_spend_convoy",
+        "name": "contains_convoy",
         "outputs": [
             {
-                "name": "bool",
+                "name": "contained",
                 "type": "felt"
             }
         ],
@@ -290,89 +235,6 @@
     },
     {
         "inputs": [
-            {
-                "name": "convoy_id",
-                "type": "felt"
-            },
-            {
-                "name": "spender",
-                "type": "felt"
-            }
-        ],
-        "name": "assert_can_spend_convoy",
-        "outputs": [],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "name": "convoy_id",
-                "type": "felt"
-            },
-            {
-                "name": "spender",
-                "type": "felt"
-            }
-        ],
-        "name": "assert_can_move_convoy",
-        "outputs": [],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "name": "convoy_id",
-                "type": "felt"
-            },
-            {
-                "name": "source_x",
-                "type": "felt"
-            },
-            {
-                "name": "source_y",
-                "type": "felt"
-            },
-            {
-                "name": "target_x",
-                "type": "felt"
-            },
-            {
-                "name": "target_y",
-                "type": "felt"
-            }
-        ],
-        "name": "move_convoy",
-        "outputs": [],
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "name": "convoy_ids_len",
-                "type": "felt"
-            },
-            {
-                "name": "convoy_ids",
-                "type": "felt*"
-            },
-            {
-                "name": "output_sizes_len",
-                "type": "felt"
-            },
-            {
-                "name": "output_sizes",
-                "type": "felt*"
-            },
-            {
-                "name": "output_len",
-                "type": "felt"
-            },
-            {
-                "name": "output",
-                "type": "Fungible*"
-            },
             {
                 "name": "x",
                 "type": "felt"
@@ -382,58 +244,11 @@
                 "type": "felt"
             }
         ],
-        "name": "transform",
+        "name": "get_plot",
         "outputs": [
             {
-                "name": "convoy_ids_len",
-                "type": "felt"
-            },
-            {
-                "name": "convoy_ids",
-                "type": "felt*"
-            }
-        ],
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "name": "attacker",
-                "type": "felt"
-            },
-            {
-                "name": "target",
-                "type": "felt"
-            },
-            {
-                "name": "x",
-                "type": "felt"
-            },
-            {
-                "name": "y",
-                "type": "felt"
-            }
-        ],
-        "name": "attack",
-        "outputs": [],
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "name": "player",
-                "type": "felt"
-            }
-        ],
-        "name": "get_player_colonies",
-        "outputs": [
-            {
-                "name": "colonies_len",
-                "type": "felt"
-            },
-            {
-                "name": "colonies",
-                "type": "felt*"
+                "name": "plot",
+                "type": "Plot"
             }
         ],
         "stateMutability": "view",
@@ -497,6 +312,142 @@
             }
         ],
         "name": "conquer",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "convoy_ids_len",
+                "type": "felt"
+            },
+            {
+                "name": "convoy_ids",
+                "type": "felt*"
+            },
+            {
+                "name": "output_sizes_len",
+                "type": "felt"
+            },
+            {
+                "name": "output_sizes",
+                "type": "felt*"
+            },
+            {
+                "name": "output_len",
+                "type": "felt"
+            },
+            {
+                "name": "output",
+                "type": "Fungible*"
+            },
+            {
+                "name": "x",
+                "type": "felt"
+            },
+            {
+                "name": "y",
+                "type": "felt"
+            }
+        ],
+        "name": "transform",
+        "outputs": [
+            {
+                "name": "convoy_ids_len",
+                "type": "felt"
+            },
+            {
+                "name": "convoy_ids",
+                "type": "felt*"
+            }
+        ],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "convoy_id",
+                "type": "felt"
+            },
+            {
+                "name": "source_x",
+                "type": "felt"
+            },
+            {
+                "name": "source_y",
+                "type": "felt"
+            },
+            {
+                "name": "target_x",
+                "type": "felt"
+            },
+            {
+                "name": "target_y",
+                "type": "felt"
+            }
+        ],
+        "name": "move_convoy",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "attacker",
+                "type": "felt"
+            },
+            {
+                "name": "target",
+                "type": "felt"
+            },
+            {
+                "name": "x",
+                "type": "felt"
+            },
+            {
+                "name": "y",
+                "type": "felt"
+            }
+        ],
+        "name": "attack",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "convoy_id",
+                "type": "felt"
+            },
+            {
+                "name": "x",
+                "type": "felt"
+            },
+            {
+                "name": "y",
+                "type": "felt"
+            }
+        ],
+        "name": "harvest",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "convoy_id",
+                "type": "felt"
+            },
+            {
+                "name": "x",
+                "type": "felt"
+            },
+            {
+                "name": "y",
+                "type": "felt"
+            }
+        ],
+        "name": "harvest_puppet",
         "outputs": [],
         "type": "function"
     }
