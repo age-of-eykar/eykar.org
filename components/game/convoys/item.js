@@ -2,6 +2,8 @@ import styles from '../../../styles/components/convoy/Item.module.css'
 import Select from './icons/select';
 import Conquer from "./icons/conquer";
 import Attack from './icons/attack';
+import Harvest from './icons/harvest';
+import Build from './icons/build';
 import BN from "bn.js"
 import { useState, useEffect } from "react";
 import { feltToString, toFelt } from '../../../utils/felt';
@@ -12,9 +14,8 @@ import { getDisplay } from '../../../utils/resources/convoyable';
 import { setConquerMode } from "../../../utils/models/game"
 import { setSelectedConvoyLoc } from "../../../utils/models/convoys"
 import { getCache } from '../../../utils/models/game';
-import Harvest from './icons/harvest';
 
-export default function ConvoyItem({ plotColony, convoys, convoyId, setConquering, selectedConvoy, setSelectedConvoy, loc, toggleEditor }) {
+export default function ConvoyItem({ plotColony, convoys, convoyId, setConquering, selectedConvoy, setSelectedConvoy, setBuilding, loc, toggleEditor }) {
 
     const { contract } = useEykarContract()
     const { account } = useStarknet()
@@ -155,6 +156,11 @@ export default function ConvoyItem({ plotColony, convoys, convoyId, setConquerin
                                     : () => setConquering(convoyId)
                             }
                                 color={[r, g, b]} />
+                    }
+                    {
+                        true
+                            ? <Build color={[r, g, b]} setBuilding={() => setBuilding(convoyId)} />
+                            : null
                     }
                     {
                         !getCache().isColonized(loc)

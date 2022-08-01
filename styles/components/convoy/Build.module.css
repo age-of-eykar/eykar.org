@@ -1,0 +1,34 @@
+.card_valid {
+    background-color: #b4d497;
+    cursor          : pointer;
+    padding         : 12px;
+    border-radius   : 8px;
+}
+
+.card_invalid {
+    background-color: #ad8f85;
+    cursor          : not-allowed;
+    padding         : 12px;
+    border-radius   : 8px;
+}
+
+.name {
+    font-family: 'Readex Pro', Verdana, sans-serif;
+    font-style : normal;
+    font-size  : 18px;
+    color      : #1f1f1d;
+}
+
+.cost {
+    font-family: 'Readex Pro', Verdana, sans-serif;
+    font-style : normal;
+    font-size  : 14px;
+    color      : #32322f;
+    display    : flex;
+    align-items: center;
+}
+
+.icon {
+    width : 22px;
+    margin: 4px;
+}

@@ -6,7 +6,7 @@ import ConvoyItem from "../item"
 import { useStarknetCall } from '@starknet-react/core'
 import { useEykarContract } from '../../../../hooks/eykar'
 
-export default function ConvoysList({ x, y, convoys, setConquering, selectedConvoy, setSelectedConvoy, setEditing }) {
+export default function ConvoysList({ x, y, convoys, setConquering, setBuilding, selectedConvoy, setSelectedConvoy, setEditing }) {
 
     const [ownConvoys, setOwnConvoys] = useState(false);
 
@@ -18,7 +18,6 @@ export default function ConvoysList({ x, y, convoys, setConquering, selectedConv
         if (plotData?.plot?.owner)
             setColonyId(plotData?.plot?.owner)
     }, plotData)
-
 
     const { data: plotColony } = useStarknetCall({ contract: contract, method: 'get_colony', args: [colonyId] })
 
@@ -36,7 +35,7 @@ export default function ConvoysList({ x, y, convoys, setConquering, selectedConv
                     : convoys.map((convoyId) =>
                         <ConvoyItem plotColony={plotColony} convoys={convoys} key={convoyId} convoyId={convoyId}
                             setConquering={setConquering} selectedConvoy={selectedConvoy}
-                            setSelectedConvoy={setSelectedConvoy} loc={[x, y]}
+                            setSelectedConvoy={setSelectedConvoy} setBuilding={setBuilding} loc={[x, y]}
                             toggleEditor={() => setOwnConvoys(true)} />
                     )
             }
