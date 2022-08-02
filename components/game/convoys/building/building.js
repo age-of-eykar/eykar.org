@@ -24,8 +24,13 @@ export default function Building({ convoyId, x, y, setBuilding }) {
     console.log(conveyables)
 
     return (<> <h1 className={styles.bigtitle}>Build in ({x}, {y})</h1>
-        <ToBuild conveyables={conveyables} 
-        building={{ name: "Settler Camp", materials: [{ type: "wood", amount: 10 }] }} />
+        <ToBuild conveyables={conveyables}
+            building={{
+                name: "Settler Camp",
+                materials: [{ type: "wood", amount: 10 }],
+                function_name: "build_lumber_camp"
+            }}
+            build_params={{ convoy_id: convoyId, x, y }} />
 
         <div className={footerStyles.footer} >
             <div onClick={() => setBuilding(false)} className={footerStyles.button}>

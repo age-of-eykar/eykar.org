@@ -450,5 +450,24 @@
         "name": "harvest_puppet",
         "outputs": [],
         "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "convoy_id",
+                "type": "felt"
+            },
+            {
+                "name": "x",
+                "type": "felt"
+            },
+            {
+                "name": "y",
+                "type": "felt"
+            }
+        ],
+        "name": "build_lumber_camp",
+        "outputs": [],
+        "type": "function"
     }
 ]

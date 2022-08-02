@@ -26,6 +26,9 @@ export function useTxMessage(metadata) {
         case 'harvest':
             return ["Harvesting", `Your convoy of identifier ${metadata.convoyId} is harvesting resources on (${metadata.target[0]}, ${metadata.target[1]}).`];
 
+        case 'build':
+            return ["Building", `Building a ${metadata.name} with convoy ${metadata.convoy_id} at (${metadata.loc[0]}, ${metadata.loc[1]}).`];
+
         default:
             return ["Moving convoy", "Convoy of 10 humans from (-4, 3) to (5, 6). Travel time estimated to 5 hours."];
     }

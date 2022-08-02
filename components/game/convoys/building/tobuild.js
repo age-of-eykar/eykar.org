@@ -1,10 +1,16 @@
 import styles from '../../../../styles/components/convoy/Build.module.css'
+
+import { useEykarContract } from "../../../../hooks/eykar"
+import { toFelt } from '../../../../utils/felt'
+import { useStarknetInvoke } from '@starknet-react/core'
 import { useState, useEffect } from "react";
 
-export default function ToBuild({ conveyables, building }) {
+export default function ToBuild({ conveyables, building, build_params }) {
 
-    const { name, materials } = building;
+    const { name, materials, function_name } = building;
     const [buildable, setBuildable] = useState(false);
+    const { contract } = useEykarContract()
+    const { data, invoke } = useStarknetInvoke({ contract: contract, method: function_name })
 
     useEffect(() => {
         let buildable = true;
@@ -15,7 +21,15 @@ export default function ToBuild({ conveyables, building }) {
         setBuildable(buildable);
     }, [materials])
 
-    return <div onClick={buildable ? () => { } : null} className={buildable ? styles.card_valid : styles.card_invalid}>
+    return <div onClick={buildable ? () => invoke({
+        args: [build_params.convoy_id, toFelt(build_params.x), toFelt(build_params.y)],
+        metadata: {
+            type: 'build',
+            name,
+            convoy_id: build_params.convoy_id,
+            loc: [build_params.x, build_params.y],
+        }
+    }) : null} className={buildable ? styles.card_valid : styles.card_invalid}>
         <h1 className={styles.name}>{name}</h1>
         <div >
             {materials.map(({ type, amount }) =>
