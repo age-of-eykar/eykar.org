@@ -1,0 +1,46 @@
+.slider {
+    display        : flex;
+    align-items    : center;
+    justify-content: center;
+}
+
+@media (max-width: 1240px) {
+    .slider {
+        margin-top   : 20px;
+        margin-bottom: 50px;
+    }
+}
+
+.line {
+    display         : flex;
+    align-items     : center;
+    justify-content : center;
+    justify-content : space-between;
+    background-color: #d3cdc680;
+    height          : 2px;
+    width           : 512px;
+}
+
+@media (max-width: 560px) {
+    .line {
+        width: 90%;
+    }
+}
+
+
+.small_point {
+    background-color: rgba(229, 228, 228, 0.9);
+    border-radius   : 50%;
+    cursor          : pointer;
+}
+
+.small_point:hover {
+    transition: all .15s ease-in-out;
+    height    : 18px !important;
+    width     : 18px !important;
+}
+
+.big_point {
+    background-color: rgba(229, 228, 228, 0.9);
+    border-radius   : 50%;
+}
