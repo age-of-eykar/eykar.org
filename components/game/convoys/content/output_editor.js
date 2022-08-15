@@ -28,7 +28,7 @@ export default function OutputEditor({ x, y, inputs, inputsIds, setEditing, setI
             <h1 className={gameStyles.bigtitle}>Allocating outputs</h1>
 
             {outputs.map((conveyables, output_index) => {
-                return <SpentItem params={{ outputs, output_index, setOutputs, spendable, setSpendable, conveyables }} />
+                return <SpentItem key={output_index} params={{ outputs, output_index, setOutputs, spendable, setSpendable, conveyables }} />
             }
             )}
 

@@ -32,8 +32,8 @@ export default function InputEditor({ inputsIds, setInputsIds, convoys, total, s
         <>
             <h1 className={gameStyles.bigtitle}>Selecting inputs</h1>
 
-            {convoys.map((convoyId) =>
-                <EditorItem convoyId={convoyId} addToTotal={addToTotal} removeFromTotal={removeFromTotal} />
+            {convoys.map((convoyId, index) =>
+                <EditorItem key={index} convoyId={convoyId} addToTotal={addToTotal} removeFromTotal={removeFromTotal} />
             )}
 
             <div className={footerStyles.footer} >
