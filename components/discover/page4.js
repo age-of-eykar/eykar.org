@@ -15,7 +15,7 @@ function Page4({ direction }) {
             <div className={styles.cards}>
                 <div className={styles.card}>
                     <div>
-                        <h1>Todo 4</h1>
+                        <h1>Roadmap</h1>
                         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
                     </div>
                     <img className={styles.mask1} src="/illustrations/warrior1.webp" alt="A warrior" />
@@ -24,5 +24,4 @@ function Page4({ direction }) {
         </div>
     );
 }
-
 export default Page4;

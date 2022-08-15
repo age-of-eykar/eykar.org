@@ -27,9 +27,8 @@
     }
 }
 
-
 .small_point {
-    background-color: rgba(229, 228, 228, 0.9);
+    background-color: rgba(229, 228, 228, 0.8);
     border-radius   : 50%;
     cursor          : pointer;
 }
@@ -41,6 +40,6 @@
 }
 
 .big_point {
-    background-color: rgba(229, 228, 228, 0.9);
+    background-color: rgb(227, 227, 227);
     border-radius   : 50%;
 }

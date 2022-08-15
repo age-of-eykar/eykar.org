@@ -9,13 +9,6 @@
     justify-content: center;
     align-items    : center;
     height         : 100%;
-}
-
-.page1 {
-    display        : flex;
-    justify-content: center;
-    align-items    : center;
-    height         : 100%;
     width          : 100%;
     position       : relative;
 }
@@ -58,7 +51,7 @@
 
 .cards {
     display        : flex;
-    flex-wrap: wrap;
+    flex-wrap      : wrap;
     justify-content: center;
     margin-top     : 90px;
 }
@@ -78,8 +71,8 @@
 
 @media (max-width: 1240px) {
     .cards {
-        cursor        : default;
-        align-items   : center;
+        cursor     : default;
+        align-items: center;
     }
 
     .bigcard {
@@ -153,31 +146,73 @@
 }
 
 .vertical_card {
-    margin  : 0px 15px 30px 15px;
-    width          : 300px;
-    height         : 500px;
-    display        : flex;
-    flex-direction: column-reverse;
-    background-position  : center;
-    background-repeat    : no-repeat;
-    background-size      : cover;
-    box-shadow     : 0px 0px 150px rgba(0, 0, 0, 0.25);
-    border-radius  : 22px;
+    margin             : 0px 15px 30px 15px;
+    width              : 300px;
+    height             : 500px;
+    display            : flex;
+    flex-direction     : column-reverse;
+    background-position: center;
+    background-repeat  : no-repeat;
+    background-size    : cover;
+    box-shadow         : 0px 0px 150px rgba(0, 0, 0, 0.25);
+    border-radius      : 22px;
 }
 
 .bg_merchant {
-    background-image     : linear-gradient(rgba(0, 0, 0, 0),
-    rgb(27, 20, 14)), url("/illustrations/warrior1.webp");
+    background-image: linear-gradient(rgba(0, 0, 0, 0),
+            rgb(27, 20, 14)), url("/illustrations/warrior2.webp");
 }
 
 .bg_diplomat {
-    background-image     : linear-gradient(rgba(0, 0, 0, 0),
-    rgb(27, 20, 14)), url("/illustrations/warrior2.webp");
+    background-image: linear-gradient(rgba(0, 0, 0, 0),
+            rgb(27, 20, 14)), url("/illustrations/warrior1.webp");
 }
 
 .bg_warlord {
-    background-image     : linear-gradient(rgba(0, 0, 0, 0),
-    rgb(27, 20, 14)), url("/illustrations/warrior2.webp");
+    background-image: linear-gradient(rgba(0, 0, 0, 0),
+            rgb(27, 20, 14)), url("/illustrations/warrior2.webp");
+}
+
+.bg_map {
+    background-image: linear-gradient(rgba(0, 0, 0, 0),
+            rgb(27, 20, 14)), url("/illustrations/map.webp");
+}
+
+.mixed_card {
+    margin             : 0px 15px 30px 15px;
+    width              : 450px;
+    height             : 500px;
+    display            : flex;
+    flex-direction     : column-reverse;
+    background-position: center;
+    background-repeat  : no-repeat;
+    background-size    : cover;
+    box-shadow         : 0px 0px 150px rgba(0, 0, 0, 0.25);
+    border-radius      : 22px;
+}
+
+.mixed_card h1 {
+    font-family: 'Readex Pro', Verdana, sans-serif;
+    font-weight: bold;
+    font-size  : 28px;
+    padding    : 30px 30px 14px 30px;
+    color      : #FFFFFF;
+}
+
+.mixed_card p {
+    font-family  : 'Readex Pro', Verdana, sans-serif;
+    font-style   : normal;
+    font-size    : 17.5px;
+    padding      : 1px 30px;
+    color        : #FFFFFF;
+    line-height  : 20px;
+    margin-bottom: 20px;
+}
+
+.mixed_card img {
+    border-radius: 22px 22px 0px 0px;
+    width        : 100%;
+    height       : 100%;
 }
 
 .vertical_card h1 {
@@ -206,11 +241,6 @@
 
 .vertical_content {
     height: 46%;
-}
-
-.vertical_mask1 {
-    width   : 100%;
-    clip-path: circle(104% at 50% 50%);
 }
 
 @media (min-width: 1920px) {

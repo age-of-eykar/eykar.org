@@ -26,13 +26,15 @@ body {
   background-repeat    : no-repeat;
   background-size      : cover;
   display              : block;
-  overflow             : auto;
+  overflow-y           : auto;
+  overflow-x           : hidden;
   position             : absolute;
   top                  : 0;
   bottom               : 0;
   left                 : 0;
   right                : 0;
   z-index              : -1;
+
 }
 
 .default_background_color {
