@@ -10,6 +10,46 @@ function Slider({ size, id, setPageId, setDirection }) {
     useEffect(() => {
         if (typeof window === 'undefined')
             return;
+
+        let xDown = null;
+        let yDown = null;
+
+        function handleTouchStart(evt) {
+            const firstTouch = evt.touches[0];
+            xDown = firstTouch.clientX;
+            yDown = firstTouch.clientY;
+        };
+
+        function handleTouchMove(evt) {
+            if (!xDown || !yDown) {
+                return;
+            }
+
+            var xUp = evt.touches[0].clientX;
+            var yUp = evt.touches[0].clientY;
+
+            var xDiff = xDown - xUp;
+            var yDiff = yDown - yUp;
+
+            if (Math.abs(xDiff) > Math.abs(yDiff)) {
+                if (xDiff > 10) {
+                    setChangingSize(0);
+                    setPageId((id + 1) % size);
+                    setDirection(-1);
+                } else if (xDiff < -10) {
+                    setChangingSize(0);
+                    setPageId((id + size - 1) % size);
+                    setDirection(1);
+                }
+            }
+            xDown = null;
+            yDown = null;
+        };
+
+        window.addEventListener('touchstart', handleTouchStart, false);
+        window.addEventListener('touchmove', handleTouchMove, false);
+
+
         let scrolled = 0;
         let lastOffset = null;
         function onScroll(event) {
@@ -42,19 +82,19 @@ function Slider({ size, id, setPageId, setDirection }) {
     }, [id, size]);
 
     for (let i = 0; i < size; i++) {
+
         points.push(
             <div
                 key={i}
-                style={i === changingID ? {
-                    width: 12 + changingSize + 'px',
-                    height: 12 + changingSize + 'px'
+                style={i === id ? {
+                    width: 24 - changingSize + 'px',
+                    height: 24 - changingSize + 'px'
                 }
-                    : i === id ? {
-                        width: 24 - changingSize + 'px',
-                        height: 24 - changingSize + 'px'
+                    : i === changingID ? {
+                        width: 12 + changingSize + 'px',
+                        height: 12 + changingSize + 'px'
                     }
-                        :
-                        { width: 12 + 'px', height: 12 + 'px' }}
+                        : { width: 12 + 'px', height: 12 + 'px' }}
                 onClick={i === id ? () => { } : () => setPageId(i)}
                 className={i === id ? styles.big_point : styles.small_point}>
             </div>)

@@ -21,8 +21,6 @@ export default function Building({ convoyId, x, y, setBuilding }) {
         }
     }, [conveyablesData])
 
-    console.log(conveyables)
-
     return (<> <h1 className={styles.bigtitle}>Build in ({x}, {y})</h1>
         <ToBuild conveyables={conveyables}
             building={{

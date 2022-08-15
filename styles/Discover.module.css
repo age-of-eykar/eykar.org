@@ -56,6 +56,13 @@
     margin-top     : 90px;
 }
 
+.right_cards {
+    display        : flex;
+    flex-wrap      : wrap;
+    justify-content: center;
+    flex-direction : column;
+}
+
 .bigcard {
     margin-bottom: 30px;
     margin-right : 30px;
@@ -257,11 +264,19 @@
 @media (max-width: 620px) {
 
     .bigcard {
-        width: 100%;
+        width: 90%;
+    }
+
+    .mixed_card {
+        width: 90%;
+    }
+
+    .right_cards {
+        flex-direction: row;
     }
 
     .card {
-        width         : 100%;
+        width         : 90%;
         height        : initial;
         flex-direction: column;
     }

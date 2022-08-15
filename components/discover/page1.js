@@ -37,7 +37,7 @@ function Page1({ direction }) {
                         litepaper <a href="https://litepaper.eykar.org">here</a>.
                     </p>
                 </div>
-                <div>
+                <div className={styles.right_cards}>
                     <div className={styles.card}>
                         <div>
                             <h1>Join the community</h1>
