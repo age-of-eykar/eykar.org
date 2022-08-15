@@ -32,11 +32,11 @@ function Slider({ size, id, setPageId, setDirection }) {
             var yDiff = yDown - yUp;
 
             if (Math.abs(xDiff) > Math.abs(yDiff)) {
-                if (xDiff > 10) {
+                if (xDiff > 4) {
                     setChangingSize(0);
                     setPageId((id + 1) % size);
                     setDirection(-1);
-                } else if (xDiff < -10) {
+                } else if (xDiff < -4) {
                     setChangingSize(0);
                     setPageId((id + size - 1) % size);
                     setDirection(1);
