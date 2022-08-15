@@ -123,15 +123,9 @@
     border-radius   : 8px;
 }
 
-@media (max-width: 1200px) {
+@media (max-width: 1260px) {
     .box {
         max-width: 600px;
-    }
-}
-
-@media (max-height: 1200px) {
-    .box {
-        max-height: 600px;
     }
 }
 

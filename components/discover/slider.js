@@ -1,11 +1,9 @@
 import styles from '../../styles/components/Slider.module.css'
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 
-function Slider({ size, id, setPageId, setDirection }) {
+function Slider({ pages, id, setPageId, setDirection }) {
 
     const points = [];
-    let [changingID, setChangingID] = useState(-1);
-    let [changingSize, setChangingSize] = useState(12);
 
     useEffect(() => {
         if (typeof window === 'undefined')
@@ -33,12 +31,10 @@ function Slider({ size, id, setPageId, setDirection }) {
 
             if (Math.abs(xDiff) > Math.abs(yDiff)) {
                 if (xDiff > 7) {
-                    setChangingSize(0);
-                    setPageId((id + 1) % size);
+                    setPageId((id + 1) % pages.length);
                     setDirection(-1);
                 } else if (xDiff < -7) {
-                    setChangingSize(0);
-                    setPageId((id + size - 1) % size);
+                    setPageId((id + pages.length - 1) % pages.length);
                     setDirection(1);
                 }
             }
@@ -48,55 +44,15 @@ function Slider({ size, id, setPageId, setDirection }) {
 
         window.addEventListener('touchstart', handleTouchStart, false);
         window.addEventListener('touchmove', handleTouchMove, false);
+    }, [id, pages]);
 
-
-        let scrolled = 0;
-        let lastOffset = null;
-        function onScroll(event) {
-            if (event.offsetY === lastOffset) {
-                scrolled += event.deltaY;
-                let newId;
-                if (scrolled == 0)
-                    newId = -1;
-                else if (scrolled > 0)
-                    newId = (id + 1) % size;
-                else
-                    newId = (id + size - 1) % size;
-                setChangingSize(12 * Math.abs(scrolled) / 150);
-                setChangingID(newId)
-                if (scrolled > 150) {
-                    setPageId(newId);
-                    setDirection(-1)
-                    scrolled = 0;
-                    window.scrollTo(0, 0);
-                } else if (scrolled < -150) {
-                    setPageId(newId);
-                    setDirection(1)
-                    scrolled = 0;
-                }
-            }
-            lastOffset = event.offsetY;
-        }
-        window.addEventListener("wheel", onScroll);
-        return () => window.removeEventListener("wheel", onScroll);
-    }, [id, size]);
-
-    for (let i = 0; i < size; i++) {
-
+    for (let i = 0; i < pages.length; i++) {
         points.push(
             <div
                 key={i}
-                style={i === id ? {
-                    width: 24 - changingSize + 'px',
-                    height: 24 - changingSize + 'px'
-                }
-                    : i === changingID ? {
-                        width: 12 + changingSize + 'px',
-                        height: 12 + changingSize + 'px'
-                    }
-                        : { width: 12 + 'px', height: 12 + 'px' }}
                 onClick={i === id ? () => { } : () => setPageId(i)}
                 className={i === id ? styles.big_point : styles.small_point}>
+                <span className={styles.title}>{pages[i]}</span>
             </div>)
     }
 

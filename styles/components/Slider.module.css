@@ -31,12 +31,16 @@
     background-color: rgba(229, 228, 228, 0.8);
     border-radius   : 50%;
     cursor          : pointer;
+    height          : 12px;
+    width           : 12px;
+    align-items     : center;
+    text-align      : center;
 }
 
 .small_point:hover {
     transition: all .15s ease-in-out;
-    height    : 18px !important;
-    width     : 18px !important;
+    height    : 18px;
+    width     : 18px;
 }
 
 .big_point {
@@ -44,4 +48,30 @@
     border-radius   : 50%;
     height          : 24px;
     width           : 24px;
+}
+
+.title {
+    margin-top      : -48px;
+    margin-left     : -3em;
+    font-family     : 'Readex Pro', Verdana, sans-serif;
+    font-size       : 14px;
+    white-space     : nowrap;
+    width           : fit-content;
+    display         : flex;
+    cursor          : pointer;
+    border-radius   : 14px;
+    align-items     : center;
+    background-color: rgba(173, 166, 166, 0.133);
+    backdrop-filter : blur(5px);
+    padding         : 6px 10px;
+    color           : white;
+    margin-right    : 7px;
+}
+
+@media (max-width: 1260px) {
+
+    .title {
+        display: none;
+    }
+
 }

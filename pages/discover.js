@@ -36,7 +36,7 @@ function Discover() {
             <Header />
             <div className={styles.wrapper}>
                 {page}
-                <Slider size={3} id={pageId} setPageId={setPageId} setDirection={setDirection} />
+                <Slider pages={["The game", "The factions", "Components"]} id={pageId} setPageId={setPageId} setDirection={setDirection} />
             </div>
         </div>
     );
