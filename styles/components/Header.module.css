@@ -2,7 +2,7 @@
     z-index        : 1;
     position       : fixed;
     left           : calc(50% - 281px);
-    width          : 562px;
+    width          : 600px;
     height         : 60px;
     border-radius  : 0px 0px 16px 16px;
     background     : rgba(49, 44, 42, 0.6);
@@ -49,7 +49,7 @@
 .logo {
     cursor: pointer;
     width : 90px;
-    margin: 4px 14px 0px 4px;
+    margin: 4px 20px 0px 4px;
 }
 
 .icon {
@@ -67,7 +67,7 @@
 }
 
 .button.sound {
-    margin-left: -8px;
+    margin-left: -4px;
 }
 
 .button.highlighted {
