@@ -49,7 +49,7 @@
 .logo {
     cursor: pointer;
     width : 90px;
-    margin: 4px 30px 0px 4px;
+    margin: 4px 14px 0px 4px;
 }
 
 .icon {
@@ -64,6 +64,10 @@
 
 .button.normal {
     color: #F3F2ED;
+}
+
+.button.sound {
+    margin-left: -8px;
 }
 
 .button.highlighted {
