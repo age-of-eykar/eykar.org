@@ -89,7 +89,7 @@ function Slider({ pages, id, setPageId, setDirection }) {
             <div
                 key={i}
                 onClick={i === id ? () => { } : () => setPageId(i)}
-                style={i === id ? { "background-color": "rgba(227, 227, 227, " + (1 - movePercentage) + ")" } : {}}
+                style={i === id ? { "backgroundColor": "rgba(227, 227, 227, " + (1 - movePercentage) + ")" } : {}}
                 className={i === id ? styles.big_point : styles.small_point}>
                 <span className={styles.title}>{pages[i]}</span>
             </div>)
