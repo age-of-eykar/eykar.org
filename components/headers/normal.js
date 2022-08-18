@@ -4,7 +4,8 @@ import { useState } from "react";
 
 let soundGlobal = false;
 const sound = typeof Audio !== "undefined" ? new Audio("./sound/eykar_theme.aac") : undefined;
-
+if (sound)
+    sound.loop = true;
 function Header() {
     const [soundEnabled, toggleSound] = useState(soundGlobal)
     return (
