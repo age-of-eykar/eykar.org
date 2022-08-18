@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { useState } from "react";
 
 let soundGlobal = false;
-const sound = typeof Audio !== "undefined" ? new Audio("./sound/eykar_theme.ogg") : undefined;
+const sound = typeof Audio !== "undefined" ? new Audio("./sound/eykar_theme.aac") : undefined;
 
 function Header() {
     const [soundEnabled, toggleSound] = useState(soundGlobal)
