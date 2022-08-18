@@ -1,13 +1,12 @@
 import styles from '../../styles/components/Header.module.css'
 import Link from 'next/link'
-import { useState, useRef } from "react";
+import { useState } from "react";
+
+let soundGlobal = false;
+const sound = typeof Audio !== "undefined" ? new Audio("./sound/eykar_theme.ogg") : undefined;
 
 function Header() {
-
-    const sound = useRef(
-        typeof Audio !== "undefined" ? new Audio("./sound/eykar_theme.ogg") : undefined
-    );
-    const [soundEnabled, toggleSound] = useState(false)
+    const [soundEnabled, toggleSound] = useState(soundGlobal)
     return (
         <nav className={styles.nav}>
             <div className={styles.icons}>
@@ -46,10 +45,11 @@ function Header() {
                 </Link>
                 <div onClick={() => {
                     if (soundEnabled)
-                        sound.current?.pause()
+                        sound.pause()
                     else
-                        sound.current?.play()
-                    toggleSound(!soundEnabled)
+                        sound.play()
+                    soundGlobal = !soundEnabled;
+                    toggleSound(soundGlobal)
                 }} className={[styles.button, styles.normal, styles.button_div, styles.sound].join(" ")}>
 
                     {soundEnabled
