@@ -38,6 +38,9 @@ function animateScene(gl, center, scale, selector, keyControlers, canvas, progra
             });
         setBuffersAndAttributes(gl, programInfo, chunk.bufferInfo);
         drawBufferInfo(gl, chunk.bufferInfo);
+    }, canvas.height / canvas.width)
+
+    getCache().forEachChunk(center.current, scale.current, (chunk) => {
         for (const [x, y, variant] of chunk.assets)
             if (assets[variant.sprite]) {
                 assets[variant.sprite].draw({
@@ -53,7 +56,7 @@ function animateScene(gl, center, scale, selector, keyControlers, canvas, progra
                     needStroke: true,
                 });
             }
-    }, canvas.height / canvas.width)
+    })
 
     frameRequest = window.requestAnimationFrame(function (currentTime) {
         const deltaTime = currentTime - previousTime;
