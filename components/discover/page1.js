@@ -23,7 +23,7 @@ function Page1({ direction }) {
                     </p>
                     <p>
                         To register your address to the game, you will have to pay about
-                        4 finney of ethereum (about 10$) to get your first land and chose
+                        8 finney of ethereum (about 10$) to get your first land and chose
                         your faction. From there you can start recruiting people, to explore
                         and conquer territory. As you expand, you will eventually meet
                         other kingdoms. You may become your ally or you could start a ruthless
