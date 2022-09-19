@@ -167,7 +167,7 @@
 
 .bg_merchant {
     background-image: linear-gradient(rgba(0, 0, 0, 0),
-            rgb(27, 20, 14)), url("/illustrations/warrior2.webp");
+            rgb(27, 20, 14)), url("/illustrations/merchant.webp");
 }
 
 .bg_diplomat {
