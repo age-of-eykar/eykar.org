@@ -23,9 +23,10 @@ export class ChunksCache {
      * @returns {x:number, y:number} the chunk coordinates
      **/
     getChunkCoordinates(x, y) {
-        let x_origin = x / ChunksCache.sideSize
+        // I have no idea why it is like this, but chunk starts at -49 and ends at 47 instead of -48 to 48
+        let x_origin = (x+1) / ChunksCache.sideSize
         x_origin = (Math.abs(x_origin) < 0.5) ? 0 : Math.trunc(x_origin + (x_origin > 0 ? 0.5 : -0.5))
-        let y_origin = y / ChunksCache.sideSize
+        let y_origin = (y+1) / ChunksCache.sideSize
         y_origin = (Math.abs(y_origin) < 0.5) ? 0 : Math.trunc(y_origin + (y_origin > 0 ? 0.5 : -0.5))
         return { x: x_origin, y: y_origin }
     }
