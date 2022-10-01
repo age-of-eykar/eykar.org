@@ -44,7 +44,7 @@ function Page1({ direction }) {
                             <h1>Join the community</h1>
                             <p>
                                 Come and follow the news, propose your ideas or simply discuss
-                                with the project participants on our official discord: <a target="_blank" href="https://discord.gg/zkWV6zVbvX">discord.eykar.org</a></p>
+                                with the project participants on our official discord: <a target="_blank" href="https://discord.gg/zkWV6zVbvX" rel="noreferrer">discord.eykar.org</a></p>
                         </div>
                         <img className={styles.mask1} src="/illustrations/warrior1.webp" alt="A warrior" />
                     </div>
@@ -53,7 +53,7 @@ function Page1({ direction }) {
                             <h1>Contribute</h1>
                             <p>
                                 You are a Cairo or React developer and want to contribute?
-                                The project is fully open source, feel free to check out our <a target="_blank" href="https://github.com/age-of-eykar">github</a>.
+                                The project is fully open source, feel free to check out our <a target="_blank" href="https://github.com/age-of-eykar" rel="noreferrer">github</a>.
                             </p>
                         </div>
                         <img className={styles.mask2} src="/illustrations/warrior2.webp" alt="A warrior" />
