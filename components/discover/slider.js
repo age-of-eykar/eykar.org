@@ -1,6 +1,8 @@
 import styles from '../../styles/components/Slider.module.css'
 import { useState, useEffect } from "react";
 
+let scrollDelay;
+
 function Slider({ pages, id, setPageId, setDirection }) {
 
     const points = [];
@@ -20,6 +22,10 @@ function Slider({ pages, id, setPageId, setDirection }) {
         };
 
         function handleTouchMove(evt) {
+            const time = Date.now();
+            if (time < scrollDelay)
+                return;
+
             if (!xDown || !yDown) {
                 return;
             }
@@ -34,9 +40,11 @@ function Slider({ pages, id, setPageId, setDirection }) {
                 if (xDiff > 7) {
                     setPageId((id + 1) % pages.length);
                     setDirection(-1);
+                    scrollDelay = time + 400;
                 } else if (xDiff < -7) {
                     setPageId((id + pages.length - 1) % pages.length);
                     setDirection(1);
+                    scrollDelay = time + 400;
                 }
             }
             xDown = null;
@@ -49,7 +57,14 @@ function Slider({ pages, id, setPageId, setDirection }) {
 
         let scrolled = 0;
         let lastOffset = null;
+
+
         function onScroll(event) {
+
+            const time = Date.now();
+            if (time < scrollDelay)
+                return;
+
             if (event.offsetY === lastOffset) {
                 scrolled += event.deltaY;
                 let newId;
@@ -64,10 +79,12 @@ function Slider({ pages, id, setPageId, setDirection }) {
                     setDirection(-1)
                     scrolled = 0;
                     window.scrollTo(0, 0);
+                    scrollDelay = time + 500;
                 } else if (scrolled < -150) {
                     setPageId(newId);
                     setDirection(1)
                     scrolled = 0;
+                    scrollDelay = time + 500;
                 }
             } else {
                 scrolled = 0;
