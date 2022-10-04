@@ -12,27 +12,23 @@ export default class ZoomControler {
         if (this.disabled)
             return;
         const change = event.deltaY / 1000;
-        this.scale.current / 256;
 
-        const vx = this.selector.cursor[0] - this.center.current.x;
-        const vy = this.selector.cursor[1] - this.center.current.y;
-        const norm = Math.sqrt(vx * vx + vy * vy);
-        const factor = (change < 0 ? 1 : -1) * norm / 13.3;
+        let cursor = this.selector.cursor;
+        let nextScale = this.scale.current + change * this.scale.current;
+        if (nextScale < 1)
+            nextScale = 1;
+        else if (nextScale > 256)
+            nextScale = 256;
 
-        const nextScale = this.scale.current + change * this.scale.current;
-        if (nextScale < 1) {
-            this.setScale(1);
-        } else if (nextScale > 256) {
-            this.setScale(256);
-        } else {
-            this.setScale(nextScale)
-            this.center.current = {
-                x: this.center.current.x + factor * vx / norm,
-                y: this.center.current.y + factor * vy / norm
-            }
+        if (cursor[0] == NaN || cursor[1] === NaN)
+            return;
+
+        this.center.current = {
+            x: cursor[0] + nextScale * (this.center.current.x - cursor[0]) / this.scale.current,
+            y: cursor[1] + nextScale * (this.center.current.y - cursor[1]) / this.scale.current
         }
-
-        this.selector.updateSelect();
+        this.setScale(nextScale)
+        this.selector.updateSelect()
     }
 
     takeControl() {
