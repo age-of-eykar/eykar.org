@@ -6,9 +6,32 @@ export default class ZoomControler {
         this.selector = selector;
         this.setScale = setScale;
         this.disabled = false;
+        this.scaling = false;
+    }
+
+    handlePinchStart(event) {
+        event.preventDefault();
+        if (event.touches.length === 2) {
+            this.scaling = true;
+        }
+    }
+
+
+    handlePinchMove(event) {
+        if (this.scaling) {
+            event.preventDefault();
+            console.log()
+        }
+    }
+
+    handlePinchEnd(event) {
+        if (this.scaling) {
+            this.scaling = false;
+        }
     }
 
     handleMouseWheel(event) {
+        event.preventDefault();
         if (this.disabled)
             return;
         const change = event.deltaY / 1000;

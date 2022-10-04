@@ -74,13 +74,13 @@ function Slider({ pages, id, setPageId, setDirection }) {
                     newId = (id + 1) % pages.length;
                 else
                     newId = (id + pages.length - 1) % pages.length;
-                if (scrolled > 150) {
+                if (scrolled > 75) {
                     setPageId(newId);
                     setDirection(-1)
                     scrolled = 0;
                     window.scrollTo(0, 0);
                     scrollDelay = time + 500;
-                } else if (scrolled < -150) {
+                } else if (scrolled < -75) {
                     setPageId(newId);
                     setDirection(1)
                     scrolled = 0;
@@ -89,7 +89,7 @@ function Slider({ pages, id, setPageId, setDirection }) {
             } else {
                 scrolled = 0;
             }
-            setMovePercentage(Math.abs(scrolled) / 150)
+            setMovePercentage(Math.abs(scrolled) / 75)
             lastOffset = event.offsetY;
         }
         window.addEventListener("wheel", onScroll);

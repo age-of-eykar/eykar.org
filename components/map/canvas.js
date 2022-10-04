@@ -63,6 +63,15 @@ export function MapCanvas({ center, onPlotClick }) {
     const listenMouseWheel = wheelControler.handleMouseWheel.bind(wheelControler);
     window.addEventListener("wheel", listenMouseWheel);
 
+    const handlePinchStart = wheelControler.handleMouseWheel.bind(wheelControler);
+    window.addEventListener("ontouchstart", handlePinchStart);
+
+    const handlePinchMove = wheelControler.handleMouseWheel.bind(wheelControler);
+    window.addEventListener("ontouchmove", handlePinchMove);
+
+    const handlePinchEnd = wheelControler.handleMouseWheel.bind(wheelControler);
+    window.addEventListener("ontouchend", handlePinchEnd);
+
     // screen resize
     const handler = debounce(() => {
       windowSize.current = {
@@ -85,6 +94,9 @@ export function MapCanvas({ center, onPlotClick }) {
       window.removeEventListener("keydown", listenKeyDown);
       window.removeEventListener("keyup", listenKeyUp);
       window.removeEventListener("wheel", listenMouseWheel);
+      window.removeEventListener("ontouchstart", handlePinchStart);
+      window.removeEventListener("ontouchmove", handlePinchMove);
+      window.removeEventListener("ontouchend", handlePinchEnd);
     };
   }, [pixelRatio]);
 
