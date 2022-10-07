@@ -69,7 +69,7 @@ export function MapCanvas({ center, onPlotClick }) {
     const onTouchStart = (event) => { onTouchStartPanning(event); zoomPinchStart(event); };
     window.addEventListener("touchstart", onTouchStart);
     const onTouchMove = (event) => { onTouchMovePanning(event); zoomPinchMove(event); };
-    window.addEventListener("touchmove", onTouchMove);
+    window.addEventListener("touchmove", onTouchMove, { passive: false });
     window.addEventListener("touchend", zoomPinchEnd);
     window.addEventListener("mousedown", onMouseStartPanning);
     window.addEventListener("mousemove", onMouseMovePanning);

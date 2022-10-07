@@ -7,7 +7,7 @@ export default function Document() {
             <title>Age of Eykar</title>
 
             <meta charSet="utf-8" />
-            <meta name="viewport" content="width=device-width, initial-scale=1" />
+            <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
             <meta name="theme-color" content="#cdc6aa" />
             <meta property="og:site_name" content="A decentralizied strategy game" />
             <meta property="og:title" content="Age of Eykar ⚔️" />

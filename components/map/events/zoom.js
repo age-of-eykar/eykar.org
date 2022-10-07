@@ -7,29 +7,32 @@ export default class ZoomControler {
         this.setScale = setScale;
         this.disabled = false;
         this.scaling = false;
+        this.dist = undefined;
     }
 
     handlePinchStart(event) {
-        console.log("toto");
-        //event.preventDefault();
         if (event.touches.length === 2) {
+            event.preventDefault();
             this.scaling = true;
         }
     }
 
-
     handlePinchMove(event) {
-        console.log("tota");
+        event.preventDefault();
         if (this.scaling) {
-            //event.preventDefault();
-            console.log()
+            const newDist = Math.hypot(
+                event.touches[0].pageX - event.touches[1].pageX,
+                event.touches[0].pageY - event.touches[1].pageY);
+            if (this.dist !== undefined)
+                this.setScale(this.scale.current * this.newDist / this.dist);
+            this.dist = newDist;
         }
     }
 
     handlePinchEnd(event) {
-        console.log("totab");
         if (this.scaling) {
             this.scaling = false;
+            this.dist = undefined;
         }
     }
 
