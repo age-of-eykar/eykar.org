@@ -9,8 +9,8 @@ import { Selector } from "./selector";
 import { setConquerMode } from "../../utils/models/game";
 import { getCache } from "../../utils/models/game";
 export let speedControler;
-export let wheelControler;
-export let mouseControler;
+export let zoomControler;
+export let panningControler;
 
 export function MapCanvas({ center, onPlotClick }) {
 
@@ -36,41 +36,25 @@ export function MapCanvas({ center, onPlotClick }) {
     getCache().refresh(center.current, scale.current, windowSize.current.height / windowSize.current.width);
 
     // handle listeners creation
-    mouseControler = new PanningControler(center, scale, windowSize,
+    panningControler = new PanningControler(center, scale, windowSize,
       canvasRef, onPlotClick, selector);
 
-    const touchDown = mouseControler.handleTouchDown.bind(mouseControler);
-    const touchMove = mouseControler.handleTouchMove.bind(mouseControler);
-    window.addEventListener("touchstart", touchDown);
-    window.addEventListener("touchmove", touchMove);
-
-    const mouseStart = mouseControler.handleMouseDown.bind(mouseControler);
-    const mouseMove = mouseControler.handleMouseMove.bind(mouseControler);
-    const mouseStop = mouseControler.handleMouseUp.bind(mouseControler);
-    window.addEventListener("mousedown", mouseStart);
-    window.addEventListener("mousemove", mouseMove);
-    window.addEventListener("mouseup", mouseStop);
-
+    const onTouchStartPanning = panningControler.handleTouchDown.bind(panningControler);
+    const onTouchMovePanning = panningControler.handleTouchMove.bind(panningControler);
+    const onMouseStartPanning = panningControler.handleMouseDown.bind(panningControler);
+    const onMouseMovePanning = panningControler.handleMouseMove.bind(panningControler);
+    const onMouseStopPanning = panningControler.handleMouseUp.bind(panningControler);
     const listenKeyDown = speedControler.onKeyDown.bind(speedControler);
     const listenKeyUp = speedControler.onKeyUp.bind(speedControler);
-    window.addEventListener("keydown", listenKeyDown);
-    window.addEventListener("keyup", listenKeyUp);
 
-    wheelControler = new ZoomControler(center, scale, selector, (newScale) => {
+    zoomControler = new ZoomControler(center, scale, selector, (newScale) => {
       scale.current = newScale;
       getCache().refresh(center.current, newScale, windowSize.current.height / windowSize.current.width);
     });
-    const listenMouseWheel = wheelControler.handleMouseWheel.bind(wheelControler);
-    window.addEventListener("wheel", listenMouseWheel);
 
-    const handlePinchStart = wheelControler.handleMouseWheel.bind(wheelControler);
-    //window.addEventListener("touchstart", handlePinchStart);
-
-    const handlePinchMove = wheelControler.handleMouseWheel.bind(wheelControler);
-    //window.addEventListener("touchmove", handlePinchMove);
-
-    const handlePinchEnd = wheelControler.handleMouseWheel.bind(wheelControler);
-    //window.addEventListener("touchend", handlePinchEnd);
+    const zoomPinchStart = zoomControler.handlePinchStart.bind(zoomControler);
+    const zoomPinchMove = zoomControler.handlePinchMove.bind(zoomControler);
+    const zoomPinchEnd = zoomControler.handlePinchEnd.bind(zoomControler);
 
     // screen resize
     const handler = debounce(() => {
@@ -82,21 +66,31 @@ export function MapCanvas({ center, onPlotClick }) {
       canvasRef.current.height = windowSize.current.height;
     }, 20);
 
+    const onTouchStart = (event) => { onTouchStartPanning(event); zoomPinchStart(event); };
+    window.addEventListener("touchstart", onTouchStart);
+    const onTouchMove = (event) => { onTouchMovePanning(event); zoomPinchMove(event); };
+    window.addEventListener("touchmove", onTouchMove);
+    window.addEventListener("touchend", zoomPinchEnd);
+    window.addEventListener("mousedown", onMouseStartPanning);
+    window.addEventListener("mousemove", onMouseMovePanning);
+    window.addEventListener("mouseup", onMouseStopPanning);
+    window.addEventListener("keydown", listenKeyDown);
+    window.addEventListener("keyup", listenKeyUp);
+    const listenMouseWheel = zoomControler.handleMouseWheel.bind(zoomControler);
+    window.addEventListener("wheel", listenMouseWheel);
     window.addEventListener("resize", handler);
     return () => {
       stopDrawing();
-      window.removeEventListener("touchstart", touchDown);
-      window.removeEventListener("touchmove", touchMove);
-      window.removeEventListener("mousedown", mouseStart);
-      window.removeEventListener("mouseup", mouseStop);
-      window.removeEventListener("mousemove", mouseMove);
-      window.removeEventListener("resize", handler);
+      window.removeEventListener("touchstart", onTouchStart);
+      window.removeEventListener("touchmove", onTouchMove);
+      window.removeEventListener("touchend", zoomPinchEnd);
+      window.removeEventListener("mousedown", onMouseStartPanning);
+      window.removeEventListener("mousemove", onMouseMovePanning);
+      window.removeEventListener("mouseup", onMouseStopPanning);
       window.removeEventListener("keydown", listenKeyDown);
       window.removeEventListener("keyup", listenKeyUp);
       window.removeEventListener("wheel", listenMouseWheel);
-      //window.removeEventListener("touchstart", handlePinchStart);
-      //window.removeEventListener("touchmove", handlePinchMove);
-      //window.removeEventListener("touchend", handlePinchEnd);
+      window.removeEventListener("resize", handler);
     };
   }, [pixelRatio]);
 
