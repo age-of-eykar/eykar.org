@@ -35,9 +35,16 @@ export function MapCanvas({ center, onPlotClick }) {
     startDrawing(canvasRef.current, center, scale, selector, speedControler)
     getCache().refresh(center.current, scale.current, windowSize.current.height / windowSize.current.width);
 
+
+
     // handle listeners creation
+    zoomControler = new ZoomControler(center, scale, selector, (newScale) => {
+      scale.current = newScale;
+      getCache().refresh(center.current, newScale, windowSize.current.height / windowSize.current.width);
+    });
+
     panningControler = new PanningControler(center, scale, windowSize,
-      canvasRef, onPlotClick, selector);
+      canvasRef, onPlotClick, selector, zoomControler);
 
     const onTouchStartPanning = panningControler.handleTouchDown.bind(panningControler);
     const onTouchMovePanning = panningControler.handleTouchMove.bind(panningControler);
@@ -46,11 +53,6 @@ export function MapCanvas({ center, onPlotClick }) {
     const onMouseStopPanning = panningControler.handleMouseUp.bind(panningControler);
     const listenKeyDown = speedControler.onKeyDown.bind(speedControler);
     const listenKeyUp = speedControler.onKeyUp.bind(speedControler);
-
-    zoomControler = new ZoomControler(center, scale, selector, (newScale) => {
-      scale.current = newScale;
-      getCache().refresh(center.current, newScale, windowSize.current.height / windowSize.current.width);
-    });
 
     const zoomPinchStart = zoomControler.handlePinchStart.bind(zoomControler);
     const zoomPinchMove = zoomControler.handlePinchMove.bind(zoomControler);

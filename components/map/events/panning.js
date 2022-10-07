@@ -3,7 +3,7 @@ import { getCache } from "../../../utils/models/game";
 
 export default class PanningControler {
     constructor(
-        center, scale, windowSize, canvasRef, onPlotClick, selector
+        center, scale, windowSize, canvasRef, onPlotClick, selector, zoomControler
     ) {
         this.center = center;
         this.scale = scale;
@@ -13,6 +13,7 @@ export default class PanningControler {
         this.selector = selector;
         this.isDown = false;
         this.disabled = false;
+        this.zoomControler = zoomControler;
     }
 
     startPanning(x, y) {
@@ -72,6 +73,8 @@ export default class PanningControler {
     }
 
     handleMouseDown(event) {
+        if (this.zoomControler.scaling)
+            return;
         if (event.target !== this.canvasRef.current)
             return;
         this.startPanning(event.clientX, event.clientY);

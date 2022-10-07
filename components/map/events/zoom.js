@@ -23,8 +23,10 @@ export default class ZoomControler {
             const newDist = Math.hypot(
                 event.touches[0].pageX - event.touches[1].pageX,
                 event.touches[0].pageY - event.touches[1].pageY);
-            if (this.dist !== undefined)
-                this.setScale(this.scale.current * this.newDist / this.dist);
+            if (this.dist !== undefined && newDist > this.dist)
+                this.setScale(this.scale.current * 0.95);
+            else
+                this.setScale(this.scale.current * 1.05);
             this.dist = newDist;
         }
     }
