@@ -10,7 +10,8 @@ export default class ZoomControler {
     }
 
     handlePinchStart(event) {
-        event.preventDefault();
+        console.log("toto");
+        //event.preventDefault();
         if (event.touches.length === 2) {
             this.scaling = true;
         }
@@ -18,20 +19,22 @@ export default class ZoomControler {
 
 
     handlePinchMove(event) {
+        console.log("tota");
         if (this.scaling) {
-            event.preventDefault();
+            //event.preventDefault();
             console.log()
         }
     }
 
     handlePinchEnd(event) {
+        console.log("totab");
         if (this.scaling) {
             this.scaling = false;
         }
     }
 
     handleMouseWheel(event) {
-        event.preventDefault();
+        //event.preventDefault();
         if (this.disabled)
             return;
         const change = event.deltaY / 1000;
@@ -43,7 +46,7 @@ export default class ZoomControler {
         else if (nextScale > 256)
             nextScale = 256;
 
-        if (cursor[0] == NaN || cursor[1] === NaN)
+        if (!cursor || cursor[0] == NaN || cursor[1] === NaN)
             return;
 
         this.center.current = {

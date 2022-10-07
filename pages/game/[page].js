@@ -4,8 +4,8 @@ import { useRouter } from 'next/router'
 import { useStarknet, useStarknetCall } from '@starknet-react/core'
 import { Spinner } from "../../components/spinner"
 import {
-    speedControler, wheelControler,
-    mouseControler, MapCanvas
+    speedControler, zoomControler,
+    panningControler, MapCanvas
 } from "../../components/map/canvas"
 import WalletMenu from '../../components/walletmenu'
 import Tutorial from "../../components/game/tutorial"
@@ -41,14 +41,14 @@ export default function Game() {
     useEffect(() => {
         if (page === 'world') {
             speedControler.releaseControl();
-            wheelControler.releaseControl();
-            mouseControler.releaseControl();
+            zoomControler.releaseControl();
+            panningControler.releaseControl();
             setInteractive(true);
             setComponent(<World center={center} clicked={clicked} setClicked={setClicked} />);
         } else {
             speedControler.takeControl();
-            wheelControler.takeControl();
-            mouseControler.takeControl();
+            zoomControler.takeControl();
+            panningControler.takeControl();
             setInteractive(false);
             if (page === 'tutorial')
                 setComponent(<Tutorial />);

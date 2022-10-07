@@ -64,13 +64,13 @@ export function MapCanvas({ center, onPlotClick }) {
     window.addEventListener("wheel", listenMouseWheel);
 
     const handlePinchStart = wheelControler.handleMouseWheel.bind(wheelControler);
-    window.addEventListener("ontouchstart", handlePinchStart);
+    //window.addEventListener("touchstart", handlePinchStart);
 
     const handlePinchMove = wheelControler.handleMouseWheel.bind(wheelControler);
-    window.addEventListener("ontouchmove", handlePinchMove);
+    //window.addEventListener("touchmove", handlePinchMove);
 
     const handlePinchEnd = wheelControler.handleMouseWheel.bind(wheelControler);
-    window.addEventListener("ontouchend", handlePinchEnd);
+    //window.addEventListener("touchend", handlePinchEnd);
 
     // screen resize
     const handler = debounce(() => {
@@ -94,9 +94,9 @@ export function MapCanvas({ center, onPlotClick }) {
       window.removeEventListener("keydown", listenKeyDown);
       window.removeEventListener("keyup", listenKeyUp);
       window.removeEventListener("wheel", listenMouseWheel);
-      window.removeEventListener("ontouchstart", handlePinchStart);
-      window.removeEventListener("ontouchmove", handlePinchMove);
-      window.removeEventListener("ontouchend", handlePinchEnd);
+      //window.removeEventListener("touchstart", handlePinchStart);
+      //window.removeEventListener("touchmove", handlePinchMove);
+      //window.removeEventListener("touchend", handlePinchEnd);
     };
   }, [pixelRatio]);
 
