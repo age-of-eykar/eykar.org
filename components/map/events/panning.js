@@ -14,6 +14,7 @@ export default class PanningControler {
         this.isDown = false;
         this.disabled = false;
         this.zoomControler = zoomControler;
+        this.touch_id = 0;
     }
 
     startPanning(x, y) {
@@ -66,15 +67,14 @@ export default class PanningControler {
 
     handleTouchDown(event) {
         const touches = event.changedTouches;
-        if (touches.length === 0)
+        if (this.zoomControler.scaling || touches.length !== 1)
             return;
         const touch = touches[0];
+        this.touch_id = touch.identifier;
         this.startPanning(touch.clientX, touch.clientY);
     }
 
     handleMouseDown(event) {
-        if (this.zoomControler.scaling)
-            return;
         if (event.target !== this.canvasRef.current)
             return;
         this.startPanning(event.clientX, event.clientY);
@@ -82,9 +82,11 @@ export default class PanningControler {
 
     handleTouchMove(event) {
         const touches = event.changedTouches;
-        if (touches.length === 0)
+        if (this.zoomControler.scaling || touches.length !== 1)
             return;
         const touch = touches[0];
+        if (touch.identifier !== this.touch_id)
+            return;
         this.movePanning(touch.clientX, touch.clientY);
     }
 

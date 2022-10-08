@@ -42,7 +42,6 @@ export function MapCanvas({ center, onPlotClick }) {
       scale.current = newScale;
       getCache().refresh(center.current, newScale, windowSize.current.height / windowSize.current.width);
     });
-
     panningControler = new PanningControler(center, scale, windowSize,
       canvasRef, onPlotClick, selector, zoomControler);
 
