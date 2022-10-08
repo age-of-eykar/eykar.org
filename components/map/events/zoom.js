@@ -21,12 +21,17 @@ export default class ZoomControler {
         event.preventDefault();
         if (this.scaling) {
             const newDist = Math.hypot(
-                event.touches[0].pageX - event.touches[1].pageX,
-                event.touches[0].pageY - event.touches[1].pageY);
-            if (this.dist !== undefined && newDist > this.dist)
-                this.setScale(this.scale.current * 0.95);
-            else
-                this.setScale(this.scale.current * 1.05);
+                event.touches[0].clientX - event.touches[1].clientX,
+                event.touches[0].clientY - event.touches[1].clientY);
+            if (this.dist !== undefined) {
+                const ratio = (this.dist / newDist);
+                let nextScale = this.scale.current * ratio ** 2;
+                if (nextScale < 1)
+                    nextScale = 1;
+                else if (nextScale > 256)
+                    nextScale = 256;
+                this.setScale(nextScale);
+            }
             this.dist = newDist;
         }
     }
