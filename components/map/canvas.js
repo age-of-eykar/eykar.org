@@ -1,5 +1,5 @@
 import styles from '../../styles/Map.module.css'
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import debounce from "debounce";
 import { startDrawing, stopDrawing } from "./draw";
 import ZoomControler from './events/zoom';
@@ -24,6 +24,8 @@ export function MapCanvas({ center, onPlotClick }) {
     height: window.innerHeight * pixelRatio
   });
 
+  const [dist, setDist] = useState(undefined);
+
   useEffect(() => {
     canvasRef.current.width = windowSize.current.width;
     canvasRef.current.height = windowSize.current.height;
@@ -35,15 +37,14 @@ export function MapCanvas({ center, onPlotClick }) {
     startDrawing(canvasRef.current, center, scale, selector, speedControler)
     getCache().refresh(center.current, scale.current, windowSize.current.height / windowSize.current.width);
 
-
-
     // handle listeners creation
-    zoomControler = new ZoomControler(center, scale, selector, (newScale) => {
+    zoomControler = new ZoomControler(center, scale, windowSize, selector, (newScale) => {
       scale.current = newScale;
       getCache().refresh(center.current, newScale, windowSize.current.height / windowSize.current.width);
-    });
+    }, setDist);
     panningControler = new PanningControler(center, scale, windowSize,
       canvasRef, onPlotClick, selector, zoomControler);
+    zoomControler.setPanningControler(panningControler);
 
     const onTouchStartPanning = panningControler.handleTouchDown.bind(panningControler);
     const onTouchMovePanning = panningControler.handleTouchMove.bind(panningControler);
@@ -66,6 +67,7 @@ export function MapCanvas({ center, onPlotClick }) {
       canvasRef.current.width = windowSize.current.width;
       canvasRef.current.height = windowSize.current.height;
     }, 20);
+
 
     const onTouchStart = (event) => { onTouchStartPanning(event); zoomPinchStart(event); };
     window.addEventListener("touchstart", onTouchStart);
@@ -95,11 +97,19 @@ export function MapCanvas({ center, onPlotClick }) {
     };
   }, [pixelRatio]);
 
+
+
+  //<div style={{ "padding-top": "100px" }}>
+  //scale-factor: {dist}
+  //</div>
   return (
-    <canvas
-      className={styles.map}
-      ref={canvasRef}
-      tabIndex={1}
-    />
+    <>
+      <canvas
+        className={styles.map}
+        ref={canvasRef}
+        tabIndex={1}
+      />
+
+    </>
   );
 }
