@@ -23,10 +23,11 @@ export default class PanningControler {
         this.start = [x, y];
     }
 
-    movePanning(px, py) {
+    movePanning(px, py, selector = true) {
         if (this.disabled)
             return;
-        this.selector.select(px, py);
+        if (selector)
+            this.selector.select(px, py);
 
         // don't pan if mouse is not pressed
         if (!this.isDown) return;

@@ -24,8 +24,6 @@ export function MapCanvas({ center, onPlotClick }) {
     height: window.innerHeight * pixelRatio
   });
 
-  const [dist, setDist] = useState(undefined);
-
   useEffect(() => {
     canvasRef.current.width = windowSize.current.width;
     canvasRef.current.height = windowSize.current.height;
@@ -41,7 +39,7 @@ export function MapCanvas({ center, onPlotClick }) {
     zoomControler = new ZoomControler(center, scale, windowSize, selector, (newScale) => {
       scale.current = newScale;
       getCache().refresh(center.current, newScale, windowSize.current.height / windowSize.current.width);
-    }, setDist);
+    });
     panningControler = new PanningControler(center, scale, windowSize,
       canvasRef, onPlotClick, selector, zoomControler);
     zoomControler.setPanningControler(panningControler);
@@ -97,11 +95,6 @@ export function MapCanvas({ center, onPlotClick }) {
     };
   }, [pixelRatio]);
 
-
-
-  //<div style={{ "padding-top": "100px" }}>
-  //scale-factor: {dist}
-  //</div>
   return (
     <>
       <canvas
