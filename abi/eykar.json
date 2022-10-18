@@ -86,10 +86,15 @@
                 "name": "availability",
                 "offset": 2,
                 "type": "felt"
+            },
+            {
+                "name": "stored",
+                "offset": 3,
+                "type": "felt"
             }
         ],
         "name": "Plot",
-        "size": 3,
+        "size": 4,
         "type": "struct"
     },
     {
@@ -249,6 +254,23 @@
             {
                 "name": "plot",
                 "type": "Plot"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "player",
+                "type": "felt"
+            }
+        ],
+        "name": "get_prestige",
+        "outputs": [
+            {
+                "name": "prestige",
+                "type": "felt"
             }
         ],
         "stateMutability": "view",
@@ -467,6 +489,44 @@
             }
         ],
         "name": "build_lumber_camp",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "convoy_id",
+                "type": "felt"
+            },
+            {
+                "name": "x",
+                "type": "felt"
+            },
+            {
+                "name": "y",
+                "type": "felt"
+            }
+        ],
+        "name": "build_town",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "convoy_id",
+                "type": "felt"
+            },
+            {
+                "name": "x",
+                "type": "felt"
+            },
+            {
+                "name": "y",
+                "type": "felt"
+            }
+        ],
+        "name": "build_barrack",
         "outputs": [],
         "type": "function"
     }

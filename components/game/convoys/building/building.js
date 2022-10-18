@@ -25,7 +25,7 @@ export default function Building({ convoyId, x, y, setBuilding }) {
         <ToBuild conveyables={conveyables}
             building={{
                 name: "Settler Camp",
-                materials: [{ type: "wood", amount: 10 }],
+                materials: [{ type: "human", amount: 200 }],
                 function_name: "build_lumber_camp"
             }}
             build_params={{ convoy_id: convoyId, x, y }} />
